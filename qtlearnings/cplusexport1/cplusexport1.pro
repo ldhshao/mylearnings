@@ -4,7 +4,8 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    message.cpp
+    message.cpp \
+    mytest.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,4 +32,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    message.h
+    message.h \
+    mytest.h

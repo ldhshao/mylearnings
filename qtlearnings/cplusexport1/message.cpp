@@ -9,4 +9,3 @@ void Message::setAuthor(const QString &a) {
 QString Message::author() const {
     return m_author;
 }
-

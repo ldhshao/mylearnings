@@ -12,6 +12,7 @@ public:
 
     QString name() const;
     float price() const;
+    void setPrice(const float &price);
 
 private:
     QString m_name;
@@ -34,7 +35,8 @@ public:
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
+public slots:
+    void update();
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:

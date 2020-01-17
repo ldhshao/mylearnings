@@ -13,4 +13,15 @@ Item{
             msg.author = "Jonah1";
        }
     }
+    Text {
+        id: notifybar
+        anchors {top: text1.bottom; left:text1.left}
+
+        Timer {
+          interval: 2000; running: true; repeat: true
+          onTriggered: {
+              notifybar.text = "timer: " + msg.author;
+          }
+        }
+    }
 }

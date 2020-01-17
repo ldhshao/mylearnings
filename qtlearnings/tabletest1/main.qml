@@ -79,7 +79,7 @@ Window {
      }
     }
     ListView {
-        id: mylistl
+        id: mylist1
         width: 200
         height: 100
         anchors {top:mytbl.bottom; left:mytbl.left}
@@ -91,6 +91,17 @@ Window {
         }
         Component.onCompleted: {
             console.log(mymodel);
+        }
+    }
+    Text {
+        id: notifybar
+        anchors {top: mylist1.bottom; left:mylist1.left}
+
+        Timer {
+          interval: 2000; running: true; repeat: true
+          onTriggered: {
+              notifybar.text = "timer: " + mymodel.index(0,0,mymodel).data;
+          }
         }
     }
 }
