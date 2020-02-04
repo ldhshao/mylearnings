@@ -1,3 +1,7 @@
-.nav li {
+#nav li {
   display: inline;
+}
+
+.active {
+  background: rgb(240, 140, 140);
 }

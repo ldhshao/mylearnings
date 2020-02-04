@@ -6,11 +6,29 @@
     <title>index html</title>
   </head>
   <body>
-    <ul class="nav">
-      <li><a href="index.html">Index</a></li>
-      <li><a href="books.html">Books</a></li>
-      <li><a href="artivles.html">Articles</a></li>
+    <ul id="nav">
+      <li class="active" id="0">Index</li>
+      <li class="disactive" id="1">Books</li>
+      <li class="disactive" id="2">Articles</li>
     </ul>
-    <h1>Index html</h1>
+    <div class="content">
+      <script type="text/javascript" src="index_content.js"></script>
+    </div>
+    <div>Copyrigt dhliu, all rights reserved.</div>
+    <script>
+      var currNavItem = document.getElementById('0');
+      function navItemHandler(event){
+        switch(event.type){
+          case 'click':
+            if(currNavItem) currNavItem.className="disactive";
+            currNavItem = event.target;
+            currNavItem.className = "active";
+            break;
+        }
+      }
+      document.getElementById("0").addEventListener('click', navItemHandler);
+      document.getElementById("1").addEventListener('click', navItemHandler);
+      document.getElementById("2").addEventListener('click', navItemHandler);
+    </script>
   </body>
 </html>
