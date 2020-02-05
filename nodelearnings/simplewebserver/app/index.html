@@ -11,20 +11,93 @@
       <li class="disactive" id="1">Books</li>
       <li class="disactive" id="2">Articles</li>
     </ul>
-    <div class="content">
+    <div id="content">
       <script type="text/javascript" src="index_content.js"></script>
     </div>
     <div>Copyrigt dhliu, all rights reserved.</div>
     <script>
       var currNavItem = document.getElementById('0');
+      var httpRequest;
       function navItemHandler(event){
         switch(event.type){
           case 'click':
-            if(currNavItem) currNavItem.className="disactive";
-            currNavItem = event.target;
-            currNavItem.className = "active";
+            if (currNavItem != event.target){
+              if(currNavItem) currNavItem.className="disactive";
+              currNavItem = event.target;
+              currNavItem.className = "active";
+              loadContentById(parseInt(currNavItem.id, 10));
+            }
             break;
         }
+      }
+      function loadContentById(index){
+        var content = document.getElementById('content');
+        removeAllChildren(content);
+        //use ajax
+        httpRequest = new XMLHttpRequest();
+        if (!httpRequest) {
+          alert('Giving up :( Cannot create an XMLHTTP instance');
+          return false;
+        }
+        httpRequest.onreadystatechange = fillContents;
+        httpRequest.open('GET', 'api/content/'+ index);
+        httpRequest.send();
+      }
+      function removeAllChildren(element) {
+        while (element.firstChild) {
+          element.removeChild(element.firstChild)
+        }
+      }
+      function alertContents() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) {
+            alert(httpRequest.responseText);
+          } else {
+            alert('There was a problem with the request.');
+          }
+        }
+      }
+      function fillContents() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) {
+            var resobj = JSON.parse(httpRequest.responseText);
+            switch(parseInt(resobj.index, 10)){
+              case 0:
+                fillContentIndex(resobj.entity);
+                break;
+              case 1:
+                fillContentBooks(resobj.entity);
+                break;
+              case 2:
+                fillContentArticles(resobj.entity);
+                break;
+            }
+
+          } else {
+            alert('There was a problem with the request.');
+          }
+        }
+      }
+      function fillContentIndex(entity){
+        var content = document.getElementById('content');
+        var title = document.createElement('h1')
+        title.innerText = entity;
+        content.appendChild(title);
+      }
+      
+      function fillContentBooks(entity){
+        var content = document.getElementById('content');
+        var ul = document.createElement('ul')
+        ul.innerText = 'books list'
+        entity.forEach(v => {
+          var li = document.createElement('li');
+          li.innerText = v.title;
+          ul.appendChild(li);
+        });
+        content.appendChild(ul);
+      }
+      
+      function fillContentArticles(entity){
       }
       document.getElementById("0").addEventListener('click', navItemHandler);
       document.getElementById("1").addEventListener('click', navItemHandler);
