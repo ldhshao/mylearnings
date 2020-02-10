@@ -5,7 +5,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     message.cpp \
-    mytest.cpp
+    mytest.cpp \
+    myapp.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     message.h \
-    mytest.h
+    mytest.h \
+    myapp.h
