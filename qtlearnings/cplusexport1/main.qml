@@ -16,12 +16,13 @@ Item{
     Text {
         id: notifybar
         anchors {top: text1.bottom; left:text1.left}
+        text: "timer: " + msg.author
 
-        Timer {
-          interval: 2000; running: true; repeat: true
-          onTriggered: {
-              notifybar.text = "timer: " + msg.author;
-          }
-        }
+       // Timer {
+       //   interval: 2000; running: true; repeat: true
+       //   onTriggered: {
+       //       notifybar.text = "timer: " + msg.author;
+       //   }
+       // }
     }
 }
