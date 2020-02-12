@@ -1,23 +1,95 @@
 import QtQuick 2.0
-import Message 1.0
+import QtQuick.Controls 1.4
 
 Item{
     width: 200
     height:200
 
-    Message{
-       id:msg
-       author: "me"
+    TableView {
+        property int lastSelRow: -1
+
+        id: mytbl
+        width: 200
+        height: 100
+        TableViewColumn{
+            width: 100
+            title:"fruit"
+            role:"name"
+        }
+        TableViewColumn{
+            width: 60
+            title:"price"
+            role:"cost"
+        }
+
+        //model: fruitModel
+        model: mymodel
+        onClicked: {
+            console.log("current row " + this.currentRow);
+            console.log("selection mode " + this.selectionMode);
+            if (this.selectionMode == SelectionMode.ContiguousSelection){
+                lastSelRow = (lastSelRow < this.currentRow)? lastSelRow: this.currentRow;
+                this.selection.clear();
+                this.selection.select(lastSelRow, this.currentRow);
+            }
+            else{
+                lastSelRow = this.currentRow;
+            }
+        }
+
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Control) {
+              this.selectionMode = SelectionMode.ExtendedSelection;
+              event.accepted = true;
+            }
+            else if (event.key === Qt.Key_Shift) {
+              this.selectionMode = SelectionMode.ContiguousSelection;
+              event.accepted = true;
+            }
+        }
+        Keys.onReleased: {
+            if (event.key === Qt.Key_Control) {
+              this.selectionMode = SelectionMode.SingleSelection;
+              event.accepted = true;
+            }
+            else if (event.key === Qt.Key_Shift) {
+              this.selectionMode = SelectionMode.SingleSelection;
+              event.accepted = true;
+            }
+
+        }
+
     }
 
-    Text {
-       id: text1
-       anchors{ top:parent.top; left:parent.left}
-       text: msg.author    // invokes Message::author() to get this value
+   // ListModel {
+   //   id: fruitModel
 
-       Component.onCompleted: {
-            msg.author = "Jonah2";
-            console.log(msg.author);
-       }
+   //   ListElement {
+   //       name: "Apple"
+   //       cost: 2.45
+   //   }
+   //   ListElement {
+   //       name: "Orange"
+   //       cost: 3.25
+   //   }
+   //  ListElement {
+   //      name: "Banana"
+   //      cost: 1.95
+   //  }
+   // }
+   // Timer{
+   //     property int idx: 0
+   //     interval: 500; running: true; repeat: true
+   //     //onTriggered: time.text = Date().toString()
+   //     onTriggered: function(){
+   //         //fruitModel.append({name:'pear', cost:2.4});
+   //         //fruitModel.sync();
+   //         fruitModel.setProperty(0, 'cost', idx++);
+   //     }
+   // }
+    Text{
+        anchors.top:mytbl.bottom
+        id:time
     }
 }
+
