@@ -8,13 +8,17 @@
 
 int main(int argc, char *argv[])
 {
+    qmlRegisterType<FruitModel>("FruitModel", 1, 0, "FruitModel");
     MyApp app(argc, argv);
     QQuickView view;
 
     Fruit *pApple = new Fruit("apple", 2.5);
     FruitModel *pModel = new FruitModel(&app);
-    MyTest     *pTest = new MyTest(&app);
-    QObject::connect(&app, &MyApp::closing, pTest, &MyTest::onClosing);
+    //MyTest     *pTest = new MyTest(&app);
+    //QObject::connect(&app, &MyApp::closing, pTest, &MyTest::onClosing);
+    WorkerThreadTest     *pTest = new WorkerThreadTest();
+    pTest->setRunning(true);
+    app.appendThread(pTest);
     pTest->setFruit(pApple);
     pTest->setModel(pModel);
     pModel->addFruit(pApple);
@@ -28,6 +32,7 @@ int main(int argc, char *argv[])
     view.setSource(QUrl("qrc:///main.qml"));
     view.show();
 
-    pTest->startTest();
+    //pTest->startTest();
+    pTest->start();
     return app.exec();
 }

@@ -44,6 +44,7 @@ void FruitModel::addFruit(Fruit *animal)
 void FruitModel::rowReset(int index)
 {
         beginResetModel();
+        qDebug()<<"row reset";
         endResetModel();
 }
 
@@ -55,8 +56,8 @@ int FruitModel::rowCount(const QModelIndex & parent) const {
 QVariant FruitModel::data(const QModelIndex & index, int role) const {
     if (index.row() < 0 || index.row() >= m_fruits.count())
         return QVariant();
-
     Fruit* fruit = m_fruits[index.row()];
+    qDebug()<<fruit->name()<<" "<<fruit->price();
     if (role == NameRole)
         return fruit->name();
     else if (role == PriceRole)

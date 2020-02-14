@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
+import FruitModel 1.0
 
 Item{
     width: 200
@@ -77,16 +78,16 @@ Item{
    //      cost: 1.95
    //  }
    // }
-   // Timer{
-   //     property int idx: 0
-   //     interval: 500; running: true; repeat: true
-   //     //onTriggered: time.text = Date().toString()
-   //     onTriggered: function(){
-   //         //fruitModel.append({name:'pear', cost:2.4});
-   //         //fruitModel.sync();
-   //         fruitModel.setProperty(0, 'cost', idx++);
-   //     }
-   // }
+   Timer{
+       property int idx: 0
+       interval: 500; running: true; repeat: true
+       //onTriggered: time.text = Date().toString()
+       onTriggered: function(){
+           //mymodel.rowReset(0);
+           mytbl.model = null;
+           mytbl.model = mymodel;
+       }
+   }
     Text{
         anchors.top:mytbl.bottom
         id:time

@@ -1,6 +1,12 @@
 #include "myapp.h"
 #include <QtDebug>
 
+MyThread::MyThread(QObject* parent)
+    : QThread(parent)
+{
+
+}
+
 MyApp::MyApp(int &argc, char **argv)
     : QGuiApplication(argc, argv)
 {

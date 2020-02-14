@@ -47,8 +47,12 @@ class WorkerThreadTest : public MyThread
   {
     Q_OBJECT
 public:
+    WorkerThreadTest(QObject* parent= 0);
     void setFruit(Fruit *msg){
         m_msg = msg;
+    }
+    void setModel(FruitModel* pModel){
+        m_model = pModel;
     }
     void run() override {
         int i = 0;
@@ -64,6 +68,7 @@ public:
     }
 private:
     Fruit *m_msg;
+    FruitModel *m_model;
   };
 
 #endif // MYTEST_H

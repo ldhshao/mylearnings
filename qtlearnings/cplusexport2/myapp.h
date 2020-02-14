@@ -9,6 +9,7 @@ class MyThread : public QThread
   Q_OBJECT
   Q_PROPERTY(bool running READ running WRITE setRunning NOTIFY runningChanged)
 public:
+  MyThread(QObject* parent);
   void setRunning(const bool &a){
       m_running = a;
       emit runningChanged();
