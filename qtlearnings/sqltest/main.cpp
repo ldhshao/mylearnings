@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "testtable.h"
 #include "testmysql.h"
+#include "mythread.h"
 #include <QApplication>
 #include <QDebug>
 
@@ -48,7 +49,9 @@ int main(int argc, char *argv[])
     }
 #endif
     //testWriteDatabase();
-    testReadDatabase();
+    //testReadDatabase();
+    CWorkerThread worker;
+    worker.startThread();
 
     //testMoreWriteRead(100);
     //CWorkerThread worker;
