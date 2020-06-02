@@ -50,12 +50,15 @@ int main(int argc, char *argv[])
 #endif
     //testWriteDatabase();
     //testReadDatabase();
+    //CWorkerThread worker;
+    //worker.startThread();
+
+    Controller ctl1;//首次连接数据库要放在主线程中；
+    ctl1.testreaddb();
+    //ctl1.testreaddb();//error, may first not finished; but use one obj internal
     CWorkerThread worker;
     worker.startThread();
 
-    //testMoreWriteRead(100);
-    //CWorkerThread worker;
-    //worker.startThread();
 
     MainWindow w;
     w.show();
