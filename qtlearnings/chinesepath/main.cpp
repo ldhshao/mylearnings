@@ -10,7 +10,8 @@
 
 void readFixedPath()
 {
-    std::ifstream ifs("D:\\books\\packet.txt", std::ios::in);
+    //std::ifstream ifs("D:\\books\\测试\\packet.txt", std::ios::in);
+    std::ifstream ifs(QString("D:\\books\\测试\\packet.txt").toStdString().c_str(), std::ios::in);
     if (ifs.is_open())
     {
         std::string strText;
