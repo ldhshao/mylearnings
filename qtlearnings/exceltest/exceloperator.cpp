@@ -22,11 +22,13 @@ bool CExcelOperator::open(const QString& path)
     m_strPath = path;
     //check path exist
     QAxObject *pWorkbooks = nullptr;
+    ///////////////////////OLE 初始化，此处在GUI下不需要，原因未知/////////////////////////
     if(S_OK != OleInitialize(nullptr))
     {
         qDebug()<<"Failed In Initialize Ole";
-        return false;
+        //return false;
     }
+    ///////////////////////////////////////////////
 
     m_pExcel = new(std::nothrow) QAxObject();
     if (nullptr == m_pExcel) {

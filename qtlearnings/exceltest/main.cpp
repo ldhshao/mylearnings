@@ -98,8 +98,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     //testExcel1();
-    //testExcel2();
-    readXml();
+    testExcel2();
+    //readXml();
 
     return a.exec();
 }
