@@ -6,7 +6,9 @@
 .spa-shell-head, .spa-shell-head-logo, .spa-shell-head-acct,
 .spa-shell-head-search, .spa-shell-main, .spa-shell-main-nav,
 .spa-shell-main-content, .spa-shell-foot, /*.spa-shell-chat,*/
-.spa-shell-modal {
+.spa-shell-manager, .spa-shell-manager-title, .spa-shell-manager-user,
+.spa-shell-manager-input-user, .spa-shell-manager-password, .spa-shell-manager-input-password,
+.spa-shell-manager-button-login{
     position : absolute;
 }
 .spa-shell-head {
@@ -76,8 +78,33 @@
     background: red;
     z-index: 1;
 }*/
-.spa-shell-modal {
-    margin-top : -200px;
-    margin-left : -200px;
+.spa-shell-manager {
+    top : 100px;
+    left : 100px;
+    width       : 200px;
+    height      : 130px;
+    background  : orange;
     display : none;
+}
+.spa-shell-manager-title {
+    top : 0;
+    left : 85px;
+}
+.spa-shell-manager-user, .spa-shell-manager-input-user {
+    top : 35px;
+}
+.spa-shell-manager-password, .spa-shell-manager-input-password {
+    top : 65px;
+}
+.spa-shell-manager-user, .spa-shell-manager-password {
+    right : 134px;
+}
+.spa-shell-manager-input-user, .spa-shell-manager-input-password {
+    left  : 70px;
+    width : 120px;
+}
+.spa-shell-manager-button-login {
+    top   : 95px;
+    left  : 70px;
+    width : 100px;
 }

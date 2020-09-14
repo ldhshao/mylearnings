@@ -19,12 +19,20 @@ spa.shell = (function () {
         + '    </div>'
         + '    <div class="spa-shell-foot">'
         + '    </div>'
-        + '    <div class="spa-shell-modal"></div>'
+        + '    <div class="spa-shell-manager">'
+        + '        <div class="spa-shell-manager-title">Login</div>'
+        + '        <div class="spa-shell-manager-user">User</div>'
+        + '        <input class="spa-shell-manager-input-user"/>'
+        + '        <div class="spa-shell-manager-password">Password</div>'
+        + '        <input class="spa-shell-manager-input-password"/>'
+        + '        <button class="spa-shell-manager-button-login">Login</button>'
+        + '    </div>'
     },
         stateMap = { anchor_map : {} },
         jqueryMap = {},
         setJqueryMap, setChatAnchor, initModule,
-        copyAnchorMap, changeAnchorPart, onHashChange;
+        copyAnchorMap, changeAnchorPart, onHashChange,
+        onManager, onLogin;
     //---------------- END MODULE SCOPE VARIABLES
     
     //---------------- BEGIN UTILITY SCOPE VARIABLES
@@ -36,7 +44,13 @@ spa.shell = (function () {
     //---------------- BEGIN DOM SCOPE VARIABLES
     setJqueryMap = function (){
         var $container = stateMap.$container;
-        jqueryMap = { $container : $container};
+        jqueryMap = { $container : $container,
+                      $managerBtn: $container.find('.spa-shell-head-acct'),
+                      $managerWin: $container.find('.spa-shell-manager'),
+                      $loginBtn  : $container.find('.spa-shell-manager-button-login')
+        };
+        //console.log(jqueryMap.$managerBtn);
+        //console.log(jqueryMap.$managerWin);
     };
     changeAnchorPart = function (arg_map) {
         var anchor_map_revise = copyAnchorMap(),
@@ -108,6 +122,15 @@ spa.shell = (function () {
 
         return false;
     };
+    onManager = function(event){
+        console.log('acct clicked');
+        jqueryMap.$managerWin.css({'display':'block'});
+        return false;
+    };
+    onLogin = function(){
+        jqueryMap.$managerWin.css({'display':'none'});
+        return false;
+    };
     //---------------- END EVENT SCOPE VARIABLES
     
     //---------------- BEGIN CALLBACK
@@ -121,6 +144,9 @@ spa.shell = (function () {
         stateMap.$container = $container;
         $container.html( configMap.main_html );
         setJqueryMap();
+        jqueryMap.$managerBtn.click(onManager);
+        jqueryMap.$loginBtn.click(onLogin);
+        console.log('manager configed');
 
         spa.chat.configModule({
             set_chat_anchor : setChatAnchor,
@@ -137,6 +163,6 @@ spa.shell = (function () {
                  .trigger('hashchange');
     };
 
-    return { initModule : initModule };
+    return { initModule : initModule, onManager : onManager };
     //---------------- END PUBLIC SCOPE VARIABLES
 }());
