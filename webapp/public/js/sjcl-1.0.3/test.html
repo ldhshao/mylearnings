@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>test sjcl</title>
+        <!-- stylesheets -->
+
+        <!-- third party javascript -->
+        <script src="sjcl.js" ></script>
+
+        <!-- our javascript -->
+        <script>
+		var h1 = sjcl.hash.sha256.hash("Hello World!");
+		var r1 = sjcl.random.randomWords(2)
+		var h2 = sjcl.hash.sha256.hash(h1.join('')+r1.join(''))
+		var res = h2.join('') + r1.join('')
+        </script>
+    </head>
+    <body>
+        <div id="test"></div>
+    </body>
+</html>
