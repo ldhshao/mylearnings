@@ -6,7 +6,8 @@
 var http = require( 'http' ),
     express = require('express'),
     app = express(),
-    server = http.createServer( app);
+    server = http.createServer( app),
+    routes = require('./routes.js');
 
 app.configure( function () {
     app.use( express.bodyParser() );
@@ -25,10 +26,7 @@ app.configure( 'production', function () {
     app.use( express.errorHandler() );
 });
 
-app.get('/', function(request, response){
-    //response.send('Hello, Express');
-    response.redirect('/spa.html');
-});
+routes.initRoutes(app);
 
 server.listen(3000);
 

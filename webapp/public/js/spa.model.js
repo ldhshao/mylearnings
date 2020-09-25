@@ -3,6 +3,7 @@
  * model module
  */
 spa.model = (function() {
+    'use strict';
     //---------------- BEGIN MODULE SCOPE VARIABLES
     //---------------- END MODULE SCOPE VARIABLES
 

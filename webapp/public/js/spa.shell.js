@@ -22,22 +22,45 @@ spa.shell = (function () {
         + '    <div class="spa-shell-manager">'
         + '        <div class="spa-shell-manager-title">Login</div>'
         + '        <div class="spa-shell-manager-user">User</div>'
-        + '        <input class="spa-shell-manager-input-user"/>'
+        + '        <input class="spa-shell-manager-input-user" placeholder="input your user name"/>'
         + '        <div class="spa-shell-manager-password">Password</div>'
-        + '        <input class="spa-shell-manager-input-password"/>'
+        + '        <input class="spa-shell-manager-input-password" placeholder="input your password"//>'
         + '        <button class="spa-shell-manager-button-login">Login</button>'
+        + '    </div>'
+        + '    <div id="msg" class="spa-shell-msg">'
         + '    </div>'
     },
         stateMap = { anchor_map : {} },
         jqueryMap = {},
         setJqueryMap, setChatAnchor, initModule,
-        copyAnchorMap, changeAnchorPart, onHashChange,
+        copyAnchorMap, changeAnchorPart, showMsg, 
+        funCompleteString, numTo11String, generateToken, generateRand,
+        onHashChange,
         onManager, onLogin;
     //---------------- END MODULE SCOPE VARIABLES
     
     //---------------- BEGIN UTILITY SCOPE VARIABLES
     copyAnchorMap = function () {
         return $.extend(true, {}, stateMap.anchor_map);
+    };
+    showMsg = function(msg){
+        jqueryMap.$msg.text(msg);
+    };
+    funCompleteString = function(s, tlen, c){
+        var stemp = '', len = tlen;
+        while(len--) stemp +=c;
+        if (s.length < tlen)
+            return stemp.substr(0, tlen - s.length) + s;
+        return c;
+    };
+    numTo11String = function(x){
+        return funCompleteString(x.toString(),11,'0');
+    };
+    generateToken = function(psw, salt){
+        return sjcl.hash.sha256.hash(psw+salt).map(x=>numTo11String(x)).join('');
+    };
+    generateRand = function(){
+        return sjcl.random.randomWords(10).map(x=>numTo11String(x)).join('');
     };
     //---------------- END UTILITY SCOPE VARIABLES
     
@@ -47,7 +70,8 @@ spa.shell = (function () {
         jqueryMap = { $container : $container,
                       $managerBtn: $container.find('.spa-shell-head-acct'),
                       $managerWin: $container.find('.spa-shell-manager'),
-                      $loginBtn  : $container.find('.spa-shell-manager-button-login')
+                      $loginBtn  : $container.find('.spa-shell-manager-button-login'),
+                      $msg       : $container.find('#msg')
         };
         //console.log(jqueryMap.$managerBtn);
         //console.log(jqueryMap.$managerWin);
@@ -128,7 +152,34 @@ spa.shell = (function () {
         return false;
     };
     onLogin = function(){
-        jqueryMap.$managerWin.css({'display':'none'});
+        var $user = jqueryMap.$managerWin.find('.spa-shell-manager-input-user'),
+            $psw = jqueryMap.$managerWin.find('.spa-shell-manager-input-password');
+        var user = $user.val(),
+            psw = $psw.val(),
+            salt = 'salt';
+        if(!user || user == ""){
+            //showMsg("Please input user name");
+            alert("Please input user name");
+            $user.focus ();
+            return false;
+        }
+        if(!psw || psw == ""){
+            alert("Please input password");
+            $psw.focus ();
+            return false;
+        }
+        psw = generateToken(psw, '');
+        salt = generateRand();
+        psw = generateToken(psw, salt);
+        $.post('user/verify/'+user, {'token':psw,'salt':salt}, function(data, status){
+            if (0 === data.result){
+                jqueryMap.$managerWin.css({'display':'none'});
+                jqueryMap.$managerWin.find('.spa-shell-manager-input-user').val('');
+                jqueryMap.$managerWin.find('.spa-shell-manager-input-password').val('');
+                //load manage ui
+                return true;
+            }
+        });
         return false;
     };
     //---------------- END EVENT SCOPE VARIABLES
