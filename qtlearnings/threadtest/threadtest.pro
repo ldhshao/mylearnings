@@ -15,7 +15,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     mythread.cpp \
-    myapp.cpp
+    myapp.cpp \
+    proxy.cpp
 
 RESOURCES += qml.qrc
 
@@ -33,4 +34,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mythread.h \
     myapp.h \
-    worker.h
+    worker.h \
+    proxy.h

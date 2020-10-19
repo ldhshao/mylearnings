@@ -30,7 +30,7 @@ bool Proxy::acceptCmd(struct SCmdInfo* pCmd)
 
 void Proxy::slot_cmdDone(struct SCmdInfo *pCmd, int iRes)
 {
-    if (nullptr != pCmd)
+    if (nullptr != pCmd && nullptr != pCmd->callback)
     {
         pCmd->callback(pCmd, iRes);
     }
@@ -43,7 +43,7 @@ Test::Test()
     cmd1.bCmd = 1;
     cmd1.callback = func;
     cmd2.bCmd = 2;
-    cmd2.callback = func;
+    cmd2.callback = nullptr;
     p.acceptCmd(&cmd1);
     p.acceptCmd(&cmd2);
 }
