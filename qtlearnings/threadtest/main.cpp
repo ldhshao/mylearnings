@@ -1,5 +1,6 @@
 #include "myapp.h"
 #include "worker.h"
+#include "proxy.h"
 #include <QQmlApplicationEngine>
 
 int main(int argc, char *argv[])
@@ -11,11 +12,13 @@ int main(int argc, char *argv[])
     //app.appendThread(worker);
     //worker->startThread();
 
-    Controller c1;
-    c1.dealstring("liu donghao");
-    c1.dealstring("liu jiahe");
-    c1.dealstring("liu lili");
-    c1.dealstring("li jin");
+   // Controller c1;
+   // c1.dealstring("liu donghao");
+   // c1.dealstring("liu jiahe");
+   // c1.dealstring("liu lili");
+   // c1.dealstring("li jin");
+
+    Test t;
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
