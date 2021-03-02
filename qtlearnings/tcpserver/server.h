@@ -2,8 +2,8 @@
 #define SERVER_H
 
 #include <QObject>
-
-class QTcpServer;
+#include <QTcpServer>
+#include <QTcpSocket>
 
 class Server : public QObject
 {
@@ -11,14 +11,17 @@ class Server : public QObject
 public:
     explicit Server(QObject *parent = nullptr);
 
+    void StartListen(int nPort);
+private:
+    QTcpServer *m_piserver;
+    QTcpSocket *m_pisocket;
+
 signals:
 
 public slots:
-    void sendFortune();
-
-private:
-    QTcpServer *tcpServer;
-    QStringList fortunes;
+    void newClientConnect();
+    void readMessage();
+    void disConnect();
 };
 
 #endif // SERVER_H

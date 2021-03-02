@@ -1,11 +1,9 @@
+#include <server.h>
 #include <QCoreApplication>
-#include "server.h"
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    Server *srv = new Server(&a);
-
-    return a.exec();
+    Server *piServer = new Server;
+    return a.exec();//开始主线程事件循环
 }

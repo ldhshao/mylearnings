@@ -1,41 +1,46 @@
-#include <QTcpServer>
-#include <QTcpSocket>
-#include <QByteArray>
-#include <QDataStream>
-#include <stdlib.h>
-#include <QDebug>
 #include "server.h"
+#include <QByteArray>
+#include <QDebug>
 
-Server::Server(QObject *parent) : QObject(parent), tcpServer(nullptr)
+Server::Server(QObject *parent) : QObject(parent)
 {
-    tcpServer = new QTcpServer(this);
-    connect(tcpServer, &QTcpServer::newConnection, this, &Server::sendFortune);
+    m_piserver = new QTcpServer;
+    m_pisocket = new QTcpSocket;
+    StartListen(2016);
+}
 
-    fortunes << tr("You've been leading a dog's life. Stay off the furniture.")
-                 << tr("You've got to think about tomorrow.")
-                 << tr("You will be surprised by a loud noise.")
-                 << tr("You will feel hungry again in another hour.")
-                 << tr("You might have mail.")
-                 << tr("You cannot kill time without injuring eternity.")
-                 << tr("Computers are not intelligent. They only think they are.");
+void Server::StartListen(int nPort)
+{
+    if(m_piserver->listen(QHostAddress::Any,nPort))
+        qDebug() << "listen ok";
+    else
+        qDebug() << "listen err";
+    connect(m_piserver,SIGNAL(newConnection()),this,SLOT(newClientConnect()));
+}
 
-    if (!tcpServer->listen(QHostAddress::AnyIPv4, 8000)) {
-        qDebug()<<"Cannot start server on 8000";
+void Server::newClientConnect()
+{
+    m_pisocket = m_piserver->nextPendingConnection();
+    connect(m_pisocket,SIGNAL(readyRead()),this,SLOT(readMessage()));
+    connect(m_pisocket,SIGNAL(disconnected()),this,SLOT(disConnect()));
+    qDebug() << "new client connect "<<m_pisocket->peerAddress().toString();
+}
+
+void Server::readMessage()
+{
+    qDebug() << "read client message";
+    QTcpSocket *receive = (QTcpSocket*)sender();
+    if(receive->bytesAvailable() > 0)
+    {
+        QByteArray buf;
+        buf = receive->readAll();
+        qDebug() << buf;
     }
 }
 
-void Server::sendFortune()
+void Server::disConnect()
 {
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-
-    out << fortunes.at(qrand() % fortunes.size());
-
-    QTcpSocket *clientConnection = tcpServer->nextPendingConnection();
-    connect(clientConnection, &QAbstractSocket::disconnected,
-            clientConnection, &QObject::deleteLater);
-
-    clientConnection->write(block);
-    clientConnection->disconnectFromHost();
+    QTcpSocket *obj = (QTcpSocket*)sender();//掉线对象
+    obj->close();
+    qDebug() << "client disconnect "<<obj->peerAddress().toString();//打印出掉线对象的ip
 }
