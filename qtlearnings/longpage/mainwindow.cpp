@@ -104,7 +104,9 @@ void MainWindow::slot_btnClicked(CStateButton* pBtn)
         pageContainer->setContent(page);
         //pageContainer.addWidgetLink()
     }else if (ui->btnSystem == fstButtonMgr.currentButton() && ui->btnScd2 == scdButtonMgr.currentButton()){
-        SpliterTest *pSpliterTest = new SpliterTest(this);
-        pSpliterTest->show();
+        SpliterTest *page = new SpliterTest(pageContainer);
+        pageContainer->setContent(page);
+    }else{
+        pageContainer->clear();
     }
 }

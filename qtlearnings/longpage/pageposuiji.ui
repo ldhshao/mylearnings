@@ -29,12 +29,12 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>canshushezhi</string>
+      <string>基本参数</string>
      </property>
      <widget class="QLineEdit" name="lineEdit">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>170</x>
         <y>40</y>
         <width>113</width>
         <height>25</height>
@@ -44,7 +44,7 @@
      <widget class="QLineEdit" name="lineEdit_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>170</x>
         <y>80</y>
         <width>113</width>
         <height>25</height>
@@ -54,7 +54,7 @@
      <widget class="QLineEdit" name="lineEdit_3">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>170</x>
         <y>120</y>
         <width>113</width>
         <height>25</height>
@@ -64,7 +64,7 @@
      <widget class="QLineEdit" name="lineEdit_4">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>170</x>
         <y>160</y>
         <width>113</width>
         <height>25</height>
@@ -74,11 +74,76 @@
      <widget class="QLineEdit" name="lineEdit_5">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>170</x>
         <y>200</y>
         <width>113</width>
         <height>25</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>91</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>设备有效性</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>141</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>机头就地按钮输入点</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>160</y>
+        <width>151</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>机头就地按钮灯输出点</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>200</y>
+        <width>151</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>机尾就地按钮灯输出点</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>141</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>机尾就地按钮输入点</string>
       </property>
      </widget>
     </widget>

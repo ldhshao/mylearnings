@@ -80,8 +80,8 @@ void CWidgetButtonMgr::clear()
     for (; it != mapButtons.end(); it++){
         delete it->second;
     }
-
     mapButtons.clear();
+    pLastBtn = nullptr;
 }
 
 void CWidgetButtonMgr::slot_btnClicked(CStateButton* pBtn)
