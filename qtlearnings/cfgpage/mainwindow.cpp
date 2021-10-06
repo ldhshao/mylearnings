@@ -18,6 +18,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     XmlList list;
-    list.readXmlFile("menu.txt");
+    list.readXmlFile("/home/test/workspace/menu.txt");
     list.dump();
 }

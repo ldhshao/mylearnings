@@ -21,6 +21,7 @@ protected:
 class XmlItem : public ItemBase
 {
 public:
+    HNDZ_DECLARE_DYNCREATE(XmlItem)
     XmlItem() {}
     virtual ~XmlItem() {}
 
@@ -32,6 +33,7 @@ protected:
 class XmlList : public XmlItem
 {
 public:
+    HNDZ_DECLARE_DYNCREATE(XmlList)
     XmlList() {}
     virtual ~XmlList();
 
@@ -44,6 +46,6 @@ public:
 protected:
     void deleteAll();
     QList<XmlItem*> m_children;
-    ReflectFactory m_reflectFactory;
+    static ReflectFactory m_reflectFactory;
 };
 #endif

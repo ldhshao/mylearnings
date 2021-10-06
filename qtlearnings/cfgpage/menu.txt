@@ -1,0 +1,16 @@
+<XmlList>
+	<XmlList id="1" name="file">
+		<XmlItem id="11" name="new">
+		</XmlItem>
+		<XmlItem id="12" name="open">
+		</XmlItem>
+		<XmlItem id="13" name="save">
+		</XmlItem>
+	</XmlList>
+	<XmlList id="2" name="edit">
+		<XmlItem id="21" name="copy">
+		</XmlItem>
+		<XmlItem id="22" name="paste">
+		</XmlItem>
+	</XmlList>
+</XmlList>
