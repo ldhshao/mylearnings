@@ -1,12 +1,15 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
+UTIL = Util
 HEADERS +=\
-          Util/DynamicLib.h \
-          Util/ItemBase.h \
-          Util/UiItem.h
+          $$UTIL/DynamicLib.h \
+          $$UTIL/ItemBase.h \
+          $$UTIL/UiItem.h   \
+          $$UTIL/Page.h
 
 SOURCES +=\
-          Util/DynamicLib.cpp \ 
-          Util/ItemBase.cpp \
-          Util/UiItem.cpp
+          $$UTIL/DynamicLib.cpp \
+          $$UTIL/ItemBase.cpp \
+          $$UTIL/UiItem.cpp   \
+          $$UTIL/Page.cpp

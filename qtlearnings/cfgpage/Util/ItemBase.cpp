@@ -63,6 +63,47 @@ void XmlList::deleteAll()
     m_children.clear();
 }
 
+XmlItem* XmlList::getHead()
+{
+    m_it = m_children.begin();
+    if (m_children.end() != m_it)
+        return *m_it;
+
+    return nullptr;
+}
+
+XmlItem* XmlList::getNext()
+{
+    if (m_children.end() != m_it){
+        m_it++;
+        if (m_children.end() != m_it)
+            return *m_it;
+    }
+
+    return nullptr;
+}
+
+XmlItem* XmlList::getItemById(int id)
+{
+    if (id == m_id)
+        return this;
+
+    QList<XmlItem*>::iterator it = m_children.begin();
+    for (; it != m_children.cend(); it++){
+        XmlList *pList = dynamic_cast<XmlList*>(*it);
+        if (nullptr != pList){
+            XmlItem* pItem = pList->getItemById(id);
+            if (nullptr != pItem)
+                return pItem;
+        }else {
+            if (id == (*it)->getId())
+                return *it;
+        }
+    }
+
+    return nullptr;
+}
+
 bool XmlList::initFromDomElement(QDomElement element)
 {
     if (XmlItem::initFromDomElement(element))

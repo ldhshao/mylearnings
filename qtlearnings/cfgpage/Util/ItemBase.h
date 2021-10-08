@@ -5,6 +5,15 @@
 #include <QList>
 #include <qdom.h>
 
+#define setIntValue(var, element, attr) {\
+    var = 0;                            \
+    QString strVal = element.attribute(attr);\
+    if (!strVal.isEmpty())                   \
+        var = strVal.toInt();                \
+    }
+
+#define setStrValue(var, element, attr) var = element.attribute(attr);
+
 class ItemBase : public BaseObject
 {
 public:
@@ -37,7 +46,13 @@ public:
     XmlList() {}
     virtual ~XmlList();
 
+    static ReflectFactory m_reflectFactory;
+
     bool readXmlFile(QString strFile);
+    XmlItem* getHead();
+    XmlItem* getNext();
+    int      getChildrenCount() {	return m_children.count();	}
+    XmlItem* getItemById(int id);
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
@@ -46,6 +61,6 @@ public:
 protected:
     void deleteAll();
     QList<XmlItem*> m_children;
-    static ReflectFactory m_reflectFactory;
+    QList<XmlItem*>::iterator m_it;
 };
 #endif

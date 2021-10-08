@@ -1,0 +1,44 @@
+<XmlList>
+    <XmlList name="系统">
+        <XmlItem id="1" name="系统配置">
+        </XmlItem>
+        <XmlItem id="2" name="运行参数">
+        </XmlItem>
+        <XmlItem id="3" name="水电联动">
+        </XmlItem>
+        <XmlItem id="4" name="系统时间">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="工作面">
+        <XmlItem id="5" name="基本参数">
+        </XmlItem>
+        <XmlItem id="6" name="破碎机">
+        </XmlItem>
+        <XmlItem id="7" name="转载机">
+        </XmlItem>
+        <XmlItem id="8" name="前溜">
+        </XmlItem>
+        <XmlItem id="9" name="后溜">
+        </XmlItem>
+        <XmlItem id="10" name="采煤机">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="皮带">
+        <XmlItem id="5" name="menu31">
+        </XmlItem>
+        <XmlItem id="6" name="menu32">
+        </XmlItem>
+        <XmlItem id="7" name="menu33">
+        </XmlItem>
+        <XmlItem id="8" name="menu34">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="泵/单点">
+        <XmlList name="menu41">
+        </XmlList>
+        <XmlList name="menu42">
+        </XmlList>
+        <XmlList name="menu43">
+        </XmlList>
+    </XmlList>
+</XmlList>

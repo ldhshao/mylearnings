@@ -1,0 +1,48 @@
+<PageList>
+    <Page id="1" name="系统配置" left="0" top="0" width="600" height="1120">
+        <UiItem id="6" name="本机地址" type="label"  left="6" top="40" width="80" height="20">
+        </UiItem>
+        <UiItem id="3" name="本机地址" type="editbox"  left="90" top="40" width="100" height="26">
+        </UiItem>
+        <UiItem id="7" name="程序用途" type="label"  left="200" top="40" width="60" height="20">
+        </UiItem>
+        <ComboboxItem id="1" name="程序用途" left="280" top="40" width="100" height="30" params="1;2;3">
+        </ComboboxItem>
+        <UiItem id="2" name="CS1有效性" type="checkbox"  left="6" top="80" width="100" height="20">
+        </UiItem>
+        <ComboboxItem id="4" name="工作面选择" left="160" top="80" width="100" height="30" params="3;2;1">
+        </ComboboxItem>
+        <UiItem id="5" name="系统配置" type="groupbox"  left="4" top="0" width="400" height="200">
+        </UiItem>
+        <UiItem id="8" name="test" type="groupbox"  left="4" top="204" width="400" height="300">
+        </UiItem>
+        <UiItem id="9" name="test1" type="groupbox"  left="4" top="508" width="400" height="300">
+        </UiItem>
+        <UiItem id="10" name="test2" type="groupbox"  left="4" top="812" width="400" height="300">
+        </UiItem>
+    </Page>
+    <Page id="2" name="工作面" left="0" top="0" width="600" height="900">
+        <UiItem id="1" name="group1" type="groupbox"  left="4" top="0" width="294" height="300">
+        </UiItem>
+        <UiItem id="6" name="本机地址" type="editbox"  left="6" top="40" width="100" height="26">
+        </UiItem>
+        <ComboboxItem id="7" name="程序用途" left="150" top="40" width="100" height="30" params="1;2;3">
+        </ComboboxItem>
+        <UiItem id="2" name="group2" type="groupbox"  left="302" top="0" width="294" height="300">
+        </UiItem>
+        <UiItem id="3" name="group3" type="groupbox"  left="4" top="300" width="592" height="300">
+        </UiItem>
+        <UiItem id="4" name="group5" type="groupbox"  left="4" top="600" width="294" height="300">
+        </UiItem>
+        <UiItem id="5" name="group6" type="groupbox"  left="302" top="600" width="294" height="300">
+        </UiItem>
+    </Page>
+    <Page id="3" name="皮带" left="0" top="0" width="600" height="400">
+        <UiItem id="3" name="水电联动" type="editbox"  left="0" top="40" width="100" height="30">
+        </UiItem>
+        <UiItem id="4" name="系统时间" type="editbox"  left="160" top="40" width="100" height="30">
+        </UiItem>
+        <UiItem id="4" name="系统时间" type="groupbox"  left="0" top="0" width="300" height="100">
+        </UiItem>
+    </Page>
+</PageList>

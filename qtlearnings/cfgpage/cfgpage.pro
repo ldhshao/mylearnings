@@ -1,4 +1,5 @@
 include ($$PWD/Util/Util.pri)
+include ($$PWD/UiCommon/UiCommon.pri)
 
 QT       += core gui
 QT       += xml

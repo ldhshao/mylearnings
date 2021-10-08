@@ -2,6 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "UiCommon/cwidgetbutton.h"
+#include "Util/ItemBase.h"
+#include "UiCommon/pagecontainer.h"
+#include <map>
+#include <list>
+using namespace std;
+class UiPage;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,8 +24,22 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void slot_button_clicked(CStateButton* pBtn);
+
+protected:
+    void initMenu();
+    void initPage();
 
 private:
     Ui::MainWindow *ui;
+    XmlList                      menuList;
+    list<CStateButton*>          menu1List;
+    list<CStateButton*>          menu2List;
+    map<CStateButton*, XmlItem*> mapBtnToItem;
+    CStateButtonMgr              menu1Mgr;
+    CStateButtonMgr              menu2Mgr;
+    PageContainer                pageContainer;
+    list<UiPage*>                pageList;
+    map<XmlItem*, UiPage*>       mapMenuToPage;
 };
 #endif // MAINWINDOW_H
