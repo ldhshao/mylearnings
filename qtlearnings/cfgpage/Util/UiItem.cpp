@@ -6,6 +6,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QDebug>
+#include "UiCommon/uistatectl.h"
 
 QString UiItem::strTypeEdit = "editbox";
 QString UiItem::strTypeCombobox = "combobox";
@@ -33,13 +34,16 @@ QWidget* UiItem::create()
 {
     QWidget *ctl = nullptr;
     if (m_type == "checkbox"){
-        QCheckBox* pBox = new QCheckBox();
+        //QCheckBox* pBox = new QCheckBox();
+        CStateCheckBox *pBox = new CStateCheckBox();
         pBox->setText(getName());
         ctl = pBox;
-    }else if (m_type == "editbox"){
-        ctl = new QLineEdit();
+    }else if (m_type == UiItem::strTypeEdit){
+        //ctl = new QLineEdit();
+        ctl = new CStateLineEdit();
     }else if (m_type == "combobox"){
-        ctl = new QComboBox();
+        //ctl = new QComboBox();
+        ctl = new CStateComboBox();
     }else if (m_type == "groupbox"){
         QGroupBox* pBox = new QGroupBox();
         pBox->setTitle(getName());

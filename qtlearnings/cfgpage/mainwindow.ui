@@ -52,8 +52,8 @@
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>300</y>
+      <x>350</x>
+      <y>140</y>
       <width>113</width>
       <height>25</height>
      </rect>
@@ -62,8 +62,8 @@
    <widget class="QComboBox" name="comboBox">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>170</y>
+      <x>360</x>
+      <y>190</y>
       <width>86</width>
       <height>25</height>
      </rect>

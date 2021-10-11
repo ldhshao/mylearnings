@@ -2,7 +2,7 @@ include ($$PWD/Util/Util.pri)
 include ($$PWD/UiCommon/UiCommon.pri)
 
 QT       += core gui
-QT       += xml
+QT       += xml sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

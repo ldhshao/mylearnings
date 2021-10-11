@@ -1,6 +1,7 @@
 #ifndef UIPAGE_H
 #define UIPAGE_H
 
+#include "uistatectl.h"
 #include <QWidget>
 #include <list>
 using namespace std;
@@ -25,6 +26,7 @@ private:
     void deleteAll();
     list<QWidget*>     ctlList;
     list<QWidget*>::iterator m_it;
+    CStateCtlMgr       ctlMgr;//manage focus control in page
 };
 
 #endif // PAGECONTAINER_H

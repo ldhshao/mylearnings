@@ -3,6 +3,7 @@
 #include "Util/ItemBase.h"
 #include "Util/Page.h"
 #include "UiCommon/uipage.h"
+#include "UiCommon/qkeytools.h"
 
 #define MENU_CFG_FILEPATH "/home/hndz-dhliu/test/menu.xml"
 #define PAGE_CFG_FILEPATH "/home/hndz-dhliu/test/page.xml"
@@ -12,15 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    int w = width(), h = height();
-    int l = 90, t = 40;
-    pageContainer.setParent(this);
-    pageContainer.resize(w - l, h - t);
-    pageContainer.move(l,t);
-    pageContainer.show();
+    onResize(width(), height());
 
     initMenu();
     initPage();
+
+    QkeyTools::getInstance();
 
     menu1Mgr.selectButton(menu1List.front());
 }
@@ -75,6 +73,8 @@ void MainWindow::initMenu()
         ui->verticalLayout->addWidget(pBtn);
         pItem = menuList.getNext();
     }
+    //QSpacerItem* vSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    //ui->verticalLayout->addItem(vSpacer);
 
     //create menu2
     for(int i = 0; i < iMenu2Max; i++){
@@ -132,4 +132,18 @@ void MainWindow::slot_button_clicked(CStateButton* pBtn)
             pageContainer.setContent(page);
         }
     }
+}
+
+void MainWindow::onResize(int width,int height)
+{
+    int l = 90, t = 40;
+    pageContainer.setParent(this);
+    pageContainer.resize(width - l, height - t);
+    pageContainer.move(l,t);
+    pageContainer.show();
+}
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    onResize(event->size().width(), event->size().height());
+    QWidget::resizeEvent(event);
 }

@@ -24,6 +24,9 @@ void UiPage::deleteAll()
 void UiPage::addWidget(QWidget *w)
 {
     ctlList.push_back(w);
+    CStateCtl *pCtl = dynamic_cast<CStateCtl*>(w);
+    if (nullptr != pCtl)
+        pCtl->setManager(&ctlMgr);
 }
 
 QWidget* UiPage::getHead()

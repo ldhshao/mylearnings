@@ -29,6 +29,8 @@ private slots:
 protected:
     void initMenu();
     void initPage();
+    void onResize(int width, int height);
+    virtual void resizeEvent(QResizeEvent *event);
 
 private:
     Ui::MainWindow *ui;
