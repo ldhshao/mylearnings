@@ -5,34 +5,29 @@
 using namespace std;
 
 class UiPage;
-class Group : public UiItem
+
+class GroupCfgItem : public UiCfgItem
 {
 public:
-    HNDZ_DECLARE_DYNCREATE(Group)
-    Group()  {}
-    virtual ~Group();
+    HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
+    GroupCfgItem() {}
+    virtual ~GroupCfgItem() {}
 
-    virtual QWidget* create();
-    virtual bool init(QWidget* w);
-
-    bool readXmlFile(QString strFile);
-    UiItem* getHead();
-    UiItem* getNext();
+    UiCfgItem* getHead();
+    UiCfgItem* getNext();
     int      getChildrenCount() {	return m_children.size();	}
 
-protected:
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
 
-    virtual void dump();
 protected:
     void deleteAll();
-    list<UiItem*> m_children;
-    list<UiItem*>::iterator m_it;
-    static ReflectFactory m_reflectFactory;
+    list<UiCfgItem*> m_children;
+    list<UiCfgItem*>::iterator m_it;
+
 };
 
-class Page : public UiItem
+class Page : public UiCfgItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(Page)
@@ -42,21 +37,12 @@ public:
     UiPage* createPage();
     UiPage* getPage() {	return m_uiPage;}
 
-    UiItem* getHead();
-    UiItem* getNext();
-    int      getChildrenCount() {	return m_children.size();	}
-
 protected:
-    virtual bool initFromDomElement(QDomElement element);
-    virtual bool initChildrenFromDomElement(QDomNodeList list);
 
     virtual void dump();
-protected:
-    void deleteAll();
-    list<UiItem*> m_children;
-    list<UiItem*>::iterator m_it;
     UiPage                 *m_uiPage;
 };
+
 class PageList : public Page
 {
 public:

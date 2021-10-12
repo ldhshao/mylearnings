@@ -2,12 +2,28 @@
 #include <QDebug>
 #define MENU_NORMAL "QPushButton{background-color: rgba(255, 255, 255, 100%);}"
 #define MENU_SELECTED "QPushButton{background-color: rgba(200, 60, 60, 100%);}"
-#define EDIT_FOCUSED "QLineEdit {  border: 2px solid gray; background: yellow; selection-background-color: darkgray;}"
+#define EDIT_FOCUSED "QLineEdit {  border: 2px solid rgba(200,60,60,100%);}"
 #define EDIT_UNFOCUS "QLineEdit { }"
-#define COMBOBOX_FOCUSED "QComboBox {  border: 2px solid gray; background: yellow; }"
+#define COMBOBOX_FOCUSED "QComboBox { border: 2px solid rgba(200,60,60,100%); }"
 #define COMBOBOX_UNFOCUS "QComboBox { }"
-#define CHECKBOX_FOCUSED "QCheckBox {  border: 2px solid gray; background: yellow; }"
+//#define CHECKBOX_FOCUSED "QCheckBox::indicator { color: rgba(200,60,60,100%);}"
+#define CHECKBOX_FOCUSED "QCheckBox { }"
 #define CHECKBOX_UNFOCUS "QCheckBox { }"
+/*
+QCheckBox::indicator:focus{
+    border:-10px;
+}
+QCheckBox::indicator{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: #758794;
+    width: 100%;
+    padding: 1px 0 0 0;
+}
+QCheckBox{
+     spacing:10px;
+}*/
 
 void CStateCtlMgr::selectCtl(CStateCtl *pCtl)
 {

@@ -18,7 +18,8 @@ PageContainer::PageContainer(QWidget *parent) :
     pScrollArea = new QScrollArea (this);
     ui->tagWidget->resize(iTagWidWidth,iTagWidHeigth);
     pVLayout = new QVBoxLayout(ui->tagWidget);
-    pScrollArea->verticalScrollBar()->hide();
+    //pScrollArea->verticalScrollBar()->hide();
+    setStyleSheet("PageContainer{background-color:rgba(70,70,90,100%)}");
 
     connect(&widButtonMgr, SIGNAL(sig_showWidget(QWidget*)), this, SLOT(slot_showWidget(QWidget*)));
     connect(this, SIGNAL(sig_selectButton(QWidget*)), &widButtonMgr, SLOT(slot_selectButton(QWidget*)));

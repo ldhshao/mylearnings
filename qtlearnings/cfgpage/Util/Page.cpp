@@ -2,58 +2,8 @@
 #include "UiCommon/uipage.h"
 #include <QDebug>
 
-HNDZ_IMPLEMENT_DYNCREATE(Group, UiItem)
-
-Group::~Group()
-{
-    deleteAll();
-}
-
-QWidget* Group::create()
-{
-    return nullptr;
-}
-bool Group::init(QWidget* w)
-{
-    return false;
-}
-
-bool Group::readXmlFile(QString strFile)
-{
-
-    return false;
-}
-UiItem* Group::getHead()
-{
-
-}
-UiItem* Group::getNext()
-{
-
-}
-
-bool Group::initFromDomElement(QDomElement element)
-{
-
-    return false;
-}
-bool Group::initChildrenFromDomElement(QDomNodeList list)
-{
-
-    return false;
-}
-
-void Group::dump()
-{
-
-}
-void Group::deleteAll()
-{
-
-}
-
 //Page
-HNDZ_IMPLEMENT_DYNCREATE(Page, UiItem)
+HNDZ_IMPLEMENT_DYNCREATE(Page, UiCfgItem)
 Page::~Page()
 {
     deleteAll();
@@ -65,8 +15,8 @@ UiPage* Page::createPage()
         m_uiPage = new UiPage();
         init(m_uiPage);
         //first create group
-        for (list<UiItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
-            if ((*it)->isType(UiItem::strTypeGroup)){
+        for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
+            if ((*it)->isType(UiCfgItem::strTypeGroup)){
                 QWidget* w = (*it)->create();
                 if (nullptr != w){
                     w->setParent(m_uiPage);
@@ -76,8 +26,8 @@ UiPage* Page::createPage()
             }
         }
         //then create other control
-        for (list<UiItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
-            if (!(*it)->isType(UiItem::strTypeGroup)){
+        for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
+            if (!(*it)->isType(UiCfgItem::strTypeGroup)){
                 QWidget* w = (*it)->create();
                 if (nullptr != w){
                     w->setParent(m_uiPage);
@@ -90,7 +40,7 @@ UiPage* Page::createPage()
     return m_uiPage;
 }
 
-UiItem* Page::getHead()
+UiCfgItem* Page::getHead()
 {
     m_it = m_children.begin();
     if (m_children.end() != m_it)
@@ -98,7 +48,7 @@ UiItem* Page::getHead()
 
     return nullptr;
 }
-UiItem* Page::getNext()
+UiCfgItem* Page::getNext()
 {
     if (m_children.end() != m_it){
         m_it++;
@@ -112,7 +62,7 @@ UiItem* Page::getNext()
 
 bool Page::initFromDomElement(QDomElement element)
 {
-    if (UiItem::initFromDomElement(element))
+    if (UiCfgItem::initFromDomElement(element))
         return initChildrenFromDomElement(element.childNodes());
     return false;
 }
@@ -128,7 +78,7 @@ bool Page::initChildrenFromDomElement(QDomNodeList list)
             QString tag = ele.tagName();
             const char *strName = tag.toUtf8().constData();
             //create XmlItem
-            UiItem* pItem = dynamic_cast<UiItem*>(XmlList::m_reflectFactory.CreateObject(ele.tagName().toUtf8().constData()));
+            UiCfgItem* pItem = dynamic_cast<UiCfgItem*>(XmlList::m_reflectFactory.CreateObject(ele.tagName().toUtf8().constData()));
             if (nullptr == pItem)
                 return false;
 
@@ -163,7 +113,7 @@ PageList::~PageList()
 }
 bool PageList::createAllPage(list<UiPage*> &pageList)
 {
-    for(list<UiItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
+    for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         Page *page = dynamic_cast<Page*>(*it);
         UiPage *w = page->createPage();
         w->hide();

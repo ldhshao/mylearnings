@@ -8,14 +8,14 @@
 #include <QDebug>
 #include "UiCommon/uistatectl.h"
 
-QString UiItem::strTypeEdit = "editbox";
-QString UiItem::strTypeCombobox = "combobox";
-QString UiItem::strTypeCheckBox = "checkbox";
-QString UiItem::strTypeLabel    = "label";
-QString UiItem::strTypeGroup    = "groupbox";
+QString UiCfgItem::strTypeEdit = "editbox";
+QString UiCfgItem::strTypeCombobox = "combobox";
+QString UiCfgItem::strTypeCheckBox = "checkbox";
+QString UiCfgItem::strTypeLabel    = "label";
+QString UiCfgItem::strTypeGroup    = "groupbox";
 
-HNDZ_IMPLEMENT_DYNCREATE(UiItem, XmlItem)
-bool UiItem::initFromDomElement(QDomElement element)
+HNDZ_IMPLEMENT_DYNCREATE(UiCfgItem, XmlItem)
+bool UiCfgItem::initFromDomElement(QDomElement element)
 {
     XmlItem::initFromDomElement(element);
 
@@ -30,7 +30,7 @@ bool UiItem::initFromDomElement(QDomElement element)
 
     return true;
 }
-QWidget* UiItem::create()
+QWidget* UiCfgItem::create()
 {
     QWidget *ctl = nullptr;
     if (m_type == "checkbox"){
@@ -38,7 +38,7 @@ QWidget* UiItem::create()
         CStateCheckBox *pBox = new CStateCheckBox();
         pBox->setText(getName());
         ctl = pBox;
-    }else if (m_type == UiItem::strTypeEdit){
+    }else if (m_type == UiCfgItem::strTypeEdit){
         //ctl = new QLineEdit();
         ctl = new CStateLineEdit();
     }else if (m_type == "combobox"){
@@ -57,24 +57,24 @@ QWidget* UiItem::create()
 
     return ctl;
 }
-bool UiItem::init(QWidget* w)
+bool UiCfgItem::init()
 {
-    if (nullptr != w){
-        w->resize(m_width, m_height);
-        w->move(m_left, m_top);
-        w->show();
+    if (nullptr != m_pWidget){
+        m_pWidget->resize(m_width, m_height);
+        m_pWidget->move(m_left, m_top);
+        m_pWidget->show();
     }
 
     return true;
 }
 
 //ComboboxItem
-HNDZ_IMPLEMENT_DYNCREATE(ComboboxItem, UiItem)
-bool ComboboxItem::initFromDomElement(QDomElement element)
+HNDZ_IMPLEMENT_DYNCREATE(ComboboxCfgItem, UiCfgItem)
+bool ComboboxCfgItem::initFromDomElement(QDomElement element)
 {
-    UiItem::initFromDomElement(element);
+    UiCfgItem::initFromDomElement(element);
     if (m_type.isEmpty())
-        m_type = UiItem::strTypeCombobox;
+        m_type = UiCfgItem::strTypeCombobox;
     QString strParams;
     setStrValue(strParams, element, "params");
     qDebug()<<strParams;
@@ -84,10 +84,10 @@ bool ComboboxItem::initFromDomElement(QDomElement element)
 
     return true;
 }
-bool ComboboxItem::init(QWidget* w)
+bool ComboboxCfgItem::init()
 {
-    if (UiItem::init(w) && !m_params.isEmpty()){
-        QComboBox *pBox = dynamic_cast<QComboBox*>(w);
+    if (UiCfgItem::init() && !m_params.isEmpty()){
+        QComboBox *pBox = dynamic_cast<QComboBox*>(m_pWidget);
         if (nullptr != pBox){
             pBox->insertItems(0, m_params);
         }

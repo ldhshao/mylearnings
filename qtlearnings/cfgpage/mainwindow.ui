@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>30</y>
+      <y>40</y>
       <width>81</width>
       <height>511</height>
      </rect>
@@ -84,18 +84,20 @@
      </property>
     </item>
    </widget>
+   <widget class="QLabel" name="labelCopyright">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>579</y>
+      <width>271</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Param Configuration Copyright @2021</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

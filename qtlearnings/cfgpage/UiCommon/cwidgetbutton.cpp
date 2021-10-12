@@ -1,7 +1,7 @@
 #include "cwidgetbutton.h"
 
-#define MENU_NORMAL "QPushButton{background-color: rgba(255, 255, 255, 100%);}"
-#define MENU_SELECTED "QPushButton{background-color: rgba(200, 60, 60, 100%);}"
+#define MENU_NORMAL "QPushButton{color:rgba(255,255,255,100%);background-color: rgba(80, 80, 100, 100%);}"
+#define MENU_SELECTED "QPushButton{color:rgba(255,255,255,100%); background-color: rgba(200, 60, 60, 100%);}"
 
 CStateButton::CStateButton(QWidget *parent):
     QPushButton(parent)

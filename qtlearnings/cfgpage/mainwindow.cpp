@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setStyleSheet("MainWindow {background-color:rgba(40,40,60,100%);}");
+    ui->labelCopyright->setStyleSheet("QLabel{color:rgba(255,255,255,100%)}");
     onResize(width(), height());
 
     initMenu();
@@ -96,7 +98,7 @@ void MainWindow::initPage()
     pgeCfgList.getChildrenCount();
     pgeCfgList.createAllPage(pageList);
     //bind page to menu
-    XmlItem* pItem = pgeCfgList.getHead();
+    UiCfgItem* pItem = pgeCfgList.getHead();
     while(nullptr != pItem){
         Page* page = dynamic_cast<Page*>(pItem);
         if (nullptr != page){
@@ -136,11 +138,13 @@ void MainWindow::slot_button_clicked(CStateButton* pBtn)
 
 void MainWindow::onResize(int width,int height)
 {
-    int l = 90, t = 40;
+    int l = 90, t = 40, lw=270, lh = 24;
+    ui->horizontalLayoutWidget->move(l, 0);
     pageContainer.setParent(this);
-    pageContainer.resize(width - l, height - t);
+    pageContainer.resize(width - l, height - t - lh);
     pageContainer.move(l,t);
     pageContainer.show();
+    ui->labelCopyright->move((width - lw)/2, height - lh);
 }
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
