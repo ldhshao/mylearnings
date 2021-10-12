@@ -26,36 +26,43 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     //check value
 
     setStrValue(m_type, element, "type");
+    setStrValue(m_description, element, "description");
     //check value
 
     return true;
 }
-QWidget* UiCfgItem::create()
+void UiCfgItem::create(QWidget* parent)
 {
-    QWidget *ctl = nullptr;
-    if (m_type == "checkbox"){
-        //QCheckBox* pBox = new QCheckBox();
-        CStateCheckBox *pBox = new CStateCheckBox();
-        pBox->setText(getName());
-        ctl = pBox;
-    }else if (m_type == UiCfgItem::strTypeEdit){
-        //ctl = new QLineEdit();
-        ctl = new CStateLineEdit();
-    }else if (m_type == "combobox"){
-        //ctl = new QComboBox();
-        ctl = new CStateComboBox();
-    }else if (m_type == "groupbox"){
-        QGroupBox* pBox = new QGroupBox();
-        pBox->setTitle(getName());
-        ctl = pBox;
-    }else if (m_type == "label"){
-        QLabel* pBox = new QLabel();
-        pBox->setAlignment(Qt::AlignLeft);
-        pBox->setText(getName());
-        ctl = pBox;
+    if (nullptr == m_pWidget){
+        bool bGroup = false;
+        if (m_type == "checkbox"){
+            //QCheckBox* pBox = new QCheckBox();
+            CStateCheckBox *pBox = new CStateCheckBox(parent);
+            pBox->setText(getName());
+            m_pWidget = pBox;
+        }else if (m_type == UiCfgItem::strTypeEdit){
+            //ctl = new QLineEdit();
+            m_pWidget = new CStateLineEdit(parent);
+        }else if (m_type == "combobox"){
+            //ctl = new QComboBox();
+            m_pWidget = new CStateComboBox(parent);
+        }else if (m_type == "groupbox"){
+            QGroupBox* pBox = new QGroupBox(parent);
+            pBox->setTitle(getName());
+            m_pWidget = pBox;
+            bGroup = true;
+        }
+        if (!bGroup){
+            QLabel* pBoxName = new QLabel(parent);
+            pBoxName->setAlignment(Qt::AlignLeft);
+            pBoxName->setText(getName());
+            m_pWidName = pBoxName;
+            QLabel* pBoxDes = new QLabel(parent);
+            pBoxDes->setAlignment(Qt::AlignLeft);
+            pBoxDes->setText(m_description);
+            m_pWidDes = pBoxDes;
+        }
     }
-
-    return ctl;
 }
 bool UiCfgItem::init()
 {

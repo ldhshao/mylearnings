@@ -93,14 +93,14 @@ void MainWindow::initMenu()
 }
 void MainWindow::initPage()
 {
-    PageList pgeCfgList;
+    PageCfgList pgeCfgList;
     pgeCfgList.readXmlFile(PAGE_CFG_FILEPATH);
     pgeCfgList.getChildrenCount();
     pgeCfgList.createAllPage(pageList);
     //bind page to menu
     UiCfgItem* pItem = pgeCfgList.getHead();
     while(nullptr != pItem){
-        Page* page = dynamic_cast<Page*>(pItem);
+        PageCfg* page = dynamic_cast<PageCfg*>(pItem);
         if (nullptr != page){
             XmlItem *pMenuItem = menuList.getItemById(page->getId());
             if (nullptr != pMenuItem)

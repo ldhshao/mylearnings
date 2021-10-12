@@ -10,8 +10,10 @@ class GroupCfgItem : public UiCfgItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
-    GroupCfgItem() {}
-    virtual ~GroupCfgItem() {}
+    GroupCfgItem() {
+        m_type = UiCfgItem::strTypeGroup;
+    }
+    virtual ~GroupCfgItem();
 
     UiCfgItem* getHead();
     UiCfgItem* getNext();
@@ -20,6 +22,9 @@ public:
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
 
+    virtual void create(QWidget* parent);
+    virtual bool init();
+
 protected:
     void deleteAll();
     list<UiCfgItem*> m_children;
@@ -27,12 +32,12 @@ protected:
 
 };
 
-class Page : public UiCfgItem
+class PageCfg : public GroupCfgItem
 {
 public:
-    HNDZ_DECLARE_DYNCREATE(Page)
-    Page() :m_uiPage(nullptr) {}
-    virtual ~Page();
+    HNDZ_DECLARE_DYNCREATE(PageCfg)
+    PageCfg() :m_uiPage(nullptr) {}
+    virtual ~PageCfg();
 
     UiPage* createPage();
     UiPage* getPage() {	return m_uiPage;}
@@ -43,11 +48,11 @@ protected:
     UiPage                 *m_uiPage;
 };
 
-class PageList : public Page
+class PageCfgList : public PageCfg
 {
 public:
-    PageList()  {}
-    virtual ~PageList();
+    PageCfgList()  {}
+    virtual ~PageCfgList();
 
     bool createAllPage(list<UiPage*> &pageList);
 
