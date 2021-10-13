@@ -107,14 +107,17 @@ bool GroupCfgItem::init()
     int iSpanDes = 2;
     int iSpanItem = 10;
     int iSpanMargin = 4;
+    int iTitleHeight = 36;
     //find cols and rows
     //count max width and max height
     set<int> cols, rows;
     vector<int> colInfos;
     int colCnt = 0, rowCnt = 0;
-    int iMaxWidth=0, iMaxHeight = 0;
+    int iMaxWidth=0, iMaxHeight = 0, iMaxNameWidth = 0, iMaxOtherWidth = 0;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for (; it != m_children.end(); it++){
+        (*it)->init();
+
         int l = (*it)->left(), t = (*it)->top();
         if (cols.find(l) == cols.end())
             cols.insert(l);
@@ -122,58 +125,66 @@ bool GroupCfgItem::init()
             rows.insert(t);
 
         //width/height
-        int w = 0, h = 0;
+        int wName = 0, wOther = 0, h = 0;
         QWidget *w0 = (*it)->getWidget();
         QWidget *w1 = (*it)->getWidName();
         QWidget *w2 = (*it)->getWidDes();
         if (nullptr != w0){
-            w += w0->size().width();
+            wOther += w0->size().width();
             if (w0->size().height() > h) h = w0->size().height();
         }
         if (nullptr != w1){
-            w += w1->size().width();
-            w += iSpanName;
+            wName += w1->size().width();
+            if (wName > iMaxNameWidth) iMaxNameWidth = wName;
             if (w1->size().height() > h) h = w1->size().height();
         }
         if (nullptr != w2){
-            w += w2->size().width();
-            w += iSpanDes;
+            wOther += w2->size().width();
+            wOther += iSpanDes;
             if (w2->size().height() > h) h = w2->size().height();
         }
-        iMaxWidth = ((iMaxWidth > w) ? iMaxWidth : w);
+        if (wOther > iMaxOtherWidth) {
+            iMaxOtherWidth = wOther;
+        }
         iMaxHeight = ((iMaxHeight > h) ? iMaxHeight : h);
     }
+    iMaxWidth = iMaxNameWidth + iSpanName + iMaxOtherWidth;
     if (!cols.empty()){
-        int s0 = iSpanMargin, s1 = *cols.begin();
+        int s0 = iSpanMargin;
+        int s1 = iSpanMargin + iMaxNameWidth + iSpanName;
         set<int>::iterator its = cols.begin();
-        do {
+        for (; its != cols.end(); its++){
             colInfos.push_back(s0);
             colInfos.push_back(s1);
-            s0 += iMaxWidth;
-            s1 += iMaxWidth;
-        }while ( its != cols.end());
+            s0 += (iMaxWidth + iSpanItem);
+            s1 += (iMaxWidth + iSpanItem);
+        }
         colCnt = cols.size();
         rowCnt = rows.size();
     }
     //init every children
-    int row = 0, col = -1;
+    int row = 0, col = 0;
     iMaxHeight += iSpanMargin;
     it = m_children.begin();
     for (; it != m_children.end(); it++){
         QWidget *w0 = (*it)->getWidget();
         QWidget *w1 = (*it)->getWidName();
         QWidget *w2 = (*it)->getWidDes();
+        int top = iTitleHeight + row * (iMaxHeight + iSpanItem);
+        qDebug()<<(*it)->getName()<<": top "<<top;
         if (nullptr != w0){
-            w0->move(colInfos[2*col + 1], row * iMaxHeight);
-            w0->show();
+            w0->move(colInfos[2*col + 1], top);
+            qDebug()<<w0->width()<<","<<w0->height();
+            qDebug()<<"l0: "<<colInfos[2*col+1];
         }
         if (nullptr != w1){
-            w1->move(colInfos[2*col + 0], row * iMaxHeight);
-            w1->show();
+            w1->move(colInfos[2*col + 0], top);
+            qDebug()<<w1->width()<<","<<w1->height();
+            qDebug()<<"l1: "<<colInfos[2*col+0];
         }
         if (nullptr != w2){
-            w2->move(colInfos[2*col + 1] + w0->size().width() + iSpanDes, row * iMaxHeight);
-            w2->show();
+            w2->move(colInfos[2*col + 1] + w0->width() + iSpanDes, top);
+            qDebug()<<"l2: "<<colInfos[2*col+1] + w0->width() + iSpanDes;
         }
         col++;
         if (col >= colCnt){
@@ -181,8 +192,30 @@ bool GroupCfgItem::init()
         }
     }
     //init myself
-    m_pWidget->resize(iSpanMargin + colCnt * iMaxWidth + (colCnt - 1) * iSpanItem + iSpanMargin,
-                      iSpanMargin + rowCnt * iMaxWidth + (rowCnt - 1) * iSpanItem + iSpanMargin);
+    int iWidth = iSpanMargin + iSpanMargin;
+    int iHeight = iSpanMargin + iSpanMargin + iTitleHeight;
+    if (0 < colCnt) iWidth = iWidth + colCnt * iMaxWidth + (colCnt - 1) * iSpanItem;
+    if (0 < rowCnt) iHeight = iHeight + rowCnt * iMaxHeight + (rowCnt - 1) * iSpanItem;
+    m_pWidget->resize(iWidth, iHeight);
+    qDebug()<<"group "<<getName()<<": "<<iWidth<<","<<iHeight;
+
+    return true;
+}
+
+//common function
+static int getValueIndex(vector<int> &vec, int v)
+{
+    int iRet = -1;
+    int iIdx = 0;
+    vector<int>::iterator it = vec.begin();
+    for (; it!= vec.end(); it++,iIdx++){
+        if (*it == v){
+            iRet = iIdx;
+            break;
+        }
+    }
+
+    return iRet;
 }
 
 //PageCfg
@@ -199,10 +232,94 @@ UiPage* PageCfg::createPage()
         //first create group
         for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
             (*it)->create(m_uiPage);
-            (*it)->init();
         }
+
+        init();
     }
     return m_uiPage;
+}
+
+bool PageCfg::initFromDomElement(QDomElement element)
+{
+    if (UiCfgItem::initFromDomElement(element)){
+        if (m_type.isEmpty())
+            m_type = UiCfgItem::strTypePage;
+        return initChildrenFromDomElement(element.childNodes());
+    }
+    return false;
+}
+bool PageCfg::init()
+{
+    for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
+        (*it)->init();
+    }
+
+    int iSpanItem = 10;
+    int iSpanMargin = 4;
+    vector<int> vecLeft, vecTop;
+    vector<int> vecWidth, vecHeight;
+    //layout Group
+    if (!m_children.empty()){
+        list<UiCfgItem*>::iterator it = m_children.begin();
+        for (; it != m_children.end(); it++){
+            int l = (*it)->left();
+            int t = (*it)->top();
+            int w = (*it)->getWidget()->width();
+            int h = (*it)->getWidget()->height();
+            int iIdx = getValueIndex(vecLeft, l);
+            if (-1 != iIdx){
+                if (w > vecWidth[iIdx]) vecWidth[iIdx] = w;
+            }else {
+                vecLeft.push_back(l);
+                vecWidth.push_back(w);
+            }
+            iIdx = getValueIndex(vecTop, t);
+            if (-1 != iIdx){
+                if (h > vecHeight[iIdx]) vecHeight[iIdx] = h;
+            }else {
+                vecTop.push_back(t);
+                vecHeight.push_back(h);
+            }
+        }
+
+        it = m_children.begin();
+        for (; it != m_children.end(); it++){
+            QWidget* w = (*it)->getWidget();
+            int l = iSpanMargin, t = iSpanMargin;
+            int iIdxCol = getValueIndex(vecLeft, (*it)->left());
+            int iIdxRow = getValueIndex(vecTop, (*it)->top());
+            w->resize(vecWidth[iIdxCol], vecHeight[iIdxRow]);
+            for (int i = 0; i < iIdxCol; i++){
+                l += vecWidth[i];
+                l += iSpanItem;
+            }
+            for (int i = 0; i < iIdxRow; i++){
+                t += vecHeight[i];
+                t += iSpanItem;
+            }
+            w->move(l, t);
+            w->show();
+            qDebug()<<(*it)->getName()<<":"<<l<<","<<t<<","<<vecWidth[iIdxCol]<<","<<vecHeight[iIdxRow];
+        }
+    }
+
+    //set size
+    int w = iSpanMargin, h = iSpanMargin;
+    for (vector<int>::iterator it = vecWidth.begin(); it != vecWidth.end(); it++){
+        w += *it;
+    }
+    if (!vecWidth.empty())
+        w = w + (vecWidth.size() - 1) * iSpanItem;
+    w += iSpanMargin;
+    for (vector<int>::iterator it = vecHeight.begin(); it != vecHeight.end(); it++){
+        h += *it;
+    }
+    if (!vecHeight.empty())
+        h = h + (vecHeight.size() - 1) * iSpanItem;
+    h += iSpanMargin;
+    m_uiPage->resize(w, h);
+    m_uiPage->move(iSpanMargin, iSpanMargin);
+    qDebug()<<getName()<<":"<<w<<","<<h;
 }
 
 void PageCfg::dump()
@@ -220,7 +337,7 @@ bool PageCfgList::createAllPage(list<UiPage*> &pageList)
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         PageCfg *page = dynamic_cast<PageCfg*>(*it);
         UiPage *w = page->createPage();
-        w->hide();
+        //w->hide();
         pageList.push_back(w);
     }
     return true;

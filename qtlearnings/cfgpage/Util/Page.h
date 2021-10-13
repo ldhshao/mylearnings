@@ -42,6 +42,10 @@ public:
     UiPage* createPage();
     UiPage* getPage() {	return m_uiPage;}
 
+    virtual bool initFromDomElement(QDomElement element);
+
+    virtual bool init();
+
 protected:
 
     virtual void dump();

@@ -18,6 +18,7 @@ public:
     static QString strTypeCheckBox;
     static QString strTypeLabel;
     static QString strTypeGroup;
+    static QString strTypePage;
 
     void setPos(int left, int top) { m_left = left; m_top = top;}
     void setSize(int width, int height) { m_width =width; m_height = height; }
