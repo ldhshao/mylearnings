@@ -8,7 +8,7 @@ UiPage::UiPage(QWidget *parent) :
 
 UiPage::~UiPage()
 {
-    deleteAll();
+    //deleteAll();
 }
 
 void UiPage::deleteAll()

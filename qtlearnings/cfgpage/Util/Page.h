@@ -24,6 +24,7 @@ public:
 
     virtual void create(QWidget* parent);
     virtual bool init();
+    void         addToPage(UiPage* page);
 
 protected:
     void deleteAll();

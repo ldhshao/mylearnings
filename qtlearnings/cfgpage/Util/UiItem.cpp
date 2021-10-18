@@ -80,7 +80,7 @@ bool UiCfgItem::init()
         m_pWidName->show();
     }
     if (nullptr != m_pWidDes){
-        int width = QFontMetrics(m_pWidDes->font()).width(m_name);
+        int width = QFontMetrics(m_pWidDes->font()).width(m_description);
         m_pWidDes->resize(width, height());
         m_pWidDes->show();
     }

@@ -1,61 +1,1207 @@
 <PageCfgList>
     <PageCfg id="1" name="系统配置" left="0" top="0" width="600" height="1120">
-        <GroupCfgItem id="5" name="系统配置" type="groupbox"  left="4" top="0" width="530" height="200">
-            <UiCfgItem id="2" name="本机地址" type="editbox"  left="100" top="40" width="100" height="26" description="(1-247)">
+        <GroupCfgItem id="1" name="系统配置" type="groupbox"  left="4" top="0" width="530" height="200">
+            <UiCfgItem id="1" name="本机地址" type="editbox"  left="100" top="40" width="100" height="26" description="(1-247)">
             </UiCfgItem>
-            <ComboboxCfgItem id="5" name="程序用途"              left="200" top="40" width="100" height="30" params="工作面;皮带">
+            <ComboboxCfgItem id="2" name="程序用途"              left="200" top="40" width="100" height="30" params="工作面;皮带">
             </ComboboxCfgItem>
-            <UiCfgItem id="7" name="CS1是否有效" type="checkbox"  left="100" top="80" width="20" height="20">
+            <UiCfgItem id="3" name="CS1是否有效" type="checkbox"  left="100" top="80" width="20" height="20">
             </UiCfgItem>
-            <ComboboxCfgItem id="9" name="工作面选择"            left="200" top="80" width="100" height="30" params="总放;总采">
+            <ComboboxCfgItem id="4" name="工作面选择"            left="200" top="80" width="100" height="30" params="总放;总采">
             </ComboboxCfgItem>
-            <UiCfgItem id="11" name="CS1是否与其他控制器联系" type="checkbox"  left="100" top="120" width="20" height="20">
+            <UiCfgItem id="5" name="CS1是否与其他控制器联系" type="checkbox"  left="100" top="120" width="20" height="20">
             </UiCfgItem>
-            <UiCfgItem id="13" name="IO1是否有效"        type="checkbox"  left="200" top="120" width="20" height="20">
+            <UiCfgItem id="6" name="IO1是否有效"        type="checkbox"  left="200" top="120" width="20" height="20">
             </UiCfgItem>
-            <UiCfgItem id="15" name="CS1下位机数量"        type="editbox"  left="100" top="160" width="100" height="20" description="(0-15)">
+            <UiCfgItem id="7" name="CS1下位机数量"        type="editbox"  left="100" top="160" width="100" height="26" description="(0-15)">
             </UiCfgItem>
-            <UiCfgItem id="17" name="IO2是否有效"        type="checkbox"  left="200" top="160" width="20" height="20">
+            <UiCfgItem id="8" name="IO2是否有效"        type="checkbox"  left="200" top="160" width="20" height="20">
             </UiCfgItem>
-            <UiCfgItem id="20" name="CS2是否有效"        type="checkbox"  left="100" top="200" width="20" height="20">
+            <UiCfgItem id="9" name="CS2是否有效"        type="checkbox"  left="100" top="200" width="20" height="20">
             </UiCfgItem>
-            <UiCfgItem id="22" name="IN是否有效"        type="checkbox"  left="200" top="200" width="20" height="20">
+            <UiCfgItem id="10" name="IN是否有效"        type="checkbox"  left="200" top="200" width="20" height="20">
             </UiCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="8" name="test" type="groupbox"  left="4" top="204" width="400" height="300">
-        </GroupCfgItem>
-        <GroupCfgItem id="9" name="test1" type="groupbox"  left="4" top="508" width="400" height="300">
-        </GroupCfgItem>
-        <GroupCfgItem id="10" name="test2" type="groupbox"  left="4" top="812" width="400" height="300">
-        </GroupCfgItem>
-    </PageCfg>
-    <PageCfg id="2" name="工作面" left="0" top="0" width="600" height="900">
-        <GroupCfgItem id="1" name="group1" type="groupbox"  left="4" top="0" width="294" height="300">
-            <UiCfgItem id="6" name="本机地址" type="editbox"  left="100" top="40" width="100" height="26">
+            <UiCfgItem id="11" name="CS2是否与其他控制器联系" type="checkbox"  left="100" top="240" width="20" height="20">
             </UiCfgItem>
-            <ComboboxCfgItem id="7" name="程序用途" left="200" top="40" width="100" height="30" params="1;2;3">
+            <UiCfgItem id="12" name="COUT是否有效"        type="checkbox"  left="200" top="240" width="20" height="20">
+            </UiCfgItem>
+            <UiCfgItem id="13" name="CS2下位机数量"        type="editbox"  left="100" top="280" width="100" height="26" description="(0-15)">
+            </UiCfgItem>
+            <UiCfgItem id="14" name="COUT是否与其他控制器联系" type="checkbox"  left="200" top="280" width="20" height="20">
+            </UiCfgItem>
+            <UiCfgItem id="15" name="KEY是否检测" type="checkbox"  left="100" top="320" width="20" height="20">
+            </UiCfgItem>
+            <UiCfgItem id="16" name="DIO是否有效" type="checkbox"  left="200" top="320" width="20" height="20">
+            </UiCfgItem>
+            <ComboboxCfgItem id="17" name="母版类型"            left="100" top="360" width="100" height="30" params="有SP型;无SP型">
             </ComboboxCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="2" name="group2" type="groupbox"  left="302" top="0" width="294" height="300">
-            <ComboboxCfgItem id="7" name="test" left="200" top="40" width="100" height="30" params="1;2;3">
-            </ComboboxCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="3" name="group3" type="groupbox"  left="4" top="300" width="592" height="300">
-        </GroupCfgItem>
-        <GroupCfgItem id="4" name="group5" type="groupbox"  left="4" top="600" width="294" height="300">
-        </GroupCfgItem>
-        <GroupCfgItem id="5" name="group6" type="groupbox"  left="302" top="600" width="294" height="300">
-        </GroupCfgItem>
-    </PageCfg>
-    <PageCfg id="3" name="皮带" left="0" top="0" width="600" height="400">
-        <GroupCfgItem id="1" name="group1" type="groupbox"  left="4" top="0" width="294" height="300">
-            <UiCfgItem id="3" name="水电联动" type="editbox"  left="100" top="40" width="100" height="30">
+            <UiCfgItem id="18" name="DIO下位机数量" type="editbox"  left="200" top="360" width="100" height="26" description="(1-10)">
             </UiCfgItem>
-            <UiCfgItem id="4" name="系统时间" type="editbox"  left="200" top="40" width="100" height="30">
+            <UiCfgItem id="19" name="SP语音是否有效" type="checkbox"  left="100" top="400" width="20" height="20">
+            </UiCfgItem>
+            <ComboboxCfgItem id="20" name="DIO下位机与实际不符"            left="200" top="400" width="100" height="30" params="复位;不复位">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="21" name="SP模块类型"            left="100" top="440" width="100" height="30" params="语音芯片SP模块;优盘式SP模块">
+            </ComboboxCfgItem>
+            <UiCfgItem id="22" name="DIO硬连锁下位机号" type="editbox"  left="200" top="440" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="23" name="本地语音音量" type="editbox"  left="100" top="480" width="100" height="26" description="(80-100)">
+            </UiCfgItem>
+            <ComboboxCfgItem id="24" name="DIO硬连锁输出点1"            left="200" top="480" width="100" height="30" params="硬连锁;不连锁">
+            </ComboboxCfgItem>
+            <UiCfgItem id="25" name="CS1是否为长沿线" type="checkbox"  left="100" top="520" width="20" height="20">
             </UiCfgItem>
         </GroupCfgItem>
     </PageCfg>
-    <PageCfg id="4" name="皮带2" left="0" top="0" width="600" height="400">
+    <PageCfg id="2" name="系统-运行参数" left="0" top="0" width="600" height="900">
+        <GroupCfgItem id="1" name="运行参数" type="groupbox"  left="4" top="0" width="294" height="300">
+            <ComboboxCfgItem id="1" name="运行方式" left="100" top="40" width="100" height="30" params="就地;检修;点动;集控">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="2" name="语音闭锁台号播放" left="200" top="40" width="100" height="30" params="使能;不使能">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="3" name="设备运行时是否允许切换运行方式" left="100" top="80" width="100" height="30" params="不允许切换;允许切换但不停泵;允许切换并停所有设备">
+            </ComboboxCfgItem>
+            <UiCfgItem id="4" name="语音滤波时间" type="editbox"  left="200" top="80" width="100" height="26" description="0.1秒(0-600)">
+            </UiCfgItem>
+            <ComboboxCfgItem id="5" name="就地按钮亮灯方式" left="100" top="120" width="100" height="30" params="设备运行时亮;用其起才亮">
+            </ComboboxCfgItem>
+            <UiCfgItem id="6" name="B12V检测输入点" type="editbox"  left="200" top="120" width="100" height="26">
+            </UiCfgItem>
+            <ComboboxCfgItem id="7" name="下位机数量与实际不符" left="100" top="160" width="100" height="30" params="复位;不复位">
+            </ComboboxCfgItem>
+            <UiCfgItem id="8" name="B12V检测输入点去抖时间" type="editbox"  left="200" top="160" width="100" height="26" description="0.1秒(0-100)">
+            </UiCfgItem>
+            <ComboboxCfgItem id="9" name="语音信号检测选择" left="100" top="200" width="100" height="30" params="不检测;CS1;CS2;CS1+CS2">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="10" name="设备模拟量默认选择" left="200" top="200" width="100" height="30" params="滚筒转速;接近报警装置;电流;轴承温度;绕组温度;滚筒温度;冷却水流量;冷却水压力;减速机油温;减速机油位;皮带速度;电机振动加速度;皮带振动加速度;其他">
+            </ComboboxCfgItem>
+            <UiCfgItem id="11" name="语音信号保持时间" type="editbox"  left="100" top="240" width="100" height="26" description="0.1秒(0-600)">
+            </UiCfgItem>
+            <UiCfgItem id="12" name="检修模式输出点" type="editbox"  left="200" top="240" width="100" height="26">
+            </UiCfgItem>
+            <ComboboxCfgItem id="13" name="设备启动时设备连锁" left="100" top="280" width="100" height="30" params="使能;不使能">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="14" name="顺煤流启车" left="200" top="280" width="100" height="30" params="使能;不使能">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="15" name="MAX录音模式" left="100" top="320" width="100" height="30" params="使能;不使能">
+            </ComboboxCfgItem>
+            <ComboboxCfgItem id="16" name="查询线与急停线关联" left="200" top="320" width="100" height="30" params="使能;不使能">
+            </ComboboxCfgItem>
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="3" name="系统-水电联动" left="0" top="0" width="600" height="400">
+        <GroupCfgItem id="1" name="水电联动" type="groupbox"  left="4" top="0" width="294" height="300">
+            <ComboboxCfgItem id="1" name="水电联动选择" left="100" top="40" width="100" height="30" params="有效;无效">
+            </ComboboxCfgItem>
+            <UiCfgItem id="2" name="水电联动输出点" type="editbox"  left="100" top="80" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="3" name="水电联动输入点" type="editbox"  left="100" top="120" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="4" name="水电联动输入点去抖时间" type="editbox"  left="100" top="160" width="100" height="26" description="0.1秒(0-100)">
+            </UiCfgItem>
+            <UiCfgItem id="5" name="自动停泵时间" type="editbox"  left="100" top="180" width="100" height="26" description="0.1秒(0-18000)">
+            </UiCfgItem>
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="4" name="系统-系统设置" left="0" top="0" width="600" height="400">
+        <GroupCfgItem id="1" name="系统时间" type="groupbox"  left="4" top="0" width="294" height="300">
+            <UiCfgItem id="2" name="系统时间" type="editbox"  left="100" top="80" width="100" height="26">
+            </UiCfgItem>
+        </GroupCfgItem>
+        <GroupCfgItem id="2" name="网络设置" type="groupbox"  left="4" top="100" width="294" height="300">
+            <UiCfgItem id="1" name="IP地址" type="editbox"  left="100" top="40" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="2" name="子网掩码" type="editbox"  left="100" top="80" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="3" name="网关" type="editbox"  left="100" top="120" width="100" height="26">
+            </UiCfgItem>
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="5" name="工作面-基本参数" left="0" top="0" width="600" height="400">
+        <GroupCfgItem id="1" name="基本参数" type="groupbox"  left="4" top="0" width="294" height="300">
+            <ComboboxCfgItem id="1" name="变频工作面使能" left="100" top="40" width="100" height="30" params="有效;无效">
+            </ComboboxCfgItem>
+            <UiCfgItem id="2" name="近控远控输出点" type="editbox"  left="200" top="40" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="3" name="集控模式输入点" type="editbox"  left="100" top="80" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="4" name="集控输出点" type="editbox"  left="200" top="80" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="5" name="检修*模式输入点" type="editbox"  left="100" top="120" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="6" name="检修*模式输出点" type="editbox"  left="200" top="120" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="7" name="检修转载机模式输入点" type="editbox"  left="100" top="160" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="8" name="检修转载机模式输出点" type="editbox"  left="200" top="160" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="9" name="检修前部模式输入点" type="editbox"  left="100" top="200" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="10" name="检修前部模式输出点" type="editbox"  left="200" top="200" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="11" name="检修后部模式输入点" type="editbox"  left="100" top="240" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="12" name="检修后部模式输出点" type="editbox"  left="200" top="240" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="13" name="连启输入点" type="editbox"  left="100" top="280" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="14" name="连停输入点" type="editbox"  left="200" top="280" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="15" name="急停输入点" type="editbox"  left="100" top="320" width="100" height="26">
+            </UiCfgItem>
+            <UiCfgItem id="16" name="连启连停急停去抖时间" type="editbox"  left="200" top="320" width="100" height="26" description="0.1秒(0-1000)">
+            </UiCfgItem>
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="6" name="工作面-破碎机" left="0" top="0" width="600" height="400">
+    <!--
+    -->
+        <GroupCfgItem id="1" name="设备设置" type="groupbox"  left="4" top="0" width="294" height="300">
+            <GroupCfgItem id="1" name="基本参数" type="groupbox"  left="4" top="0" width="294" height="300">
+                <ComboboxCfgItem id="1" name="设备有效性" left="10" top="10" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="远停输入点1" type="editbox"  left="20" top="10" width="100" height="26" description="(0-8)">
+                </UiCfgItem>
+                <UiCfgItem id="3" name="机头就地按钮输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="4" name="远停输出点1" type="editbox"  left="20" top="20" width="100" height="26" description="(0-8)">
+                </UiCfgItem>
+                <UiCfgItem id="5" name="机尾就地按钮输入点" type="editbox"  left="10" top="30" width="100" height="26">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="连锁下设备" left="20" top="30" width="100" height="30" params="1#皮带;2#皮带;3#皮带;4#皮带;破碎机;转载机;前溜;后溜;下控制器;设备连锁输入点;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="7" name="机头就地按钮灯输出点" type="editbox"  left="10" top="40" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="8" name="设备连锁输入点" type="editbox"  left="20" top="40" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="9" name="机尾就地按钮灯输出点" type="editbox"  left="10" top="50" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="设备连锁输入点去抖时间" type="editbox"  left="20" top="50" width="100" height="26" description="0.1秒(0-100)">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="远程启停输入点" type="editbox"  left="10" top="60" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="设备连锁输出点1" type="editbox"  left="20" top="60" width="100" height="26" description="(0-10)">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="备妥输出点1" type="editbox"  left="10" top="70" width="100" height="26" description="(0-10)">
+                </UiCfgItem>
+                <UiCfgItem id="14" name="准备就绪输入点1" type="editbox"  left="20" top="70" width="100" height="26" description="(0-10)">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="CS1远停台号(最大136台)" type="editbox"  left="10" top="80" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="16" name="CS2远停台号(最大136台)" type="editbox"  left="20" top="80" width="100" height="26">
+                </UiCfgItem>
+                <ComboboxCfgItem id="17" name="与急停闭锁关系" left="10" top="90" width="100" height="30" params="CS1;CS2;CS1+CS2;DIO;CS1+DIO;CS2+DIO;CS1+CS2+DIO;不闭锁">
+                </ComboboxCfgItem>
+                <UiCfgItem id="18" name="启车预警次数" type="editbox"  left="20" top="90" width="100" height="26" description="次(0-20)">
+                </UiCfgItem>
+                <UiCfgItem id="19" name="启车预警时间" type="editbox"  left="10" top="100" width="100" height="26" description="0.1秒(0-6000)">
+                </UiCfgItem>
+                <UiCfgItem id="20" name="两次启车间隔时间" type="editbox"  left="20" top="100" width="100" height="26" description="0.1秒(0-1200)">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="2" name="高级参数" type="groupbox"  left="4" top="10" width="294" height="300">
+                <UiCfgItem id="15" name="启动完成输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="停车延时时间" type="editbox"  left="20" top="10" width="100" height="26" description="0.1秒(0-6000)">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="急停输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="准备就绪点去抖时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-100)">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="过载输出点" type="editbox"  left="10" top="30" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="远程启定点去抖时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-100)">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="机头就地按钮锁定输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="就地按钮锁定输入点去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="机尾就地按钮锁定输入点" type="editbox"  left="10" top="50" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="就地按钮脉冲保持最短时间" type="editbox"  left="20" top="50" width="100" height="26" description="0.1秒(0-10)">
+                </UiCfgItem>
+                <ComboboxCfgItem id="1" name="备妥输出点与准备就绪点、连锁关系" left="10" top="60" width="100" height="30" params="联系;不联系">
+                </ComboboxCfgItem>
+                <UiCfgItem id="15" name="就地按钮脉冲保持最长时间" type="editbox"  left="20" top="60" width="100" height="26" description="0.1秒(5-50)">
+                </UiCfgItem>
+                <ComboboxCfgItem id="1" name="准备就绪点在检修模式" left="10" top="70" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="15" name="远停输入点去抖时间" type="editbox"  left="20" top="70" width="100" height="26">
+                </UiCfgItem>
+                <UiCfgItem id="15" name="停车预警次数" type="editbox"  left="10" top="80" width="100" height="26">
+                </UiCfgItem>
+                <ComboboxCfgItem id="1" name="在就地/检修方式下,酒店牛有效时是否取消键盘启停功能" left="20" top="80" width="100" height="30" params="是;否">
+                </ComboboxCfgItem>
+            </GroupCfgItem>
+        </GroupCfgItem>
+        <GroupCfgItem id="1" name="主电机" type="groupbox"  left="4" top="10" width="294" height="300">
+            <GroupCfgItem id="1" name="电机1" type="groupbox"  left="4" top="0" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机2" type="groupbox"  left="4" top="10" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机3" type="groupbox"  left="4" top="20" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机4" type="groupbox"  left="4" top="30" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机5" type="groupbox"  left="4" top="40" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机6" type="groupbox"  left="4" top="50" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机7" type="groupbox"  left="4" top="60" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电机8" type="groupbox"  left="4" top="70" width="294" height="300">
+                <GroupCfgItem id="1" name="电机参数" type="groupbox"  left="10" top="0" width="294" height="300">
+                    <UiCfgItem id="1" name="电机控制输出点" type="editbox"  left="10" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="英式先导启车输出点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电机启动时间间隔" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电机反馈输入点" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="电机反馈等待时间" type="editbox"  left="10" top="50" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="电机反馈输入点去抖时间" type="editbox"  left="10" top="60" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="减速机冷却水阀控制输出点" type="editbox"  left="10" top="70" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="英式点闭合保持时间" type="editbox"  left="10" top="80" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="英式点延时闭合时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(5-50)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="电流" type="groupbox"  left="20" top="0" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="电机过载输入点类型" left="10" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="电流故障保护延时时间" type="editbox"  left="20" top="10" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="电流输入点" type="editbox"  left="10" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="电流量程" type="editbox"  left="20" top="20" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="5" name="电机过载保护类型" left="10" top="30" width="100" height="30" params="停车;不停车">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="6" name="电机额定电流" type="editbox"  left="20" top="30" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="电流过载保护延时时间" type="editbox"  left="10" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="电流过载值" type="editbox"  left="20" top="40" width="100" height="26">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="电流故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="电流单位" type="editbox"  left="20" top="50" width="100" height="26">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="轴承温度" type="groupbox"  left="10" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="绕组温度" type="groupbox"  left="20" top="20" width="294" height="300">
+                    <ComboboxCfgItem id="1" name="保护使能" left="10" top="10" width="100" height="30" params="使能;不使能">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="2" name="报警值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="量程最小值" type="editbox"  left="10" top="20" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="停车值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(0-100)">
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="量程最大值" type="editbox"  left="10" top="30" width="100" height="26" description="℃(0-300)">
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-6000)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="7" name="传感器动作保护类型" left="10" top="40" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="8" name="故障去抖时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-100)">
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器故障保护类型" left="10" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="温度输入点1" type="editbox"  left="20" top="50" width="100" height="26" description="(0-3)">
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+        </GroupCfgItem>
+        <GroupCfgItem id="1" name="高低速" type="groupbox"  left="4" top="20" width="294" height="300">
+             <ComboboxCfgItem id="1" name="软启动有效性" left="10" top="10" width="100" height="30" params="有效;无效">
+             </ComboboxCfgItem>
+             <UiCfgItem id="2" name="低速锁定输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+             </UiCfgItem>
+             <UiCfgItem id="3" name="低速锁定输入点去抖时间" type="editbox"  left="10" top="20" width="100" height="26" description="0.1秒(0-100)">
+             </UiCfgItem>
+             <ComboboxCfgItem id="4" name="高低速工作方式" left="20" top="20" width="100" height="30" params="低速方式;高低速方式">
+             </ComboboxCfgItem>
+             <UiCfgItem id="5" name="低速运行时间" type="editbox"  left="10" top="30" width="100" height="26" description="0.1秒(0-6000)">
+             </UiCfgItem>
+             <UiCfgItem id="6" name="低高转换最长允许时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(5-50)">
+             </UiCfgItem>
+        </GroupCfgItem>
+        <GroupCfgItem id="1" name="VOITH" type="groupbox"  left="4" top="30" width="294" height="300">
+            <GroupCfgItem id="1" name="基本参数" type="groupbox"  left="4" top="10" width="294" height="300">
+                <ComboboxCfgItem id="1" name="软启动有效性" left="10" top="10" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="阀反馈去抖时间" type="editbox"  left="20" top="10" width="100" height="26" description="0.1秒(0-30)"> 
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="耦合器有效性(1#)" left="10" top="20" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="4" name="阀反馈等待时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-50)"> 
+                </UiCfgItem>
+                <ComboboxCfgItem id="5" name="耦合器有效性(2#)" left="10" top="30" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="6" name="速度正常后测温延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-10)"> 
+                </UiCfgItem>
+                <ComboboxCfgItem id="7" name="耦合器有效性(3#)" left="10" top="40" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="8" name="低水压-充液到水位满时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-500)"> 
+                </UiCfgItem>
+                <ComboboxCfgItem id="9" name="耦合器有效性(4#)" left="10" top="50" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <UiCfgItem id="10" name="高水压-充液到水位满时间" type="editbox"  left="20" top="50" width="100" height="26" description="0.1秒(0-350)"> 
+                </UiCfgItem>
+                <ComboboxCfgItem id="11" name="耦合器有效性(5#)" left="10" top="60" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="12" name="主电机电压等级" left="20" top="60" width="100" height="26" description="V" params="1140;3300;6000;10000"> 
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="13" name="耦合器有效性(6#)" left="10" top="70" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="14" name="耦合器有效性(7#)" left="10" top="80" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="15" name="耦合器有效性(8#)" left="10" top="90" width="100" height="30" params="有效;无效">
+                </ComboboxCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="阀参数" type="groupbox"  left="4" top="20" width="294" height="300">
+                <GroupCfgItem id="1" name="1#阀" type="groupbox"  left="1" top="1" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="2#阀" type="groupbox"  left="2" top="1" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="3#阀" type="groupbox"  left="1" top="2" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="4#阀" type="groupbox"  left="2" top="2" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="5#阀" type="groupbox"  left="1" top="3" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="6#阀" type="groupbox"  left="2" top="3" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="7#阀" type="groupbox"  left="1" top="4" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+                <GroupCfgItem id="1" name="8#阀" type="groupbox"  left="2" top="4" width="294" height="300">
+                    <UiCfgItem id="1" name="充液阀输出点" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="充液阀常闭反馈输入点" type="editbox"  left="20" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="充液阀常开反馈输入点" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="充液阀延时动作时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                </GroupCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="电流参数" type="groupbox"  left="4" top="30" width="294" height="300">
+                    <UiCfgItem id="1" name="电机空载电流" type="editbox"  left="10" top="10" width="100" height="26" description="A(0-160)"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="2" name="启动过程是否检测电流" left="20" top="10" width="100" height="30" params="检测;不检测">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="3" name="功率不平衡停车延时时间" type="editbox"  left="30" top="10" width="100" height="26" description="0.1秒(0-200)"> 
+                    </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="水压参数" type="groupbox"  left="4" top="40" width="294" height="300">
+                    <UiCfgItem id="1" name="水压输入点(1#VOITH)" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="水压输入点(2#VOITH)" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="水压输入点(3#VOITH)" type="editbox"  left="10" top="30" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="水压输入点(4#VOITH)" type="editbox"  left="10" top="40" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="水压输入点(5#VOITH)" type="editbox"  left="10" top="50" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="水压输入点(6#VOITH)" type="editbox"  left="10" top="60" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="水压输入点(7#VOITH)" type="editbox"  left="10" top="70" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="水压输入点(8#VOITH)" type="editbox"  left="10" top="80" width="100" height="26"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="9" name="传感器类型" left="20" top="10" width="100" height="30" params="模拟量;开关量">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="10" name="水压量程" type="editbox"  left="20" top="20" width="100" height="26" description="Bar(0-600)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="11" name="传感器动作保护延时时间" type="editbox"  left="20" top="30" width="100" height="26" description="0.1秒(0-1000)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="12" name="传感器故障保护延时时间" type="editbox"  left="20" top="40" width="100" height="26" description="0.1秒(0-1000)"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="13" name="传感器故障保护类型" left="20" top="50" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="速度参数" type="groupbox"  left="4" top="50" width="294" height="300">
+                    <UiCfgItem id="1" name="速度输入点1" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="速度输入点2" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="速度输入点3" type="editbox"  left="10" top="30" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="速度输入点4" type="editbox"  left="10" top="40" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="速度输入点5" type="editbox"  left="10" top="50" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="速度输入点6" type="editbox"  left="10" top="60" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="速度输入点7" type="editbox"  left="10" top="70" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="速度输入点8" type="editbox"  left="10" top="80" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="速度量程" type="editbox"  left="20" top="10" width="100" height="26" description="转(0-6000)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="10" name="检测完成速度时间" type="editbox"  left="20" top="20" width="100" height="26" description="0.1秒(0-1200)"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="11" name="启动过程是否检测速度" left="20" top="30" width="100" height="30" params="检测;不检测">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="12" name="运行中最小速度值" type="editbox"  left="20" top="40" width="100" height="26" description="转(0-1480)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="13" name="运行欠速停车延时时间" type="editbox"  left="20" top="50" width="100" height="26" description="0.1秒(0-6000)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="14" name="传感器故障保护延时时间" type="editbox"  left="20" top="60" width="100" height="26" description="0.1秒(0-1000)"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="15" name="传感器故障保护类型" left="20" top="70" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="温度参数" type="groupbox"  left="4" top="60" width="294" height="300">
+                    <UiCfgItem id="1" name="温度输入点(1#VOITH)" type="editbox"  left="10" top="10" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="温度输入点(2#VOITH)" type="editbox"  left="10" top="20" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="3" name="温度输入点(3#VOITH)" type="editbox"  left="10" top="30" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="4" name="温度输入点(4#VOITH)" type="editbox"  left="10" top="40" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="5" name="温度输入点(5#VOITH)" type="editbox"  left="10" top="50" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="6" name="温度输入点(6#VOITH)" type="editbox"  left="10" top="60" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="7" name="温度输入点(7#VOITH)" type="editbox"  left="10" top="70" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="8" name="温度输入点(8#VOITH)" type="editbox"  left="10" top="80" width="100" height="26"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="9" name="传感器故障保护延时时间" type="editbox"  left="10" top="90" width="100" height="26" description="0.1秒(0-1000)"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="10" name="传感器故障保护类型" left="10" top="100" width="100" height="30" params="报警;报警正常停车;报警紧急停车;无">
+                    </ComboboxCfgItem>
+                    <UiCfgItem id="11" name="量程最大值" type="editbox"  left="20" top="10" width="100" height="26" description="℃(-20-600)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="12" name="量程最小值" type="editbox"  left="20" top="20" width="100" height="26" description="℃(-20-600)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="13" name="超温停车温度" type="editbox"  left="20" top="30" width="100" height="26" description="℃(0-100)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="14" name="超温换水温度" type="editbox"  left="20" top="40" width="100" height="26" description="℃(0-80)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="15" name="换水停止温度" type="editbox"  left="20" top="50" width="100" height="26" description="℃(0-55)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="16" name="超温停车延时时间" type="editbox"  left="20" top="60" width="100" height="26" description="0.1秒(0-3000)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="17" name="低水压时-最大换水时间" type="editbox"  left="20" top="70" width="100" height="26" description="0.1秒(0-3000)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="18" name="高水压时-最大换水时间" type="editbox"  left="20" top="80" width="100" height="26" description="0.1秒(0-2400)"> 
+                    </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="1" name="特殊参数" type="groupbox"  left="4" top="70" width="294" height="300">
+                    <UiCfgItem id="1" name="运行过程中充液保持时间" type="editbox"  left="10" top="10" width="100" height="26" description="0.1秒(15-150)"> 
+                    </UiCfgItem>
+                    <UiCfgItem id="2" name="功率不平衡差值" type="editbox"  left="20" top="10" width="100" height="26" description="(0-100%)"> 
+                    </UiCfgItem>
+                    <ComboboxCfgItem id="3" name="充液间隔计算方式" left="30" top="10" width="100" height="30" params="电流">
+                    </ComboboxCfgItem>
+            </GroupCfgItem>
+        </GroupCfgItem>
+        <GroupCfgItem id="1" name="变频" type="groupbox"  left="4" top="40" width="294" height="300">
+        </GroupCfgItem>
+        <GroupCfgItem id="1" name="设备保护" type="groupbox"  left="4" top="50" width="294" height="300">
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="7" name="工作面-转载机" left="0" top="0" width="600" height="400">
+        <GroupCfgItem id="1" name="group21" type="groupbox"  left="4" top="0" width="294" height="300">
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="8" name="工作面-前溜" left="0" top="0" width="600" height="400">
+        <GroupCfgItem id="1" name="group21" type="groupbox"  left="4" top="0" width="294" height="300">
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="9" name="工作面-后溜" left="0" top="0" width="600" height="400">
+        <GroupCfgItem id="1" name="group21" type="groupbox"  left="4" top="0" width="294" height="300">
+        </GroupCfgItem>
+    </PageCfg>
+    <PageCfg id="10" name="工作面-采煤机" left="0" top="0" width="600" height="400">
         <GroupCfgItem id="1" name="group21" type="groupbox"  left="4" top="0" width="294" height="300">
         </GroupCfgItem>
     </PageCfg>

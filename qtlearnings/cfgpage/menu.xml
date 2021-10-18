@@ -24,21 +24,81 @@
         </XmlItem>
     </XmlList>
     <XmlList name="皮带">
-        <XmlItem id="5" name="menu31">
+        <XmlItem id="11" name="1#皮带">
         </XmlItem>
-        <XmlItem id="6" name="menu32">
+        <XmlItem id="12" name="2#皮带">
         </XmlItem>
-        <XmlItem id="7" name="menu33">
+        <XmlItem id="13" name="3#皮带">
         </XmlItem>
-        <XmlItem id="8" name="menu34">
+        <XmlItem id="14" name="4#皮带">
+        </XmlItem>
+        <XmlItem id="15" name="5#皮带">
+        </XmlItem>
+        <XmlItem id="16" name="6#皮带">
+        </XmlItem>
+        <XmlItem id="17" name="7#皮带">
+        </XmlItem>
+        <XmlItem id="18" name="8#皮带">
         </XmlItem>
     </XmlList>
     <XmlList name="泵/单点">
-        <XmlList name="menu41">
-        </XmlList>
-        <XmlList name="menu42">
-        </XmlList>
-        <XmlList name="menu43">
-        </XmlList>
+        <XmlItem id="19" name="清水泵">
+        </XmlItem>
+        <XmlItem  id="20" name="乳化泵">
+        </XmlItem>
+        <XmlItem  id="21" name="单点">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="通讯">
+        <XmlItem id="22" name="串口1主机">
+        </XmlItem>
+        <XmlItem id="23" name="串口1从机">
+        </XmlItem>
+        <XmlItem id="24" name="串口2主机">
+        </XmlItem>
+        <XmlItem id="25" name="串口2从机">
+        </XmlItem>
+        <XmlItem id="26" name="网络从机">
+        </XmlItem>
+        <XmlItem id="27" name="Modbus网关">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="煤仓">
+        <XmlItem id="28" name="1#煤仓">
+        </XmlItem>
+        <XmlItem id="29" name="2#煤仓">
+        </XmlItem>
+        <XmlItem id="30" name="3#煤仓">
+        </XmlItem>
+        <XmlItem id="31" name="4#煤仓">
+        </XmlItem>
+        <XmlItem id="32" name="5#煤仓">
+        </XmlItem>
+        <XmlItem id="33" name="6#煤仓">
+        </XmlItem>
+        <XmlItem id="34" name="7#煤仓">
+        </XmlItem>
+        <XmlItem id="35" name="8#煤仓">
+        </XmlItem>
+        <XmlItem id="36" name="9#煤仓">
+        </XmlItem>
+        <XmlItem id="37" name="10#煤仓">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="温度巡检仪">
+        <XmlItem id="38" name="1#巡检仪">
+        </XmlItem>
+        <XmlItem id="39" name="3#巡检仪">
+        </XmlItem>
+    </XmlList>
+    <XmlList name="帮助">
+        <XmlItem id="40" name="设置点表">
+        </XmlItem>
+        <XmlItem id="41" name="历史记录">
+        </XmlItem>
+        <XmlItem id="42" name="键盘说明">
+        </XmlItem>
+        <XmlItem id="43" name="画面配置">
+        </XmlItem>
     </XmlList>
 </XmlList>

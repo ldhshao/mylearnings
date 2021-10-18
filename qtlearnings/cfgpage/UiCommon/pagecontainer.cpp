@@ -48,16 +48,23 @@ void PageContainer::setContent(UiPage *page)
     clear();
 
     pContentWidget = page;
+    int iBtnCnt = 0, tagHeightMax = height() / 2, tagHeight;
     QWidget *w = page->getHead();
     while (nullptr != w){
         QGroupBox *pGroup = dynamic_cast<QGroupBox*>(w);
-        if (nullptr != pGroup){
+        if (nullptr != pGroup && page == pGroup->parent()){
             addWidgetLink(pGroup, pGroup->title());
             subWidList.push_back(w);
+            iBtnCnt++;
         }
         w = page->getNext();
     }
     pScrollArea->setWidget(pContentWidget);
+
+    tagHeight = iBtnCnt * 40;
+    if (tagHeight > tagHeightMax)
+        tagHeight = tagHeightMax;
+    ui->tagWidget->resize(ui->tagWidget->width(), tagHeight);
 }
 void PageContainer::clear()
 {
@@ -98,7 +105,9 @@ void PageContainer::slot_vertScrollBarValueChanged(int val)
 {
     if (!subWidList.empty()){
         for (list<QWidget*>::const_iterator it = subWidList.cbegin(); it != subWidList.end(); it++){
-            if ((*it)->pos().ry() >= val){
+            int top = (*it)->pos().ry();
+            int bottom = top + (*it)->size().height();
+            if (top <= val && val <= bottom){
                 emit sig_selectButton(*it);
                 break;
             }
