@@ -43,5 +43,6 @@ private:
     PageContainer                pageContainer;
     list<UiPage*>                pageList;
     map<XmlItem*, UiPage*>       mapMenuToPage;
+    unsigned short               paramTable[512];
 };
 #endif // MAINWINDOW_H

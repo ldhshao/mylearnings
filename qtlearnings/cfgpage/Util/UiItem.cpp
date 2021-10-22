@@ -7,6 +7,9 @@
 #include <QLabel>
 #include <QDebug>
 #include "UiCommon/uistatectl.h"
+#include "UiCommon/ckeydnedit.h"
+#include "UiCommon/ckeydncombobox.h"
+#include "UiCommon/cbinder.h"
 
 QString UiCfgItem::strTypeEdit = "editbox";
 QString UiCfgItem::strTypeCombobox = "combobox";
@@ -24,10 +27,12 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     setIntValue(m_top, element, "top");
     setIntValue(m_width, element, "width");
     setIntValue(m_height, element, "height");
+    setIntValue(m_dataidx, element, "dataidx");
     //check value
 
     setStrValue(m_type, element, "type");
     setStrValue(m_description, element, "description");
+    setStrValue(m_defaultVal, element, "defaultvalue");
     //check value
 
     return true;
@@ -42,10 +47,11 @@ void UiCfgItem::create(QWidget* parent)
             m_pWidget = pBox;
         }else if (m_type == UiCfgItem::strTypeEdit){
             //ctl = new QLineEdit();
-            m_pWidget = new CStateLineEdit(parent);
+            //m_pWidget = new CStateLineEdit(parent);
+            m_pWidget = new CKeyDnEdit(parent);
         }else if (m_type == UiCfgItem::strTypeCombobox){
             //ctl = new QComboBox();
-            m_pWidget = new CStateComboBox(parent);
+            m_pWidget = new CKeyDnComboBox(parent);
         }else if (m_type == UiCfgItem::strTypeGroup){
             QGroupBox* pBox = new QGroupBox(parent);
             pBox->setTitle(getName());
@@ -87,6 +93,27 @@ bool UiCfgItem::init()
 
     return true;
 }
+bool UiCfgItem::initData(unsigned short* pStAddr)
+{
+    unsigned short usMin = 0, usMax = 0;
+    int iPos0 =  m_description.indexOf("(");
+    int iPos1 =  m_description.indexOf(")");
+    if (-1 < iPos0 && iPos0 < iPos1){
+        QString strRange = m_description.mid(iPos0+1, iPos1 - iPos0 - 1).remove(' ');
+        iPos0 = strRange.indexOf(QRegExp("\\d+-\\d+"));
+        if (-1< iPos0){
+            iPos1 = strRange.indexOf("-", iPos0);
+            usMin = static_cast<unsigned short>(strRange.mid(iPos0, iPos1 - iPos0).toInt());
+            usMax = static_cast<unsigned short>(strRange.mid(iPos1 + 1).toInt());
+            qDebug()<<"name "<<m_name<<" min "<<usMin<<" max "<<usMax;
+            CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+            CBinder::BindEdit(pEdit, pStAddr+m_dataidx, usMin, usMax);
+            if (!m_defaultVal.isEmpty())
+                pEdit->setEditText(m_defaultVal);
+        }
+    }
+    return true;
+}
 
 //ComboboxItem
 HNDZ_IMPLEMENT_DYNCREATE(ComboboxCfgItem, UiCfgItem)
@@ -104,14 +131,21 @@ bool ComboboxCfgItem::initFromDomElement(QDomElement element)
 
     return true;
 }
-bool ComboboxCfgItem::init()
+//bool ComboboxCfgItem::init()
+//{
+//    if (UiCfgItem::init() && !m_params.isEmpty()){
+//        QComboBox *pBox = dynamic_cast<QComboBox*>(m_pWidget);
+//        if (nullptr != pBox){
+//            pBox->insertItems(0, m_params);
+//        }
+//    }
+//
+//    return true;
+//}
+bool ComboboxCfgItem::initData(unsigned short *pStAddr)
 {
-    if (UiCfgItem::init() && !m_params.isEmpty()){
-        QComboBox *pBox = dynamic_cast<QComboBox*>(m_pWidget);
-        if (nullptr != pBox){
-            pBox->insertItems(0, m_params);
-        }
+    CKeyDnComboBox* pBox = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
+    if (nullptr != pBox){
+        CBinder::BindComboBox(pBox, pStAddr+m_dataidx, m_params, m_defaultVal);
     }
-
-    return true;
 }

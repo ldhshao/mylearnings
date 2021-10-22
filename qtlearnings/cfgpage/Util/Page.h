@@ -24,6 +24,7 @@ public:
 
     virtual void create(QWidget* parent);
     virtual bool init();
+    virtual bool initData(unsigned short* pStAddr);//init data
     void         addToPage(UiPage* page);
 
 protected:
@@ -56,12 +57,14 @@ protected:
 class PageCfgList : public PageCfg
 {
 public:
-    PageCfgList()  {}
+    PageCfgList(unsigned short* paramTbl) : m_pParamTbl(paramTbl) {}
     virtual ~PageCfgList();
 
     bool createAllPage(list<UiPage*> &pageList);
 
     bool readXmlFile(QString strFile);
+protected:
+    unsigned short* m_pParamTbl;
 };
 #endif
 

@@ -7,7 +7,7 @@ class UiCfgItem : public XmlItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(UiCfgItem)
-    UiCfgItem(UiCfgItem *parent = nullptr) : m_left(0), m_top(0), m_width(0), m_height(0),
+    UiCfgItem(UiCfgItem *parent = nullptr) : m_left(0), m_top(0), m_width(0), m_height(0),m_dataidx(-1),
                   m_pWidget(nullptr), m_pWidName(nullptr), m_pWidDes(nullptr){
         m_pParent = parent;
     }
@@ -26,6 +26,7 @@ public:
     int  top() {	return m_top;	}
     int  width() {	return m_width;	}
     int  height() {	return m_height;	}
+    int  dataidx() { return m_dataidx; }
     bool isType(const QString &type) {	return m_type == type; }
     QWidget* getWidget() {	return m_pWidget;	}
     QWidget* getWidName() {	return m_pWidName;	}
@@ -35,11 +36,14 @@ public:
 
     virtual void create(QWidget* parent);
     virtual bool init();
+    virtual bool initData(unsigned short* pStAddr);//init data
 
 protected:
     int m_left, m_top, m_width, m_height;
+    int m_dataidx;
     QString m_type;
     QString m_description;
+    QString m_defaultVal;
     UiCfgItem  *m_pParent;//delete later
     QWidget *m_pWidget;
     QWidget *m_pWidName;
@@ -55,7 +59,8 @@ public:
     virtual bool initFromDomElement(QDomElement element);
 
     //virtual QWidget* create();
-    virtual bool init();
+    //virtual bool init();
+    virtual bool initData(unsigned short* pStAddr);//init data
 
 protected:
     QStringList m_params;

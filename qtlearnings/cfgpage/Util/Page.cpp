@@ -313,6 +313,21 @@ bool GroupCfgItem::init()
     return true;
 }
 
+bool GroupCfgItem::initData(unsigned short* pStAddr)
+{
+    bool bOK = false;
+    if (-1 != m_dataidx){
+        unsigned short *pAddr = pStAddr + m_dataidx;
+        list<UiCfgItem*>::iterator it = m_children.begin();
+        for (; it != m_children.end(); it++){
+            (*it)->initData(pAddr);
+        }
+        bOK = true;
+    }
+
+    return bOK;
+}
+
 void GroupCfgItem::addToPage(UiPage* page)
 {
     list<UiCfgItem*>::iterator it = m_children.begin();
@@ -477,7 +492,7 @@ bool PageCfgList::createAllPage(list<UiPage*> &pageList)
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         PageCfg *page = dynamic_cast<PageCfg*>(*it);
         UiPage *w = page->createPage();
-        //w->hide();
+        page->initData(m_pParamTbl);
         pageList.push_back(w);
     }
     return true;

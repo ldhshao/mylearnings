@@ -1,55 +1,55 @@
 <PageCfgList>
-    <PageCfg id="1" name="系统配置" left="0" top="0" width="600" height="1120">
-        <GroupCfgItem id="1" name="系统配置" type="groupbox"  left="4" top="0" width="530" height="200">
-            <UiCfgItem id="1" name="本机地址" type="editbox"  left="100" top="40" width="100" height="26" description="(1-247)">
+    <PageCfg id="1" name="系统配置" left="0" top="0" width="600" height="1120" dataidx="0">
+        <GroupCfgItem id="1" name="系统配置" type="groupbox"  left="4" top="0" width="530" height="200" dataidx="0">
+            <UiCfgItem id="1" name="本机地址" type="editbox"  left="100" top="40" width="100" height="26" description="(1-247 )" defaultvalue="1" dataidx="0">
             </UiCfgItem>
-            <ComboboxCfgItem id="2" name="程序用途"              left="200" top="40" width="100" height="30" params="工作面;皮带">
+            <ComboboxCfgItem id="2" name="程序用途"              left="200" top="40" width="100" height="30" params="工作面;皮带" defaultvalue="工作面" dataidx="1">
             </ComboboxCfgItem>
-            <UiCfgItem id="3" name="CS1是否有效" type="checkbox"  left="100" top="80" width="20" height="20">
+            <UiCfgItem id="3" name="CS1是否有效" type="checkbox"  left="100" top="80" width="20" height="20" dataidx="2">
             </UiCfgItem>
-            <ComboboxCfgItem id="4" name="工作面选择"            left="200" top="80" width="100" height="30" params="总放;总采">
+            <ComboboxCfgItem id="4" name="工作面选择"            left="200" top="80" width="100" height="30" params="总放;总采" defaultvalue="test" dataidx="3">
             </ComboboxCfgItem>
-            <UiCfgItem id="5" name="CS1是否与其他控制器联系" type="checkbox"  left="100" top="120" width="20" height="20">
+            <UiCfgItem id="5" name="CS1是否与其他控制器联系" type="checkbox"  left="100" top="120" width="20" height="20" dataidx="4">
             </UiCfgItem>
-            <UiCfgItem id="6" name="IO1是否有效"        type="checkbox"  left="200" top="120" width="20" height="20">
+            <UiCfgItem id="6" name="IO1是否有效"        type="checkbox"  left="200" top="120" width="20" height="20" dataidx="5">
             </UiCfgItem>
-            <UiCfgItem id="7" name="CS1下位机数量"        type="editbox"  left="100" top="160" width="100" height="26" description="(0-15)">
+            <UiCfgItem id="7" name="CS1下位机数量"        type="editbox"  left="100" top="160" width="100" height="26" description="(0-15)" dataidx="6">
             </UiCfgItem>
-            <UiCfgItem id="8" name="IO2是否有效"        type="checkbox"  left="200" top="160" width="20" height="20">
+            <UiCfgItem id="8" name="IO2是否有效"        type="checkbox"  left="200" top="160" width="20" height="20" dataidx="7">
             </UiCfgItem>
-            <UiCfgItem id="9" name="CS2是否有效"        type="checkbox"  left="100" top="200" width="20" height="20">
+            <UiCfgItem id="9" name="CS2是否有效"        type="checkbox"  left="100" top="200" width="20" height="20" dataidx="8">
             </UiCfgItem>
-            <UiCfgItem id="10" name="IN是否有效"        type="checkbox"  left="200" top="200" width="20" height="20">
+            <UiCfgItem id="10" name="IN是否有效"        type="checkbox"  left="200" top="200" width="20" height="20" dataidx="9">
             </UiCfgItem>
-            <UiCfgItem id="11" name="CS2是否与其他控制器联系" type="checkbox"  left="100" top="240" width="20" height="20">
+            <UiCfgItem id="11" name="CS2是否与其他控制器联系" type="checkbox"  left="100" top="240" width="20" height="20" dataidx="10">
             </UiCfgItem>
-            <UiCfgItem id="12" name="COUT是否有效"        type="checkbox"  left="200" top="240" width="20" height="20">
+            <UiCfgItem id="12" name="COUT是否有效"        type="checkbox"  left="200" top="240" width="20" height="20" dataidx="11">
             </UiCfgItem>
-            <UiCfgItem id="13" name="CS2下位机数量"        type="editbox"  left="100" top="280" width="100" height="26" description="(0-15)">
+            <UiCfgItem id="13" name="CS2下位机数量"        type="editbox"  left="100" top="280" width="100" height="26" description="(0- 15)" dataidx="12">
             </UiCfgItem>
-            <UiCfgItem id="14" name="COUT是否与其他控制器联系" type="checkbox"  left="200" top="280" width="20" height="20">
+            <UiCfgItem id="14" name="COUT是否与其他控制器联系" type="checkbox"  left="200" top="280" width="20" height="20" dataidx="13">
             </UiCfgItem>
-            <UiCfgItem id="15" name="KEY是否检测" type="checkbox"  left="100" top="320" width="20" height="20">
+            <UiCfgItem id="15" name="KEY是否检测" type="checkbox"  left="100" top="320" width="20" height="20" dataidx="14">
             </UiCfgItem>
-            <UiCfgItem id="16" name="DIO是否有效" type="checkbox"  left="200" top="320" width="20" height="20">
+            <UiCfgItem id="16" name="DIO是否有效" type="checkbox"  left="200" top="320" width="20" height="20" dataidx="15">
             </UiCfgItem>
-            <ComboboxCfgItem id="17" name="母版类型"            left="100" top="360" width="100" height="30" params="有SP型;无SP型">
+            <ComboboxCfgItem id="17" name="母版类型"            left="100" top="360" width="100" height="30" params="有SP型;无SP型" dataidx="16">
             </ComboboxCfgItem>
-            <UiCfgItem id="18" name="DIO下位机数量" type="editbox"  left="200" top="360" width="100" height="26" description="(1-10)">
+            <UiCfgItem id="18" name="DIO下位机数量" type="editbox"  left="200" top="360" width="100" height="26" description="(1-10)" dataidx="17">
             </UiCfgItem>
-            <UiCfgItem id="19" name="SP语音是否有效" type="checkbox"  left="100" top="400" width="20" height="20">
+            <UiCfgItem id="19" name="SP语音是否有效" type="checkbox"  left="100" top="400" width="20" height="20" dataidx="18">
             </UiCfgItem>
-            <ComboboxCfgItem id="20" name="DIO下位机与实际不符"            left="200" top="400" width="100" height="30" params="复位;不复位">
+            <ComboboxCfgItem id="20" name="DIO下位机与实际不符"            left="200" top="400" width="100" height="30" params="复位;不复位" dataidx="19">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="21" name="SP模块类型"            left="100" top="440" width="100" height="30" params="语音芯片SP模块;优盘式SP模块">
+            <ComboboxCfgItem id="21" name="SP模块类型"            left="100" top="440" width="100" height="30" params="语音芯片SP模块;优盘式SP模块" dataidx="20">
             </ComboboxCfgItem>
-            <UiCfgItem id="22" name="DIO硬连锁下位机号" type="editbox"  left="200" top="440" width="100" height="26">
+            <UiCfgItem id="22" name="DIO硬连锁下位机号" type="editbox"  left="200" top="440" width="100" height="26" dataidx="21">
             </UiCfgItem>
-            <UiCfgItem id="23" name="本地语音音量" type="editbox"  left="100" top="480" width="100" height="26" description="(80-100)">
+            <UiCfgItem id="23" name="本地语音音量" type="editbox"  left="100" top="480" width="100" height="26" description="(80-100)" dataidx="22">
             </UiCfgItem>
-            <ComboboxCfgItem id="24" name="DIO硬连锁输出点1"            left="200" top="480" width="100" height="30" params="硬连锁;不连锁">
+            <ComboboxCfgItem id="24" name="DIO硬连锁输出点1"            left="200" top="480" width="100" height="30" params="硬连锁;不连锁" dataidx="23">
             </ComboboxCfgItem>
-            <UiCfgItem id="25" name="CS1是否为长沿线" type="checkbox"  left="100" top="520" width="20" height="20">
+            <UiCfgItem id="25" name="CS1是否为长沿线" type="checkbox"  left="100" top="520" width="20" height="20" dataidx="24">
             </UiCfgItem>
         </GroupCfgItem>
     </PageCfg>

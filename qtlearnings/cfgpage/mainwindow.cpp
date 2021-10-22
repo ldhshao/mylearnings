@@ -93,7 +93,7 @@ void MainWindow::initMenu()
 }
 void MainWindow::initPage()
 {
-    PageCfgList pgeCfgList;
+    PageCfgList pgeCfgList(paramTable);
     pgeCfgList.readXmlFile(PAGE_CFG_FILEPATH);
     pgeCfgList.getChildrenCount();
     pgeCfgList.createAllPage(pageList);

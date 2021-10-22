@@ -12,7 +12,7 @@ class CStateCtl
 {
 public:
     CStateCtl() : pManager(nullptr) {}
-    ~CStateCtl(){}
+    virtual ~CStateCtl(){}
 
     enum CTL_STATE{
         CTLS_UNSELECT,
@@ -61,7 +61,7 @@ class CStateComboBox : public QComboBox, public CStateCtl
 
 public:
     CStateComboBox(QWidget *parent = nullptr);
-    ~CStateComboBox(){}
+    virtual ~CStateComboBox(){}
 
     virtual void setState(CTL_STATE state);
 
