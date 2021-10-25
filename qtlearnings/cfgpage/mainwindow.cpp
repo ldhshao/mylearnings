@@ -4,6 +4,7 @@
 #include "Util/Page.h"
 #include "UiCommon/uipage.h"
 #include "UiCommon/qkeytools.h"
+#include "Util/devcfg.h"
 
 #define MENU_CFG_FILEPATH "/home/hndz-dhliu/test/menu.xml"
 #define PAGE_CFG_FILEPATH "/home/hndz-dhliu/test/page.xml"
@@ -108,6 +109,10 @@ void MainWindow::initPage()
         }
         pItem = pgeCfgList.getNext();
     }
+
+    DevCfgList devCfg;
+    devCfg.readDevCfgFile("/home/hndz-dhliu/test/system.xml");
+    devCfg.dump();
 }
 
 void MainWindow::slot_button_clicked(CStateButton* pBtn)

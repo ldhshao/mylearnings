@@ -1,0 +1,18 @@
+<DevCfgList>
+    <DevCfgItem name="系统" type="system">
+    </DevCfgItem>
+    <DevCfgList name="posuiji" type="workface">
+        <DevCfgList name="dianjizu" type="motorgroup">
+            <DevCfgItem name="1#dianji" type="motor">
+            </DevCfgItem>
+            <DevCfgItem name="2#dianji" type="motor">
+            </DevCfgItem>
+        </DevCfgList>
+        <DevCfgList name="posuiji-voith" type="workvoithgroup">
+            <DevCfgItem name="1#posuiji-voith" type="workvoith">
+            </DevCfgItem>
+        </DevCfgList>
+        <DevCfgItem name="baohu" type="analogprotect">
+        </DevCfgItem>
+    </DevCfgList>
+</DevCfgList>
