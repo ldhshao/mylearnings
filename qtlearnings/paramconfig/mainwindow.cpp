@@ -3,6 +3,7 @@
 #include "Util/PageCfg.h"
 #include "UiCommon/uipage.h"
 #include "UiCommon/pagecontainer.h"
+#include "UiCommon/qkeytools.h"
 #include <QComboBox>
 #include <fstream>
 #define SYSTEM_CFG_FILEPATH "/home/hndz-dhliu/test/system.xml"
@@ -20,7 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     paramCount = 0;
     loadParam();
     initMenu();
-    pageMgr->move(90, 30);
+    pageMgr->move(90, 200);
+    QkeyTools::getInstance();
     slot_systemClicked(false);
 }
 
@@ -231,7 +233,7 @@ bool MainWindow::loadParam()
 }
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    int l = 90, t = 30, m = 4;
+    int l = 90, t = 200, m = 4;
     int width = event->size().width();
     int height = event->size().height();
     pageMgr->resize(width - l - m, height - t - m);

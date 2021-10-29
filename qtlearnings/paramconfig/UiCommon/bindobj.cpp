@@ -388,7 +388,7 @@ bool BindUint16::setValue(const QString &strVal)
 
     return ret;
 }
-bool BindUint16::isValid(u_int16_t val)
+bool BindUint16::isValid(uint16_t val)
 {
     if (m_imin <= val && val <= m_imax){
         return true;
@@ -424,7 +424,7 @@ bool BindUint16Ptr::setValue(const QString &strVal)
 
     return ret;
 }
-bool BindUint16Ptr::isValid(u_int16_t val)
+bool BindUint16Ptr::isValid(uint16_t val)
 {
     if(nullptr != m_iminptr && nullptr != m_imaxptr){
         if (*m_iminptr <= val && val <= *m_imaxptr){

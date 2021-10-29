@@ -15,7 +15,7 @@ public:
 
     //bool setComboBoxText(const QString& strText);
     uint16_t* valuePtr() { return pVal; }
-    void setValuePtr(u_int16_t* val) { pVal = val; }
+    void setValuePtr(uint16_t* val) { pVal = val; }
 
 signals:
     void sig_valueChanged(uint16_t *pVal, uint16_t valNew);
