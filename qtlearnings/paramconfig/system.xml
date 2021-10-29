@@ -1,0 +1,36 @@
+<DevCfgList>
+    <DevCfgList name="系统" type="system">
+        <DevCfgItem name="系统配置" type="systemconfig">
+        </DevCfgItem>
+        <DevCfgItem name="水电联动" type="systemwatereleclinkage">
+        </DevCfgItem>
+        <DevCfgItem name="模式开关" type="systemmodeswitch">
+        </DevCfgItem>
+        <DevCfgItem name="变频工作面" type="systemfrequency">
+        </DevCfgItem>
+    </DevCfgList>
+    <DevCfgList name="破碎机" type="workface">
+        <DevCfgItem name="基本信息" type="workfacebaseinfo">
+        </DevCfgItem>
+        <DevCfgList name="电机组" type="motorgroup">
+            <DevCfgItem name="基本信息" type="motorgroupbaseinfo">
+            </DevCfgItem>
+            <DevCfgItem name="1#电机" type="motor">
+            </DevCfgItem>
+            <DevCfgItem name="2#电机" type="motor">
+            </DevCfgItem>
+        </DevCfgList>
+        <DevCfgList name="VOITH" type="workvoithgroup">
+            <DevCfgItem name="基本信息" type="workvoithgroupbaseinfo">
+            </DevCfgItem>
+            <DevCfgItem name="1#posuiji-voith" type="workvoith">
+            </DevCfgItem>
+            <DevCfgItem name="2#posuiji-voith" type="workvoith">
+            </DevCfgItem>
+        </DevCfgList>
+        <DevCfgItem name="1#保护" type="analogprotect">
+        </DevCfgItem>
+        <DevCfgItem name="2#保护" type="analogprotect">
+        </DevCfgItem>
+    </DevCfgList>
+</DevCfgList>
