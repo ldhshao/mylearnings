@@ -5,10 +5,11 @@
 #include "UiCommon/pagecontainer.h"
 #include "UiCommon/qkeytools.h"
 #include <QComboBox>
+#include <QCoreApplication>
 #include <fstream>
-#define SYSTEM_CFG_FILEPATH "/home/hndz-dhliu/test/system.xml"
-#define UITEMP_CFG_FILEPATH "/home/hndz-dhliu/test/uitemplate.xml"
-#define PARAMS_FILEPATH     "/home/hndz-dhliu/test/param.dat"
+#define SYSTEM_CFG_FILEPATH "system.xml"
+#define UITEMP_CFG_FILEPATH "uitemplate.xml"
+#define PARAMS_FILEPATH     "param.dat"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     pageMgr = new PageContainer(this);
     paramAddr = nullptr;
     paramCount = 0;
+    appDir = QCoreApplication::applicationDirPath();
     loadParam();
     initMenu();
     pageMgr->move(90, 200);
@@ -36,10 +38,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::initMenu()
 {
-    PageCfgList pageCfg(0);
-    PageCfg cfgTemplate;
-    cfgTemplate.readXmlFile(UITEMP_CFG_FILEPATH);
-    devCfg.readDevCfgFile(SYSTEM_CFG_FILEPATH);
+    QString strDevCfg = appDir + "/" + SYSTEM_CFG_FILEPATH;
+    devCfg.readDevCfgFile(strDevCfg);
     QPushButton *pBtn = new QPushButton (this);
     QComboBox   *pCmb = new QComboBox (this);
     int i = 0;
@@ -89,7 +89,8 @@ void MainWindow::initPage()
 {
     PageCfgList pageCfgList(paramAddr);
     PageCfg cfgTemplate;
-    cfgTemplate.readXmlFile(UITEMP_CFG_FILEPATH);
+    QString strTemplate = appDir + "/" + UITEMP_CFG_FILEPATH;
+    cfgTemplate.readXmlFile(strTemplate);
     DevCfgItem *pItem = devCfg.getHead();
     while (nullptr != pItem) {
         DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);
@@ -211,7 +212,8 @@ bool MainWindow::saveParam()
 {
     if (nullptr != paramAddr){
        ofstream outFile;
-       outFile.open(PARAMS_FILEPATH, ios_base::out|ios_base::binary);
+       QString strParam = appDir + "/" + PARAMS_FILEPATH;
+       outFile.open(strParam.toStdString(), ios_base::out|ios_base::binary);
        outFile.write(reinterpret_cast<char*>(paramAddr), paramCount*sizeof (uint16_t));
        outFile.close();
     }
@@ -221,12 +223,15 @@ bool MainWindow::loadParam()
 {
     if (nullptr == paramAddr){
         ifstream inFile;
-        inFile.open(PARAMS_FILEPATH, ios_base::in | ios_base::binary);
+        QString strParam = appDir + "/" + PARAMS_FILEPATH;
+        inFile.open(strParam.toStdString(), ios_base::in | ios_base::binary);
         inFile.seekg(0, inFile.end);
         paramCount = inFile.tellg() / sizeof(uint16_t);
+        if (paramCount > 0){
         inFile.seekg(0, inFile.beg);
-        paramAddr = new uint16_t[paramCount];
-        inFile.read(reinterpret_cast<char*>(paramAddr), paramCount*sizeof(uint16_t));
+            paramAddr = new uint16_t[paramCount];
+            inFile.read(reinterpret_cast<char*>(paramAddr), paramCount*sizeof(uint16_t));
+        }
         inFile.close();
     }
     return true;

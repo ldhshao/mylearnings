@@ -50,5 +50,6 @@ private:
     PageContainer              *pageMgr;
     unsigned short             *paramAddr;
     int                         paramCount;
+    QString                     appDir;
 };
 #endif // MAINWINDOW_H
