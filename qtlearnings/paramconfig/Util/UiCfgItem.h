@@ -23,7 +23,7 @@ public:
 
     void setPos(int left, int top) { m_left = left; m_top = top;}
     void setSize(int width, int height) { m_width =width; m_height = height; }
-    void setDataidx(int idx) { m_dataidx = idx; }
+    virtual void setDataidx(int idx) { m_dataidx = idx; }
     void setParent(UiCfgItem* parent) { m_parent = parent; }
     int  left() {	return m_left;	}
     int  top() {	return m_top;	}
@@ -39,6 +39,7 @@ public:
     QWidget* getWidDes() {	return m_pWidDes;	}
 
     virtual bool initFromDomElement(QDomElement element);
+    virtual void dump();
 
     virtual UiCfgItem* createMyself();
 

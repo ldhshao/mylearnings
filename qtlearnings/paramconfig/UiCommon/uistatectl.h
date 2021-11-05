@@ -83,4 +83,27 @@ protected:
     virtual void focusInEvent(QFocusEvent *event);
 };
 
+class CMyLineEdit : public QLineEdit
+{
+    Q_OBJECT
+
+public:
+    CMyLineEdit(QWidget *parent = nullptr):QLineEdit(parent){}
+    ~CMyLineEdit(){}
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
+};
+
+class CMyComboBox : public QComboBox
+{
+    Q_OBJECT
+
+public:
+    CMyComboBox(QWidget *parent = nullptr):QComboBox(parent){}
+    virtual ~CMyComboBox(){}
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
+};
 #endif // CWIDGETBUTTON_H

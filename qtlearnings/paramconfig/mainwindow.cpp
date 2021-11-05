@@ -10,6 +10,17 @@
 #define SYSTEM_CFG_FILEPATH "system.xml"
 #define UITEMP_CFG_FILEPATH "uitemplate.xml"
 #define PARAMS_FILEPATH     "param.dat"
+#define MENU1_STYLE         "QPushButton {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}"
+#define MENU1_CMB_STYLE     "QComboBox {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}\
+                             QComboBox QAbstractItemView{background-color: #646478;color: #FFFFFF;selection-background-color: #505064;selection-color: #FFFFFF;}"
+// #define MENU1_CMB_STYLE     "QComboBox QAbstractItemView{\
+//        background-color: #4f4f4f;\
+//        color: #999999;\
+//     \
+//        selection-background-color: #999999;\
+//        selection-color: #4f4f4f;\
+//    }"
+#define MENU2_STYLE         "QPushButton {font-size:28px; font:bold;}"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
     appDir = QCoreApplication::applicationDirPath();
     loadParam();
     initMenu();
-    pageMgr->move(90, 200);
-    QkeyTools::getInstance();
+    //QkeyTools::getInstance();
+    onResize(width(), height());
     slot_systemClicked(false);
 }
 
@@ -44,6 +55,10 @@ void MainWindow::initMenu()
     QComboBox   *pCmb = new QComboBox (this);
     int i = 0;
     pBtn->setText("系统");
+    pBtn->setStyleSheet(MENU1_STYLE);
+    pBtn->resize(120, 40);
+    pCmb->setStyleSheet(MENU1_CMB_STYLE);
+    pCmb->resize(120, 40);
     pCmb->insertItem(i++, "选择设备");
     menu2Lists.resize(devCfg.getChildrenCount());
     menu2MgrList.resize(devCfg.getChildrenCount());
@@ -62,7 +77,9 @@ void MainWindow::initMenu()
             list<CStateButton*> btnList;
             while(nullptr != pSubItem){
                 CStateButton* pSubBtn = new CStateButton();
+                QString strStyle = pSubBtn->styleSheet();
                 pSubBtn->setVisible(false);
+                pSubBtn->setStyleSheet(strStyle.append(MENU2_STYLE));
                 pSubBtn->setText(pSubItem->getName());
                 btnList.push_back(pSubBtn);
                 ui->verticalLayout->addWidget(pSubBtn);
@@ -81,6 +98,22 @@ void MainWindow::initMenu()
     ui->horizontalLayout->addWidget(pBtn);
     ui->horizontalLayout->addWidget(pCmb);
     cmbDevices = pCmb;
+
+    pBtn = new QPushButton(this);
+    pBtn->setText("通讯");
+    pBtn->setStyleSheet(MENU1_STYLE);
+    pBtn->resize(120, 40);
+    ui->horizontalLayout->addWidget(pBtn);
+    //pBtn = new QPushButton(this);
+    //pBtn->setText("帮助");
+    //pBtn->setStyleSheet(MENU1_STYLE);
+    //pBtn->resize(120, 40);
+    //ui->horizontalLayout->addWidget(pBtn);
+    pBtn = new QPushButton(this);
+    pBtn->setText("关于我们");
+    pBtn->setStyleSheet(MENU1_STYLE);
+    pBtn->resize(120, 40);
+    ui->horizontalLayout->addWidget(pBtn);
 
     initPage();
 }
@@ -197,6 +230,7 @@ void MainWindow::selectMenu(int menuIdx)
     for (list<CStateButton*>::iterator it = btnList.begin(); it != btnList.end(); it++){
         (*it)->setVisible(true);
     }
+    ui->verticalLayoutWidget->resize(ui->verticalLayoutWidget->width(), menu2Lists[menuIdx].size() * 40);
 
     currMenuIdx = menuIdx;
 
@@ -236,12 +270,19 @@ bool MainWindow::loadParam()
     }
     return true;
 }
+void MainWindow::onResize(int width, int height)
+{
+    int l = 120, t = 140, m = 4;
+    pageMgr->move(l, t);
+    ui->horizontalLayoutWidget->resize(width - l -l, 40);
+    ui->horizontalLayoutWidget->move(l, t - 45);
+    ui->verticalLayoutWidget->resize(l, menu2Lists[currMenuIdx].size()*40);
+    ui->verticalLayoutWidget->move(0, t);
+    pageMgr->resize(width - l - m, height - t - m);
+}
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    int l = 90, t = 200, m = 4;
-    int width = event->size().width();
-    int height = event->size().height();
-    pageMgr->resize(width - l - m, height - t - m);
+    onResize(event->size().width(), event->size().height());
     QMainWindow::resizeEvent(event);
 }
 
@@ -260,6 +301,7 @@ void MainWindow::slot_menu2Clicked(CStateButton* btn)
 {
     map<CStateButton*, UiPage*>::iterator it = menu2ToPageMap.find(btn);
     if (menu2ToPageMap.end() != it){
-        pageMgr->setContent(it->second);
+        //pageMgr->setContent(it->second);
+        it->second->show();
     }
 }

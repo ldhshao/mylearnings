@@ -22,7 +22,7 @@ signals:
 
 protected:
     void keyPressEvent(QKeyEvent* ev);
-    virtual void focusInEvent(QFocusEvent *event);
+    //virtual void focusInEvent(QFocusEvent *event);
 
 protected slots:
     void slot_currentIndexChanged(int index);

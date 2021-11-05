@@ -15,51 +15,53 @@ CKeyDnEdit::CKeyDnEdit(QWidget *parent) :
     connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(slot_textChanged(const QString&)));
 }
 
-void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
-{
-    CStateLineEdit::focusInEvent(ev);
-    this->showText();
-    this->setCursorPosition(this->text().length());
-    qDebug()<<__func__;
-}
-
-//qh滤波处理 不处理tab按键
-bool CKeyDnEdit::event(QEvent *ev)
-{
-    if (ev->type() == QEvent::KeyPress)
-    {
-        QKeyEvent *ke = static_cast<QKeyEvent *>(ev);
-        if (ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab)
-        {
-            return true;
-        }
-    }
-    return QWidget::event(ev);
-}
-
-void CKeyDnEdit::needDisplay(QKeyEvent *ev)
-{
-    /*字符加数字则直接显示*/
-    if((ev->key() >= Qt::Key_0 && ev->key() <= Qt::Key_9) || (ev->key() >= Qt::Key_A && ev->key() <= Qt::Key_Z) || ev->key() == Qt::Key_Backspace){
-        QLineEdit::keyPressEvent(ev);
-    }
-}
+//void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
+//{
+//    CStateLineEdit::focusInEvent(ev);
+//    this->showText();
+//    this->setCursorPosition(this->text().length());
+//    qDebug()<<__func__;
+//}
+//
+////qh滤波处理 不处理tab按键
+//bool CKeyDnEdit::event(QEvent *ev)
+//{
+//    if (ev->type() == QEvent::KeyPress)
+//    {
+//        QKeyEvent *ke = static_cast<QKeyEvent *>(ev);
+//        if (ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab)
+//        {
+//            return true;
+//        }
+//    }
+//    return QWidget::event(ev);
+//}
+//
+//void CKeyDnEdit::needDisplay(QKeyEvent *ev)
+//{
+//    /*字符加数字则直接显示*/
+//    if((ev->key() >= Qt::Key_0 && ev->key() <= Qt::Key_9) || (ev->key() >= Qt::Key_A && ev->key() <= Qt::Key_Z) || ev->key() == Qt::Key_Backspace){
+//        QLineEdit::keyPressEvent(ev);
+//    }
+//}
 
 void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
 {
     // 未绑定数据直接返回按键事件
     qDebug()<<"key press";
+    switch (ev->key()) {
+        case Qt::Key_Down:
+        case Qt::Key_Up:
+        case Qt::Key_X:
+            ev->setAccepted(false);
+        break;
+    }
     if(pBind == NULL)
     {
         emit this->keydown(ev);
         return;
     }
 
-    if(ev->key() == Qt::Key_X)
-    {
-        emit this->keydown(ev);
-        return;
-    }
     pBind->setState(IBindObj::BS_SOURCEKEY);
     pBind->keyEventFilter(ev);
     setText(pBind->showSet());

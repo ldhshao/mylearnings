@@ -1,4 +1,5 @@
 #include "uistatectl.h"
+#include <QKeyEvent>
 #include <QDebug>
 #define MENU_NORMAL "QPushButton{background-color: rgba(255, 255, 255, 100%);}"
 #define MENU_SELECTED "QPushButton{background-color: rgba(200, 60, 60, 100%);}"
@@ -114,5 +115,29 @@ void CStateCheckBox::focusInEvent(QFocusEvent *event)
     Q_UNUSED(event)
     if (nullptr != pManager){
         pManager->selectCtl(this);
+    }
+}
+
+void CMyLineEdit::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Down:
+    case Qt::Key_Up:
+        event->setAccepted(false);
+        break;
+    default:
+        QLineEdit::keyPressEvent(event);
+    }
+}
+
+void CMyComboBox::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Down:
+    case Qt::Key_Up:
+        event->setAccepted(false);
+        break;
+    default:
+        QComboBox::keyPressEvent(event);
     }
 }

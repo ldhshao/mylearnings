@@ -33,11 +33,11 @@ public:
     int XOffset;
     int YOffset;
     /* 需要显示在编辑框 */
-    void needDisplay(QKeyEvent *ev);
+    //void needDisplay(QKeyEvent *ev);
 protected:
     void keyPressEvent(QKeyEvent* ev);
-    virtual void focusInEvent(QFocusEvent* ev);
-    bool event(QEvent *ev);
+    //virtual void focusInEvent(QFocusEvent* ev);
+    //bool event(QEvent *ev);
  signals:
     void keydown(QKeyEvent* ev);
 protected slots:

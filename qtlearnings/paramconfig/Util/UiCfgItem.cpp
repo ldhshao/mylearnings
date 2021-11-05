@@ -53,6 +53,10 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
 
     return true;
 }
+void UiCfgItem::dump()
+{
+    qDebug()<<"name "<<m_name<<" dataidx "<<m_dataidx<<" addr "<<paramAddress();
+}
 void UiCfgItem::create(QWidget* parent)
 {
     if (nullptr == m_pWidget){
@@ -62,12 +66,12 @@ void UiCfgItem::create(QWidget* parent)
             CStateCheckBox *pBox = new CStateCheckBox(parent);
             m_pWidget = pBox;
         }else if (m_type == UiCfgItem::strTypeEdit){
-            //ctl = new QLineEdit();
+            m_pWidget = new CMyLineEdit(parent);
             //m_pWidget = new CStateLineEdit(parent);
-            m_pWidget = new CKeyDnEdit(parent);
+            //m_pWidget = new CKeyDnEdit(parent);
         }else if (m_type == UiCfgItem::strTypeCombobox){
-            //ctl = new QComboBox();
-            m_pWidget = new CKeyDnComboBox(parent);
+            m_pWidget = new CMyComboBox(parent);
+            //m_pWidget = new CKeyDnComboBox(parent);
         }else if (m_type == UiCfgItem::strTypeGroup){
             QGroupBox* pBox = new QGroupBox(parent);
             pBox->setTitle(getName());
@@ -118,13 +122,14 @@ bool UiCfgItem::initData(unsigned short* pStAddr)
         QString strRange = m_description.mid(iPos0+1, iPos1 - iPos0 - 1).remove(' ');
         iPos0 = strRange.indexOf(QRegExp("\\d+-\\d+"));
         if (-1< iPos0){
+            unsigned short* pAddr = pStAddr + parent()->dataidx();
             iPos1 = strRange.indexOf("-", iPos0);
             usMin = static_cast<unsigned short>(strRange.mid(iPos0, iPos1 - iPos0).toInt());
             usMax = static_cast<unsigned short>(strRange.mid(iPos1 + 1).toInt());
             usDef = static_cast<unsigned short>(m_defaultVal.toInt());
-            qDebug()<<"name "<<m_name<<" min "<<usMin<<" max "<<usMax<<" addr "<<pStAddr+m_dataidx;
+            qDebug()<<"name "<<m_name<<" min "<<usMin<<" max "<<usMax<<" addr "<<pAddr+m_dataidx;
             CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-            CBinder::BindEdit(pEdit, pStAddr+m_dataidx, usMin, usMax, usDef);
+            CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, usMax, usDef);
         }
     }
 
@@ -247,20 +252,21 @@ bool UiCfgItemEx::initData(unsigned short *pStAddr)
             bOk = false;
         }
         usDef = m_defaultVal.toUShort();
+        unsigned short* pAddr = pStAddr + parent()->dataidx();
         if (nullptr != pMinItem || nullptr != pMaxItem){
             CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
             if (nullptr != pMinItem){
                 if (nullptr == pMaxItem)
-                    CBinder::BindEdit(pEdit, pStAddr+m_dataidx, pMinItem->paramAddress(), usMax, usDef);
+                    CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMinItem->paramAddress(), usMax, usDef);
                 else
-                    CBinder::BindEdit(pEdit, pStAddr+m_dataidx, pMinItem->paramAddress(), pMaxItem->paramAddress(), usDef);
+                    CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMinItem->paramAddress(), pMaxItem->paramAddress(), usDef);
             }else {
-                CBinder::BindEdit(pEdit, pStAddr+m_dataidx, usMin, pMaxItem->paramAddress(), usDef);
+                CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, pMaxItem->paramAddress(), usDef);
             }
 
         }else{
             CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-            CBinder::BindEdit(pEdit, pStAddr+m_dataidx, usMin, usMax, usDef);
+            CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, usMax, usDef);
         }
     }
 }
@@ -317,7 +323,8 @@ bool ComboboxCfgItem::initData(unsigned short *pStAddr)
 
     CKeyDnComboBox* pBox = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
     if (nullptr != pBox){
-        CBinder::BindComboBox(pBox, pStAddr+m_dataidx, m_params, m_defaultVal);
-        qDebug()<<"name "<<getName()<<" addr "<<pStAddr+m_dataidx;
+        unsigned short* pAddr = pStAddr + parent()->dataidx();
+        CBinder::BindComboBox(pBox, pAddr+m_dataidx, m_params, m_defaultVal);
+        qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
     }
 }

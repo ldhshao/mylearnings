@@ -82,6 +82,15 @@ bool GroupCfgItem::initChildrenFromDomElement(QDomNodeList list)
     return false;
 }
 
+void GroupCfgItem::dump()
+{
+    UiCfgItem::dump();
+
+    for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
+        (*it)->dump();
+    }
+}
+
 UiCfgItem* GroupCfgItem::createMyself()
 {
     GroupCfgItem* pList = new GroupCfgItem();
@@ -120,6 +129,21 @@ void GroupCfgItem::deleteAll()
     }
 
     m_children.clear();
+}
+
+void GroupCfgItem::setDataidx(int idx)
+{
+    m_dataidx = idx;
+
+    list<UiCfgItem*>::iterator it = m_children.begin();
+    for(; it != m_children.end(); it++){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            grp->setDataidx(idx);
+            grp->m_dataidx = idx;
+            idx += grp->getDataCount();
+        }
+    }
 }
 
 void GroupCfgItem::create(QWidget *parent)
@@ -305,6 +329,7 @@ bool GroupCfgItem::init()
         }else {
             rowHeights[t] = h;
         }
+
     }
     int iWidth = iSpanMargin, iHeight = iTitleHeight;
     //assign colInfos and rowInfos
@@ -364,11 +389,10 @@ bool GroupCfgItem::initData(unsigned short* pStAddr)
 
     bool bOK = false;
     if (-1 != m_dataidx){
-        unsigned short *pAddr = pStAddr + m_dataidx;
+        //unsigned short *pAddr = pStAddr + m_dataidx;
         list<UiCfgItem*>::iterator it = m_children.begin();
         for (; it != m_children.end(); it++){
-            (*it)->initData(pAddr);
-
+            (*it)->initData(pStAddr);
         }
         bOK = true;
     }
@@ -499,6 +523,7 @@ UiPage* PageCfg::createPage()
         }
 
         init();
+        m_uiPage->initTabOrder();
     }
     return m_uiPage;
 }
@@ -514,14 +539,8 @@ bool PageCfg::initFromDomElement(QDomElement element)
 }
 bool PageCfg::init()
 {
-    int dataidx = 0;
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         (*it)->init();
-        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
-        if(nullptr != grp){
-            grp->setDataidx(dataidx);
-            dataidx += grp->getDataCount();
-        }
     }
 
     int iSpanItem = 10;
@@ -592,11 +611,6 @@ bool PageCfg::init()
     qDebug()<<getName()<<":"<<w<<","<<h;
 }
 
-void PageCfg::dump()
-{
-
-}
-
 GroupCfgItem* PageCfg::findGroupByName(const QString &strName)
 {
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
@@ -622,8 +636,9 @@ bool PageCfgList::createAllPage(list<UiPage*> &pageList)
         UiPage *w = page->createPage();
         page->setDataidx(dataidx);
         dataidx += page->getDataCount();
-        page->initData(m_pParamTbl);
+        //page->initData(m_pParamTbl);
         pageList.push_back(w);
     }
+    //dump();
     return true;
 }

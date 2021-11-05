@@ -1,4 +1,7 @@
 #include "uipage.h"
+#include "ckeydnedit.h"
+#include "ckeydncombobox.h"
+#include <QKeyEvent>
 #include <QDebug>
 
 UiPage::UiPage(QWidget *parent) :
@@ -24,9 +27,9 @@ void UiPage::deleteAll()
 void UiPage::addWidget(QWidget *w)
 {
     ctlList.push_back(w);
-    CStateCtl *pCtl = dynamic_cast<CStateCtl*>(w);
-    if (nullptr != pCtl)
-        pCtl->setManager(&ctlMgr);
+    //CStateCtl *pCtl = dynamic_cast<CStateCtl*>(w);
+    //if (nullptr != pCtl)
+    //    pCtl->setManager(&ctlMgr);
 }
 
 QWidget* UiPage::getHead()
@@ -47,4 +50,51 @@ QWidget* UiPage::getNext()
     }
 
     return nullptr;
+}
+
+void UiPage::initTabOrder()
+{
+    map<int, map<int,QWidget*>> widMap;//setting tab order
+    list<QWidget*>::iterator it = ctlList.begin();
+    for (; it != ctlList.end(); it++) {
+        //CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(*it);
+        //CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(*it);
+        QLineEdit* pEdit = dynamic_cast<QLineEdit*>(*it);
+        QComboBox* pCmb = dynamic_cast<QComboBox*>(*it);
+        if (nullptr == pEdit && nullptr == pCmb){
+            continue;
+        }
+
+        widMap[(*it)->pos().rx()][(*it)->pos().ry()] = *it;
+    }
+    //set control tab order
+    QWidget *wid = nullptr;
+    for(auto itCol = widMap.begin(); itCol != widMap.end(); itCol++){
+        auto itRow = itCol->second.begin();
+        if (nullptr == wid){
+            wid = itRow->second;
+            itRow++;
+        }
+        for(;itRow != itCol->second.end(); itRow++){
+            QWidget::setTabOrder(wid, itRow->second);
+            wid = itRow->second;
+            qDebug()<<"col"<<itCol->first<<"row"<<itRow->first;
+        }
+    }
+}
+
+void UiPage::keyPressEvent(QKeyEvent *event)
+{
+    qDebug()<<focusWidget();
+    switch (event->key()) {
+    case Qt::Key_Down:
+        focusNextPrevChild(true);
+        event->setAccepted(true);
+        break;
+    case Qt::Key_Up:
+        focusNextPrevChild(false);
+        event->setAccepted(true);
+        break;
+    }
+    qDebug()<<focusWidget();
 }

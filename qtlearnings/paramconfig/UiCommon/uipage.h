@@ -17,8 +17,11 @@ public:
     void addWidget(QWidget* w);
     QWidget* getHead();
     QWidget* getNext();
+    void initTabOrder();
 
 signals:
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
 
 protected slots:
 

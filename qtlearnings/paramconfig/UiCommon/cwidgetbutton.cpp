@@ -11,10 +11,12 @@ CStateButton::CStateButton(QWidget *parent):
 }
 void CStateButton::setButtonState(BUTTON_STATE state)
 {
+    QString strStyle = styleSheet();
     if (BS_SELECTED == state)
-        setStyleSheet(MENU_SELECTED);
+        strStyle.append(MENU_SELECTED);
     else
-        setStyleSheet(MENU_NORMAL);
+        strStyle.append(MENU_NORMAL);
+    setStyleSheet(strStyle);
 }
 void CStateButton::slot_clicked(bool)
 {

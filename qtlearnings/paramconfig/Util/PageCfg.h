@@ -24,10 +24,12 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
+    virtual void dump();
 
     virtual UiCfgItem* createMyself();
     void    copyChildren(GroupCfgItem* pDst);
 
+    virtual void setDataidx(int idx);
     virtual void create(QWidget* parent);
     virtual bool init();
     virtual bool initData(unsigned short* pStAddr);//init data
@@ -63,7 +65,6 @@ public:
 
 protected:
 
-    virtual void dump();
     UiPage                 *m_uiPage;
 };
 

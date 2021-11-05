@@ -31,6 +31,7 @@ protected:
     void selectMenu(int menuIdx);
     bool saveParam();
     bool loadParam();
+    void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
 
 protected slots:

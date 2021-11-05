@@ -15,10 +15,10 @@ CKeyDnComboBox::CKeyDnComboBox(QWidget *parent) :
 //    return false;
 //}
 
-void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
-{
-    CStateComboBox::focusInEvent(ev);
-}
+//void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
+//{
+//    CStateComboBox::focusInEvent(ev);
+//}
 
 void CKeyDnComboBox::keyPressEvent(QKeyEvent *ev)
 {
@@ -37,6 +37,7 @@ void CKeyDnComboBox::keyPressEvent(QKeyEvent *ev)
     case Qt::Key_Up:
     case Qt::Key_Down:
     case Qt::Key_Return:
+        ev->setAccepted(false);
         break;
     default:
         break;

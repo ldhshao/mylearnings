@@ -19,6 +19,7 @@ void CEnableMngr::registerEableUi(CKeyDnComboBox* pCmb, uint16_t* pVal, uint16_t
 }
 void CEnableMngr::slot_valueChanged(uint16_t* pVal, uint16_t valNew)
 {
+    qDebug()<<"addr "<<pVal<<" value "<<valNew<<" value "<<*pVal;
     auto itOut = valUiMap.find(pVal);
     if (itOut != valUiMap.end()){
         auto it = itOut->second.begin();
