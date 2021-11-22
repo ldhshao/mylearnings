@@ -39,6 +39,9 @@ protected slots:
     void slot_deviceChanged(int newIdx);
     void slot_menu2Clicked(CStateButton* btn);
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     QComboBox      *cmbDevices;

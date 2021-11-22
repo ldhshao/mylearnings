@@ -12,13 +12,25 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    cdevposctl1.cpp \
+    cdevposctl2.cpp \
+    cdevposmgr.cpp \
+    ckeycheckbox.cpp \
+    ckeycombobox.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    cdevposctl1.h \
+    cdevposctl2.h \
+    cdevposmgr.h \
+    ckeycheckbox.h \
+    ckeycombobox.h \
     mainwindow.h
 
 FORMS += \
+    cdevposctl1.ui \
+    cdevposctl2.ui \
     mainwindow.ui
 
 DESTDIR = $$PWD/../bin

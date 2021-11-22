@@ -4,6 +4,8 @@
 #include "UiCommon/uipage.h"
 #include "UiCommon/pagecontainer.h"
 #include "UiCommon/qkeytools.h"
+#include "cdevposctl1.h"
+#include "cdevposctl2.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -301,7 +303,14 @@ void MainWindow::slot_menu2Clicked(CStateButton* btn)
 {
     map<CStateButton*, UiPage*>::iterator it = menu2ToPageMap.find(btn);
     if (menu2ToPageMap.end() != it){
-        //pageMgr->setContent(it->second);
+        pageMgr->setContent(it->second);
         it->second->show();
     }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    //CDevPosCtl1 *testCtl = new CDevPosCtl1();
+    CDevPosCtl2 *testCtl = new CDevPosCtl2();
+    testCtl->show();
 }
