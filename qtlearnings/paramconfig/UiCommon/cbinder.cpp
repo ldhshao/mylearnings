@@ -1,5 +1,6 @@
 ﻿#include "cbinder.h"
 #include "ckeydnedit.h"
+#include "../cdevpointedit.h"
 #include "ckeydncombobox.h"
 #include "bindobj.h"
 
@@ -149,7 +150,10 @@ CBinder::BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t *min, uint16_t max,
     BindEdit(pObj,pVal,min,pMax, defaultVal);
 }
 
-
+void CBinder::BindEdit(CDevPointEdit *pEdit, uint16_t *pVal, uint32_t defaultVal)
+{
+    pEdit->setValuePtr(pVal);
+}
 /*
  * Selection type
  */

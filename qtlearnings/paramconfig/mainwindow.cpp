@@ -310,7 +310,7 @@ void MainWindow::slot_menu2Clicked(CStateButton* btn)
 
 void MainWindow::on_pushButton_clicked()
 {
-    //CDevPosCtl1 *testCtl = new CDevPosCtl1();
-    CDevPosCtl2 *testCtl = new CDevPosCtl2();
-    testCtl->show();
+   // CDevPosCtl1 *testCtl = new CDevPosCtl1();
+    //CDevPosCtl2 *testCtl = new CDevPosCtl2();
+    CDevPosCtl1::instance()->show();
 }

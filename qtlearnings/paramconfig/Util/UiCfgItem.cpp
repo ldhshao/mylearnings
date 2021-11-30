@@ -5,17 +5,18 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <stack>
 #include <QDebug>
 #include "UiCommon/uistatectl.h"
 #include "UiCommon/ckeydnedit.h"
 #include "UiCommon/ckeydncombobox.h"
 #include "UiCommon/cbinder.h"
 #include "UiCommon/cenablemngr.h"
+#include "../cdevpointedit.h"
 #include "Util/PageCfg.h"
 using namespace std;
 
 QString UiCfgItem::strTypeEdit = "editbox";
+QString UiCfgItem::strTypeDevPointEdit = "devpointedit";
 QString UiCfgItem::strTypeCombobox = "combobox";
 QString UiCfgItem::strTypeCheckBox = "checkbox";
 QString UiCfgItem::strTypeLabel    = "label";
@@ -32,6 +33,7 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     setIntValue(m_width, element, "width");
     setIntValue(m_height, element, "height");
     setIntValue(m_dataidx, element, "dataidx");
+    setIntValue(m_datacnt, element, "datacnt");
     //check value
 
     setStrValue(m_type, element, "type");
@@ -55,7 +57,7 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
 }
 void UiCfgItem::dump()
 {
-    qDebug()<<"name "<<m_name<<" dataidx "<<m_dataidx<<" addr "<<paramAddress();
+    qDebug()<<"name "<<m_name<<" dataidx "<<m_dataidx<<" count "<<m_datacnt<<" addr "<<paramAddress();
 }
 void UiCfgItem::create(QWidget* parent)
 {
@@ -66,9 +68,11 @@ void UiCfgItem::create(QWidget* parent)
             CStateCheckBox *pBox = new CStateCheckBox(parent);
             m_pWidget = pBox;
         }else if (m_type == UiCfgItem::strTypeEdit){
-            m_pWidget = new CMyLineEdit(parent);
+            //m_pWidget = new CMyLineEdit(parent);
             //m_pWidget = new CStateLineEdit(parent);
-            //m_pWidget = new CKeyDnEdit(parent);
+            m_pWidget = new CKeyDnEdit(parent);
+        }else if (m_type == UiCfgItem::strTypeDevPointEdit){
+            m_pWidget = new CDevPointEdit(parent);
         }else if (m_type == UiCfgItem::strTypeCombobox){
             m_pWidget = new CMyComboBox(parent);
             //m_pWidget = new CKeyDnComboBox(parent);
@@ -94,7 +98,11 @@ void UiCfgItem::create(QWidget* parent)
         }
     }
 }
-bool UiCfgItem::init()
+bool UiCfgItem::initData(int idx)
+{
+    return true;
+}
+bool UiCfgItem::initUi(unsigned short* pStAddr)
 {
     if (nullptr != m_pWidget){
         m_pWidget->resize(m_width, m_height);
@@ -111,10 +119,6 @@ bool UiCfgItem::init()
         m_pWidDes->show();
     }
 
-    return true;
-}
-bool UiCfgItem::initData(unsigned short* pStAddr)
-{
     unsigned short usMin = 0, usMax = 0, usDef = 0;
     int iPos0 =  m_description.indexOf("(");
     int iPos1 =  m_description.indexOf(")");
@@ -133,6 +137,13 @@ bool UiCfgItem::initData(unsigned short* pStAddr)
         }
     }
 
+    if (UiCfgItem::strTypeDevPointEdit == m_type){
+        unsigned short* pAddr = pStAddr + parent()->dataidx();
+        CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(m_pWidget);
+        CBinder::BindEdit(pEdit, pAddr + m_dataidx, 0);
+        if (2 > m_datacnt) qDebug()<<"error: name "<<m_name<<" with datacount "<<m_datacnt;
+    }
+
     GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
     if (nullptr!= pGroup){
         UiCfgItem* pEnSource = nullptr;
@@ -148,10 +159,8 @@ bool UiCfgItem::initData(unsigned short* pStAddr)
 
 uint16_t *UiCfgItem::paramAddress()
 {
-    stack<GroupCfgItem*> parentStack;
     GroupCfgItem* parent = dynamic_cast<GroupCfgItem*>(this->parent());
     while(nullptr != parent){
-        parentStack.push(parent);
         if (nullptr != parent->paramAddress()){
             break;
         }
@@ -161,22 +170,8 @@ uint16_t *UiCfgItem::paramAddress()
         return nullptr;
 
     uint16_t* paramAddr = parent->paramAddress();
-    parentStack.pop();
-    int dataCnt = 0;
-    while(!parentStack.empty()){
-        GroupCfgItem* pItem =parentStack.top();
-        GroupCfgItem* pTmp = dynamic_cast<GroupCfgItem*>(parent->getHead());
-        while(nullptr != pTmp){
-            if (pTmp == pItem)
-                break;
-            dataCnt += pTmp->getDataCount();
-            pTmp = dynamic_cast<GroupCfgItem*>(parent->getNext());
-        }
-        parent = pItem;
-        parentStack.pop();
-    }
 
-    return paramAddr+dataCnt+m_dataidx;
+    return paramAddr+(this->parent()->dataidx()+m_dataidx);
 }
 
 UiCfgItem* UiCfgItem::createMyself()
@@ -189,6 +184,7 @@ UiCfgItem* UiCfgItem::createMyself()
     pItem->m_width = m_width;
     pItem->m_height = m_height;
     pItem->m_dataidx = m_dataidx;
+    pItem->m_datacnt = m_datacnt;
     pItem->m_type = m_type;
     pItem->m_description = m_description;
     pItem->m_defaultVal = m_defaultVal;
@@ -217,6 +213,7 @@ UiCfgItem* UiCfgItemEx::createMyself()
     pItem->m_width = m_width;
     pItem->m_height = m_height;
     pItem->m_dataidx = m_dataidx;
+    pItem->m_datacnt = m_datacnt;
     pItem->m_type = m_type;
     pItem->m_description = m_description;
     pItem->m_defaultVal = m_defaultVal;
@@ -226,9 +223,9 @@ UiCfgItem* UiCfgItemEx::createMyself()
 
     return pItem;
 }
-bool UiCfgItemEx::initData(unsigned short *pStAddr)
+bool UiCfgItemEx::initUi(unsigned short *pStAddr)
 {
-    UiCfgItem::initData(pStAddr);
+    UiCfgItem::initUi(pStAddr);
 
     int pos = m_range.indexOf('-');
     if (-1 < pos){
@@ -297,6 +294,7 @@ UiCfgItem* ComboboxCfgItem::createMyself()
     pItem->m_width = m_width;
     pItem->m_height = m_height;
     pItem->m_dataidx = m_dataidx;
+    pItem->m_datacnt = m_datacnt;
     pItem->m_type = m_type;
     pItem->m_description = m_description;
     pItem->m_defaultVal = m_defaultVal;
@@ -317,9 +315,9 @@ UiCfgItem* ComboboxCfgItem::createMyself()
 //
 //    return true;
 //}
-bool ComboboxCfgItem::initData(unsigned short *pStAddr)
+bool ComboboxCfgItem::initUi(unsigned short *pStAddr)
 {
-    UiCfgItem::initData(pStAddr);
+    UiCfgItem::initUi(pStAddr);
 
     CKeyDnComboBox* pBox = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
     if (nullptr != pBox){

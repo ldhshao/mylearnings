@@ -5,6 +5,7 @@
 #include <list>
 using namespace std;
 class CKeyDnEdit;
+class CDevPointEdit;
 class CKeyDnComboBox;
 
 enum pointmode{
@@ -61,6 +62,7 @@ public:
     BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t min, uint16_t *max, uint16_t defaultVal);
     static void
     BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t *min, uint16_t max, uint16_t defaultVal);
+    static void BindEdit(CDevPointEdit *pEdit, uint16_t *pVal, uint32_t defaultVal);
 
 
     /*

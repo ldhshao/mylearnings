@@ -29,11 +29,12 @@ public:
     virtual UiCfgItem* createMyself();
     void    copyChildren(GroupCfgItem* pDst);
 
-    virtual void setDataidx(int idx);
+    //virtual void setDataidx(int idx);
     virtual void create(QWidget* parent);
-    virtual bool init();
-    virtual bool initData(unsigned short* pStAddr);//init data
+    virtual bool initData(int idx);
+    virtual bool initUi(unsigned short* pStAddr);//init data
     void         addToPage(UiPage* page);
+    bool         chkDataConflict(); //test function
 
     bool readXmlFile(QString strFile);
     UiCfgItem* findItemById(int id);
@@ -59,7 +60,7 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
 
-    virtual bool init();
+    virtual bool initUi(unsigned short* pStAddr);
 
     GroupCfgItem* findGroupByName(const QString& strName);
 

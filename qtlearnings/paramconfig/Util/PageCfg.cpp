@@ -131,19 +131,72 @@ void GroupCfgItem::deleteAll()
     m_children.clear();
 }
 
-void GroupCfgItem::setDataidx(int idx)
+bool GroupCfgItem::initData(int idx)
 {
     m_dataidx = idx;
 
+    int cnt = 0;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for(; it != m_children.end(); it++){
-        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
-        if (nullptr != grp){
-            grp->setDataidx(idx);
-            grp->m_dataidx = idx;
-            idx += grp->getDataCount();
+        (*it)->initData(idx);
+        cnt += (*it)->datacount();
+        idx += (*it)->datacount();
+    }
+    m_datacnt = cnt;
+    //check data conflict
+    chkDataConflict();
+
+    return true;
+}
+
+bool isInRange(int b, int e, int min, int max)
+{
+    return ((min <= b) && (e <= max));
+}
+struct SRange{
+    int min;
+    int max;
+};
+bool isConflict(int min, int max, vector<struct SRange>& rangeList)
+{
+    for(auto it = rangeList.begin(); it != rangeList.end(); it++){
+        if (isInRange(min, max, it->min, it->max))
+            return true;
+    }
+
+    return false;
+}
+void addRangeList(int min, int max, vector<struct SRange>& rangeList)
+{
+    for(auto it = rangeList.begin(); it != rangeList.end(); it++){
+        if (min == it->max){
+            it->max = max;
+            return ;
+        }else if (max == it->min){
+            it->min = min;
+            return ;
         }
     }
+
+    struct SRange range = {min, max};
+    rangeList.push_back(range);
+}
+bool GroupCfgItem::chkDataConflict()
+{
+    bool bRet = false;
+    vector<struct SRange> rangeList;
+    list<UiCfgItem*>::iterator it = m_children.begin();
+    for(; it != m_children.end(); it++){
+        int min = (*it)->dataidx(), max = (*it)->dataidx()+(*it)->datacount();
+        if (!isConflict(min, max, rangeList)){
+            addRangeList(min, max, rangeList);
+        }else {
+            bRet = true;
+            qDebug()<<"error: data conflict "<<(*it)->getName()<<" dataidx "<<min;
+        }
+    }
+
+    return bRet;
 }
 
 void GroupCfgItem::create(QWidget *parent)
@@ -169,113 +222,8 @@ void GroupCfgItem::create(QWidget *parent)
     //}
 }
 
-/*////version 001
-bool GroupCfgItem::init()
-{
-    //only for group
-    int iSpanName = 4;
-    int iSpanDes = 2;
-    int iSpanItem = 10;
-    int iSpanMargin = 4;
-    int iTitleHeight = 36;
-    //find cols and rows
-    //count max width and max height
-    set<int> cols, rows;
-    vector<int> colInfos;
-    int colCnt = 0, rowCnt = 0;
-    int iMaxWidth=0, iMaxHeight = 0, iMaxNameWidth = 0, iMaxOtherWidth = 0;
-    list<UiCfgItem*>::iterator it = m_children.begin();
-    for (; it != m_children.end(); it++){
-        (*it)->init();
-
-        int l = (*it)->left(), t = (*it)->top();
-        if (cols.find(l) == cols.end())
-            cols.insert(l);
-        if (rows.find(t) == rows.end())
-            rows.insert(t);
-
-        //width/height
-        int wName = 0, wOther = 0, h = 0;
-        QWidget *w0 = (*it)->getWidget();
-        QWidget *w1 = (*it)->getWidName();
-        QWidget *w2 = (*it)->getWidDes();
-        if (nullptr != w0){
-            wOther += w0->size().width();
-            if (w0->size().height() > h) h = w0->size().height();
-        }
-        if (nullptr != w1){
-            wName += w1->size().width();
-            if (wName > iMaxNameWidth) iMaxNameWidth = wName;
-            if (w1->size().height() > h) h = w1->size().height();
-        }
-        if (nullptr != w2){
-            wOther += w2->size().width();
-            wOther += iSpanDes;
-            if (w2->size().height() > h) h = w2->size().height();
-        }
-        if (wOther > iMaxOtherWidth) {
-            iMaxOtherWidth = wOther;
-        }
-        iMaxHeight = ((iMaxHeight > h) ? iMaxHeight : h);
-    }
-    iMaxWidth = iMaxNameWidth + iSpanName + iMaxOtherWidth;
-    if (!cols.empty()){
-        int s0 = iSpanMargin;
-        int s1 = iSpanMargin + iMaxNameWidth + iSpanName;
-        set<int>::iterator its = cols.begin();
-        for (; its != cols.end(); its++){
-            colInfos.push_back(s0);
-            colInfos.push_back(s1);
-            s0 += (iMaxWidth + iSpanItem);
-            s1 += (iMaxWidth + iSpanItem);
-        }
-        colCnt = cols.size();
-        rowCnt = rows.size();
-    }
-    //init every children
-    int row = 0, col = 0;
-    iMaxHeight += iSpanMargin;
-    it = m_children.begin();
-    for (; it != m_children.end(); it++){
-        QWidget *w0 = (*it)->getWidget();
-        QWidget *w1 = (*it)->getWidName();
-        QWidget *w2 = (*it)->getWidDes();
-        int top = iTitleHeight + row * (iMaxHeight + iSpanItem);
-        qDebug()<<(*it)->getName()<<": top "<<top;
-        if (nullptr != w0){
-            w0->move(colInfos[2*col + 1], top);
-            qDebug()<<w0->width()<<","<<w0->height();
-            qDebug()<<"l0: "<<colInfos[2*col+1];
-        }
-        if (nullptr != w1){
-            w1->move(colInfos[2*col + 0], top);
-            qDebug()<<w1->width()<<","<<w1->height();
-            qDebug()<<"l1: "<<colInfos[2*col+0];
-        }
-        if (nullptr != w2){
-            w2->move(colInfos[2*col + 1] + w0->width() + iSpanDes, top);
-            qDebug()<<w2->width()<<","<<w2->height();
-            qDebug()<<"l2: "<<colInfos[2*col+1] + w0->width() + iSpanDes;
-        }
-        col++;
-        if (col >= colCnt){
-            row++; col = 0;
-        }
-    }
-    //init myself
-    int iWidthMin = QFontMetrics(m_pWidget->font()).width(m_name);
-    int iWidth = iSpanMargin + iSpanMargin;
-    int iHeight = iSpanMargin + iSpanMargin + iTitleHeight;
-    if (0 < colCnt) iWidth = iWidth + colCnt * iMaxWidth + (colCnt - 1) * iSpanItem;
-    if (iWidth < iWidthMin) iWidth = iWidthMin;
-    if (0 < rowCnt) iHeight = iHeight + rowCnt * iMaxHeight + (rowCnt - 1) * iSpanItem;
-    m_pWidget->resize(iWidth, iHeight);
-    qDebug()<<"group "<<getName()<<": "<<iWidth<<","<<iHeight;
-
-    return true;
-}*/
 //version 002
-bool GroupCfgItem::init()
+bool GroupCfgItem::initUi(unsigned short* pStAddr)
 {
     //only for group
     int iSpanName = 4;
@@ -294,7 +242,7 @@ bool GroupCfgItem::init()
     map<int, int> rowHeights, rowInfos;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for (; it != m_children.end(); it++){
-        (*it)->init();
+        (*it)->initUi(pStAddr);
 
         //width/height
         int wName = 0, wOther = 0, h = 0;
@@ -381,23 +329,6 @@ bool GroupCfgItem::init()
     qDebug()<<"group "<<getName()<<": "<<iWidth<<","<<iHeight;
 
     return true;
-}
-
-bool GroupCfgItem::initData(unsigned short* pStAddr)
-{
-    UiCfgItem::initData(pStAddr);
-
-    bool bOK = false;
-    if (-1 != m_dataidx){
-        //unsigned short *pAddr = pStAddr + m_dataidx;
-        list<UiCfgItem*>::iterator it = m_children.begin();
-        for (; it != m_children.end(); it++){
-            (*it)->initData(pStAddr);
-        }
-        bOK = true;
-    }
-
-    return bOK;
 }
 
 void GroupCfgItem::addToPage(UiPage* page)
@@ -522,7 +453,6 @@ UiPage* PageCfg::createPage()
                 pGroup->addToPage(m_uiPage);
         }
 
-        init();
         m_uiPage->initTabOrder();
     }
     return m_uiPage;
@@ -537,10 +467,10 @@ bool PageCfg::initFromDomElement(QDomElement element)
     }
     return false;
 }
-bool PageCfg::init()
+bool PageCfg::initUi(unsigned short *pStAddr)
 {
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
-        (*it)->init();
+        (*it)->initUi(pStAddr);
     }
 
     int iSpanItem = 10;
@@ -630,15 +560,13 @@ PageCfgList::~PageCfgList()
 }
 bool PageCfgList::createAllPage(list<UiPage*> &pageList)
 {
-    int dataidx = 0;
+    initData(0);
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         PageCfg *page = dynamic_cast<PageCfg*>(*it);
         UiPage *w = page->createPage();
-        page->setDataidx(dataidx);
-        dataidx += page->getDataCount();
-        //page->initData(m_pParamTbl);
+        page->initUi(m_pParamTbl);
         pageList.push_back(w);
     }
-    //dump();
+    dump();
     return true;
 }

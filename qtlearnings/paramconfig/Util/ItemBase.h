@@ -6,10 +6,9 @@
 #include <qdom.h>
 
 #define setIntValue(var, element, attr) {\
-    var = 0;                            \
-    QString strVal = element.attribute(attr);\
-    if (!strVal.isEmpty())                   \
-        var = strVal.toInt();                \
+        QString strVal = element.attribute(attr);\
+        if (!strVal.isEmpty())                   \
+            var = strVal.toInt();                \
     }
 
 #define setStrValue(var, element, attr) var = element.attribute(attr);

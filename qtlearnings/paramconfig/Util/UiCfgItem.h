@@ -7,7 +7,7 @@ class UiCfgItem : public XmlItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(UiCfgItem)
-    UiCfgItem(UiCfgItem *parent = nullptr) : m_left(0), m_top(0), m_width(0), m_height(0),m_dataidx(-1),
+    UiCfgItem(UiCfgItem *parent = nullptr) : m_left(0), m_top(0), m_width(0), m_height(0),m_dataidx(-1),m_datacnt(1),
                   m_pWidget(nullptr), m_pWidName(nullptr), m_pWidDes(nullptr){
         m_enableSourceId = -1; m_enableSourceVal = 0;
         m_parent = parent;
@@ -15,6 +15,7 @@ public:
     virtual ~UiCfgItem() {}
 
     static QString strTypeEdit;
+    static QString strTypeDevPointEdit;
     static QString strTypeCombobox;
     static QString strTypeCheckBox;
     static QString strTypeLabel;
@@ -30,6 +31,7 @@ public:
     int  width() {	return m_width;	}
     int  height() {	return m_height;	}
     int  dataidx() { return m_dataidx; }
+    int  datacount() { return m_datacnt; }
     QString  enableSourceId() {	return m_enableSourceId; }
     uint16_t  enableSourceVal() { return m_enableSourceVal; }
     UiCfgItem* parent() { return m_parent; }
@@ -44,14 +46,14 @@ public:
     virtual UiCfgItem* createMyself();
 
     virtual void create(QWidget* parent);
-    virtual bool init();
-    virtual bool initData(unsigned short* pStAddr);//init data
+    virtual bool initData(int idx);
+    virtual bool initUi(unsigned short* pStAddr);//init data
 
     virtual uint16_t *paramAddress();
 
 protected:
     int m_left, m_top, m_width, m_height;
-    int m_dataidx;
+    int m_dataidx, m_datacnt;
     QString m_type;
     QString m_description;
     QString m_defaultVal;
@@ -72,7 +74,7 @@ public:
     virtual bool initFromDomElement(QDomElement element);
     virtual UiCfgItem* createMyself();
 
-    virtual bool initData(unsigned short* pStAddr);//init data
+    virtual bool initUi(unsigned short* pStAddr);//init data
 
 protected:
     QString m_range;
@@ -89,7 +91,7 @@ public:
 
     //virtual QWidget* create();
     //virtual bool init();
-    virtual bool initData(unsigned short* pStAddr);//init data
+    virtual bool initUi(unsigned short* pStAddr);//init data
 
 protected:
     QStringList m_params;

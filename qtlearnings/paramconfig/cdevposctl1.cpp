@@ -1,9 +1,16 @@
 #include "cdevposctl1.h"
 #include "ui_cdevposctl1.h"
 #include "cdevposmgr.h"
+#include "cdevpointedit.h"
+#include <QKeyEvent>
 #include <QDebug>
 
 #define PROPERTY_INDEX "index"
+
+CDevPosCtl1* CDevPosCtl1::instance(){
+    static CDevPosCtl1 _ins;
+    return &_ins;
+}
 
 CDevPosCtl1::CDevPosCtl1(QWidget *parent) :
     QWidget(parent),
@@ -11,6 +18,7 @@ CDevPosCtl1::CDevPosCtl1(QWidget *parent) :
 {
     ui->setupUi(this);
     currChk = nullptr;
+    edit = nullptr;
     chkLoading = false;
     int i = 0;
     chks[i++] = ui->checkBox_1;
@@ -40,6 +48,55 @@ CDevPosCtl1::CDevPosCtl1(QWidget *parent) :
 CDevPosCtl1::~CDevPosCtl1()
 {
     delete ui;
+}
+
+
+void CDevPosCtl1::setAttachEdit(CDevPointEdit *e)
+{
+    if (nullptr != e && !e->text().isEmpty()){
+        QStringList ptList = e->text().split(".");
+        if (3 == ptList.count()){
+            ui->comboBox_line->setCurrentText(ptList[0]);
+            ui->comboBox_machine->setCurrentText(ptList[1]);
+            int port = ptList[2].toInt() - 1;
+            if (0 <= port){
+                for (int i = 0; i < MACHINE_CHECKBOX_MAX; i++) {
+                    if (i != port) chks[i]->setEnabled(false);
+                    else chks[i]->setEnabled(true);
+                }
+            }
+        }
+    }
+    edit = e;
+}
+
+void CDevPosCtl1::keyPressEvent(QKeyEvent *event)
+{
+    QWidget *focus = focusWidget();
+    bool dealed = false;
+    switch (event->key()) {
+    case Qt::Key_Up:
+        focusNextPrevChild(false);
+        break;
+    case Qt::Key_Down:
+        focusNextPrevChild(true);
+        break;
+    default:
+        break;
+    }
+
+    if (Qt::Key_Return == event->key()){
+        if (focus == ui->pushButton_cancel){
+            on_pushButton_cancel_clicked();
+            return ;
+        }
+        if (focus == ui->pushButton_ok){
+            on_pushButton_ok_clicked();
+            return ;
+        }
+    }
+
+    event->setAccepted(dealed);
 }
 
 void CDevPosCtl1::on_checkbox_stateChanged(int newState)
@@ -114,10 +171,16 @@ void CDevPosCtl1::on_pushButton_cancel_clicked()
 
         CDevPosMgr::instance()->setPortValue(l, m, currChk->property(PROPERTY_INDEX).toInt(), false);
     }
-    close();
+    hide();
 }
 
 void CDevPosCtl1::on_pushButton_ok_clicked()
 {
-    close();
+    if (nullptr != edit && nullptr != currChk){
+        int l = ui->comboBox_line->currentIndex();
+        int m = ui->comboBox_machine->currentIndex() - 1;
+        int p = currChk->property(PROPERTY_INDEX).toInt();
+        edit->setValue(make_dev_point(l, m, p));
+    }
+    hide();
 }

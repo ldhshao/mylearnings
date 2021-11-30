@@ -125,3 +125,45 @@ void CDevPosMgr::setPortValue(int l, int m, int port, bool use)
     portInfos[l][m][port] = use;
     qDebug()<<"line "<<l<<" machine "<<m<<" port "<<port<<" val "<<use;
 }
+
+void CDevPosMgr::setDevPoint(uint32_t devPt, bool use)
+{
+    int l = get_line_from_dev_point(devPt);
+    int m = get_machine_from_dev_point(devPt);
+    int p = get_port_from_dev_point(devPt);
+    if (0 >= l || l> lineCount){
+        return ;
+    }
+    l = l - 1;
+    if (0 > m || m>= getMachineCount(l)){
+        return ;
+    }
+    if (0 > p || p > portCount[lineTypes[l]]){
+        return ;
+    }
+
+    setPortValue(l, m, p, use);
+}
+
+QString CDevPosMgr::makeStrDevPoint(uint32_t devPoint)
+{
+    QString strDevPoint;
+    int l = get_line_from_dev_point(devPoint);
+    int m = get_machine_from_dev_point(devPoint);
+    int p = get_port_from_dev_point(devPoint);
+    if (0 >= l || l> lineCount){
+        return strDevPoint;
+    }
+    l = l - 1;
+    if (0 > m || m>= getMachineCount(l)){
+        return strDevPoint;
+    }
+    if (0 > p || p > portCount[lineTypes[l]]){
+        return strDevPoint;
+    }
+
+    strDevPoint = lineNames[l];
+    strDevPoint.append(QString::asprintf(".%d.%d", m+1, p+1));
+
+    return strDevPoint;
+}
