@@ -6,6 +6,7 @@
 #include "UiCommon/qkeytools.h"
 #include "cdevposctl1.h"
 #include "cdevposctl2.h"
+#include "clineselector.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -308,9 +309,23 @@ void MainWindow::slot_menu2Clicked(CStateButton* btn)
     }
 }
 
+static int idx = 0;
 void MainWindow::on_pushButton_clicked()
 {
    // CDevPosCtl1 *testCtl = new CDevPosCtl1();
     //CDevPosCtl2 *testCtl = new CDevPosCtl2();
-    CDevPosCtl1::instance()->show();
+    //CDevPosCtl1::instance()->show();
+    qDebug()<<"pos "<<CLineSelector::instance()->pos();
+    idx++;
+    CLineSelector::instance()->adjustPosition(idx*100, 100, 100, 40);
+    CLineSelector::instance()->show();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    qDebug()<<"pos "<<CLineSelector::instance()->pos();
+    idx--;
+    CLineSelector::instance()->adjustPosition(idx*100, 100, 100, 40);
+    CLineSelector::instance()->show();
+
 }

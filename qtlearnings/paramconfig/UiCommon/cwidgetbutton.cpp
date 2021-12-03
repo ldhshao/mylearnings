@@ -1,4 +1,5 @@
 #include "cwidgetbutton.h"
+#include <QKeyEvent>
 
 #define MENU_NORMAL "QPushButton{color:rgba(255,255,255,100%);background-color: rgba(80, 80, 100, 100%);}"
 #define MENU_SELECTED "QPushButton{color:rgba(255,255,255,100%); background-color: rgba(200, 60, 60, 100%);}"
@@ -30,6 +31,28 @@ CWidgetButton::CWidgetButton(QWidget *w, QWidget *parent)
 
 }
 
+CKeyStateButton::CKeyStateButton(QWidget *parent)
+    :CStateButton(parent)
+{
+
+}
+void CKeyStateButton::keyPressEvent(QKeyEvent *event)
+{
+    QWidget *focus = focusWidget();
+    switch (event->key()) {
+    case Qt::Key_Left:
+    case Qt::Key_Right:
+    case Qt::Key_Up:
+    case Qt::Key_Down:
+    case Qt::Key_Return:
+    case Qt::Key_Escape:
+        event->setAccepted(false);
+        break;
+    default:
+        break;
+    }
+}
+
 
 CStateButtonMgr::CStateButtonMgr(QObject *parent):
     QObject(parent), pLastBtn(nullptr)
@@ -51,9 +74,12 @@ void CStateButtonMgr::slot_btnClicked(CStateButton* pBtn)
     if (nullptr != pLastBtn)
         pLastBtn->setButtonState(CStateButton::BS_NORMAL);
     pLastBtn = pBtn;
-    pBtn->setButtonState(CStateButton::BS_SELECTED);
+    if (nullptr != pBtn){
+        //pBtn->setFocus();
+        pBtn->setButtonState(CStateButton::BS_SELECTED);
 
-    emit sig_button_clicked(pBtn);
+        emit sig_button_clicked(pBtn);
+    }
 }
 
 CWidgetButtonMgr::CWidgetButtonMgr(QObject *parent):

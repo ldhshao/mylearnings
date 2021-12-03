@@ -11,11 +11,13 @@ public:
 
     void setValuePtr(uint16_t* val);
     void setValue(uint32_t val);
+    uint32_t getValue();
     void showText();
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
-    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+    virtual void focusOutEvent(QFocusEvent *event);
     uint16_t *pVal;
 };
 

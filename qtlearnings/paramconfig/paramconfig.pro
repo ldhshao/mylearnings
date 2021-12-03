@@ -18,6 +18,7 @@ SOURCES += \
     cdevposmgr.cpp \
     ckeycheckbox.cpp \
     ckeycombobox.cpp \
+    clineselector.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -28,6 +29,7 @@ HEADERS += \
     cdevposmgr.h \
     ckeycheckbox.h \
     ckeycombobox.h \
+    clineselector.h \
     mainwindow.h
 
 FORMS += \

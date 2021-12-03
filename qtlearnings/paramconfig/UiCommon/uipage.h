@@ -22,6 +22,7 @@ public:
 signals:
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
 
 protected slots:
 

@@ -1,0 +1,85 @@
+#ifndef CLINESELECTOR_H
+#define CLINESELECTOR_H
+#include "UiCommon/cwidgetbutton.h"
+#include <vector>
+#include <QWidget>
+using namespace std;
+class QCheckBox;
+class CDevPointEdit;
+
+class CButtonSelector : public QWidget
+{
+    Q_OBJECT
+public:
+    void   selectButtonByIndex(int idx);
+    void   adjustPosition(int x, int y, int w, int h);
+    void   hideSelector();
+
+protected:
+    explicit CButtonSelector(QWidget *parent = nullptr);
+
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void nextSelector(){}
+    virtual void prevSelector(){}
+
+protected:
+    CStateButtonMgr btnMgr;
+    vector<CStateButton*> btnList;
+    int                   btnVisibleCnt;
+};
+
+class CLineSelector : public CButtonSelector
+{
+    Q_OBJECT
+public:
+    static CLineSelector* instance();
+
+protected:
+    explicit CLineSelector(QWidget *parent = nullptr);
+    virtual void nextSelector();
+    virtual void prevSelector();
+
+protected slots:
+    void slot_btnClicked(CStateButton* pBtn);
+};
+
+class CMachineSelector : public CButtonSelector
+{
+    Q_OBJECT
+public:
+    static CMachineSelector* instance();
+    void   showMachines(int line);
+
+protected:
+    explicit CMachineSelector(QWidget *parent = nullptr);
+    virtual void nextSelector();
+    virtual void prevSelector();
+    int      currLine;
+
+protected slots:
+    void slot_btnClicked(CStateButton* pBtn);
+};
+
+class CPortSelector : public QWidget
+{
+    Q_OBJECT
+public:
+    static CPortSelector* instance();
+    void   showPorts(int line, int machine);
+    void   enablePort(int p);
+    void   setAttachEdit(CDevPointEdit* edit) {	pEdit = edit; }
+    void   adjustPosition(int x, int y, int w, int h);
+
+protected:
+    explicit CPortSelector(QWidget *parent = nullptr);
+    virtual void keyPressEvent(QKeyEvent *event);
+    vector<QCheckBox*> btnList;
+    int      currLine;
+    int      currMachine;
+    bool     chkLoading;
+    CDevPointEdit *pEdit;
+
+protected slots:
+    void on_checkbox_stateChanged(int newState);
+};
+#endif // CLINESELECTOR_H

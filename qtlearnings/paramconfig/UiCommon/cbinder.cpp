@@ -2,7 +2,9 @@
 #include "ckeydnedit.h"
 #include "../cdevpointedit.h"
 #include "ckeydncombobox.h"
+#include "../cdevposmgr.h"
 #include "bindobj.h"
+#include <QDebug>
 
 CBinder::CBinder()
 {
@@ -153,6 +155,9 @@ CBinder::BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t *min, uint16_t max,
 void CBinder::BindEdit(CDevPointEdit *pEdit, uint16_t *pVal, uint32_t defaultVal)
 {
     pEdit->setValuePtr(pVal);
+    uint32_t devPoint = pEdit->getValue();
+    qDebug()<<"read addr "<<pVal<<" val "<<devPoint;
+    CDevPosMgr::instance()->setDevPoint(devPoint, true);
 }
 /*
  * Selection type

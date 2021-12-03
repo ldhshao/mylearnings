@@ -40,6 +40,17 @@ protected:
     QWidget *pWidget;
 };
 
+class CKeyStateButton : public CStateButton
+{
+    Q_OBJECT
+
+public:
+    explicit CKeyStateButton(QWidget *parent = nullptr);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
+};
+
 
 class CStateButtonMgr : public QObject
 {

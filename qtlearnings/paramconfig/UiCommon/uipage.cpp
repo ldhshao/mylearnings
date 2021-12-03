@@ -98,3 +98,15 @@ void UiPage::keyPressEvent(QKeyEvent *event)
     }
     qDebug()<<focusWidget();
 }
+
+void UiPage::focusInEvent(QFocusEvent *event)
+{
+    qDebug()<<"UiPage::focusInEvent";
+    //qDebug()<<"CMachineSelector active "<<CMachineSelector::instance()->isActiveWindow();
+    //qDebug()<<"CPortSelector active "<<CPortSelector::instance()->isActiveWindow();
+    //qDebug()<<"Application focus widget "<<QApplication::focusWidget();
+    //qDebug()<<"Application activeWindow "<<QApplication::activeWindow();
+    //if (!CMachineSelector::instance()->isActiveWindow() && !CPortSelector::instance()->isActiveWindow()){
+    //    prevSelector();
+    //}
+}

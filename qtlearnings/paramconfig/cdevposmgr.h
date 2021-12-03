@@ -31,6 +31,7 @@ public:
     void       setPortValue(int l, int m, int port, bool use);
     void       setDevPoint(uint32_t devPt, bool use);
     QString    makeStrDevPoint(uint32_t devPoint);
+    bool       isDevPointValid(uint32_t);
 
     enum {
       LINETYPE_CS = 0,
