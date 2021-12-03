@@ -75,16 +75,10 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
         CMachineSelector::instance()->selectButtonByIndex(m);
         CPortSelector::instance()->activateWindow();
     }else{
-        //QCursor::setPos(CLineSelector::instance()->pos());
-        //CLineSelector::instance()->selectButtonByIndex(0);
-        //CLineSelector::instance()->setFocus();
     }
 }
 
 void CDevPointEdit::focusOutEvent(QFocusEvent *event)
 {
     qDebug()<<"CDevPointEdit::focusOutEvent";
-    //CLineSelector::instance()->hideSelector();
-    //CMachineSelector::instance()->hideSelector();
-    //CPortSelector::instance()->hide();
 }

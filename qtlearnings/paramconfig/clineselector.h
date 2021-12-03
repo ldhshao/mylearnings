@@ -4,6 +4,7 @@
 #include <vector>
 #include <QWidget>
 using namespace std;
+class QTimer;
 class QCheckBox;
 class CDevPointEdit;
 
@@ -22,10 +23,16 @@ protected:
     virtual void nextSelector(){}
     virtual void prevSelector(){}
 
+protected slots:
+    void slot_emitTimer();
+
 protected:
     CStateButtonMgr btnMgr;
     vector<CStateButton*> btnList;
     int                   btnVisibleCnt;
+    QTimer               *emitTimer;
+    int                   timerInterval;
+    int                   usrKey;
 };
 
 class CLineSelector : public CButtonSelector
@@ -66,7 +73,6 @@ class CPortSelector : public QWidget
 public:
     static CPortSelector* instance();
     void   showPorts(int line, int machine);
-    void   enablePort(int p);
     void   setAttachEdit(CDevPointEdit* edit) {	pEdit = edit; }
     void   adjustPosition(int x, int y, int w, int h);
 
@@ -78,8 +84,12 @@ protected:
     int      currMachine;
     bool     chkLoading;
     CDevPointEdit *pEdit;
+    QTimer               *emitTimer;
+    int                   timerInterval;
+    int                   usrKey;
 
 protected slots:
     void on_checkbox_stateChanged(int newState);
+    void slot_emitTimer();
 };
 #endif // CLINESELECTOR_H

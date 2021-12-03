@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QCheckBox>
+#include <QTimer>
 #include <QDebug>
 #include <QKeyEvent>
 //#include <QMouseEvent>
@@ -14,6 +15,10 @@ CButtonSelector::CButtonSelector(QWidget *parent) : QWidget(parent)
 {
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
     btnVisibleCnt = 0;
+    usrKey = 0;
+    timerInterval = 300;
+    emitTimer = new QTimer(this);
+    connect(emitTimer, SIGNAL(timeout()), this, SLOT(slot_emitTimer()));
 }
 
 void CButtonSelector::selectButtonByIndex(int idx)
@@ -80,6 +85,20 @@ void CButtonSelector::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Escape:
         hide();
         break;
+    case Qt::Key_0:
+    case Qt::Key_1:
+    case Qt::Key_2:
+    case Qt::Key_3:
+    case Qt::Key_4:
+    case Qt::Key_5:
+    case Qt::Key_6:
+    case Qt::Key_7:
+    case Qt::Key_8:
+    case Qt::Key_9:
+        if(emitTimer->isActive()) emitTimer->stop();
+        usrKey = usrKey * 10 + (event->key() - Qt::Key_0);
+        emitTimer->start(timerInterval);
+        break;
     default:
         break;
     }
@@ -91,6 +110,17 @@ void CButtonSelector::hideSelector()
     selectButtonByIndex(-1);
 }
 
+void CButtonSelector::slot_emitTimer()
+{
+    emitTimer->stop();
+    qDebug()<<"slot_emitTimer "<<usrKey;
+    usrKey = usrKey - 1;
+    if (usrKey < btnList.size() && btnList[usrKey]->isVisible()){
+        btnMgr.selectButton(btnList[usrKey]);
+    }
+    usrKey = 0;
+}
+
 CLineSelector::CLineSelector(QWidget *parent) : CButtonSelector(parent)
 {
     int w = 100, h = 40;
@@ -98,7 +128,7 @@ CLineSelector::CLineSelector(QWidget *parent) : CButtonSelector(parent)
     for (int i = 0; i < lineNames.count(); i++) {
         CStateButton* btn = new CKeyStateButton(this);
         btn->resize(w,h);
-        btn->setText(lineNames[i]);
+        btn->setText(lineNames[i] + QString::asprintf("\n(%d)",i+1));
         btn->setProperty(PROPERTY_INDEX, i);
         btn->move(i*w, 0);
         btnMgr.registerButton(btn);
@@ -145,7 +175,7 @@ CMachineSelector::CMachineSelector(QWidget *parent) : CButtonSelector(parent),cu
     for (int i = 0; i < MACHINE_MAX; i++) {
         CStateButton* btn = new CKeyStateButton(this);
         btn->resize(w,h);
-        btn->setText(QString::asprintf("%d", i+1));
+        btn->setText(QString::asprintf("%d\n(%d)", i+1, i+1));
         btn->setProperty(PROPERTY_INDEX, i);
         btn->move(i*w, 0);
         btnMgr.registerButton(btn);
@@ -205,14 +235,18 @@ CPortSelector::CPortSelector(QWidget *parent) : QWidget(parent),currLine(-1),cur
 {
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
     pEdit = nullptr;
+    usrKey = 0;
+    timerInterval = 300;
+    emitTimer = new QTimer(this);
+    connect(emitTimer, SIGNAL(timeout()), this, SLOT(slot_emitTimer()));
 
-    int w = 60, h = 40;
+    int w = 60, h = 40, m = 6;
     for (int i = 0; i < PORT_MAX; i++) {
         QCheckBox* btn = new CKeyCheckBox(this);
         btn->resize(w,h);
-        btn->setText(QString::asprintf("%d", i+1));
+        btn->setText(QString::asprintf("%d\n(%d)", i+1, i+1));
         btn->setProperty(PROPERTY_INDEX, i);
-        btn->move(i*w, 0);
+        btn->move(m+i*w, 0);
         connect(btn, SIGNAL(stateChanged(int)), this, SLOT(on_checkbox_stateChanged(int)));
         btnList.push_back(btn);
     }
@@ -226,7 +260,7 @@ CPortSelector* CPortSelector::instance()
 
 void CPortSelector::showPorts(int line, int machine)
 {
-    int w = 60, h = 40;
+    int w = 60, h = 40, m=6;
     list<bool> portList = CDevPosMgr::instance()->getMachinePorts(line, machine);
     int cnt = portList.size();
     int i = 0;
@@ -261,28 +295,11 @@ void CPortSelector::showPorts(int line, int machine)
     for (; i < PORT_MAX; i++) {
         btnList[i]->setVisible(false);
     }
-    resize(cnt*w, h);
+    resize(m+cnt*w, h);
     currLine = line;
     currMachine = machine;
     chkLoading = false;
     show();
-}
-
-void CPortSelector::enablePort(int p)
-{
-    if (p < btnList.size()){
-        btnList[p]->setEnabled(true);
-        btnList[p]->setFocus();
-        if (btnList[p]->isChecked()){
-            for (int i = 0; i < PORT_MAX; i++){
-                if(!btnList[i]->isVisible())
-                    break;
-                if(i == p)
-                    continue;
-                btnList[i]->setEnabled(false);
-            }
-        }
-    }
 }
 
 void CPortSelector::adjustPosition(int x, int y, int w, int h)
@@ -347,8 +364,33 @@ void CPortSelector::keyPressEvent(QKeyEvent *event)
         CMachineSelector::instance()->hideSelector();
         CLineSelector::instance()->hideSelector();
         break;
+    case Qt::Key_0:
+    case Qt::Key_1:
+    case Qt::Key_2:
+    case Qt::Key_3:
+    case Qt::Key_4:
+    case Qt::Key_5:
+    case Qt::Key_6:
+    case Qt::Key_7:
+    case Qt::Key_8:
+    case Qt::Key_9:
+        if(emitTimer->isActive()) emitTimer->stop();
+        usrKey = usrKey * 10 + (event->key() - Qt::Key_0);
+        emitTimer->start(timerInterval);
+        break;
     default:
         QWidget::keyPressEvent(event);
         break;
     }
+}
+
+void CPortSelector::slot_emitTimer()
+{
+    emitTimer->stop();
+    qDebug()<<"CPortSelector::slot_emitTimer "<<usrKey;
+    usrKey = usrKey - 1;
+    if (usrKey < btnList.size() && btnList[usrKey]->isVisible()){
+        btnList[usrKey]->setFocus();//效果不明显
+    }
+    usrKey = 0;
 }
