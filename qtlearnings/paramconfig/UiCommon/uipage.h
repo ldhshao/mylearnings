@@ -20,6 +20,8 @@ public:
     void initTabOrder();
 
 signals:
+    void sig_configFinished();
+
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void focusInEvent(QFocusEvent *event);

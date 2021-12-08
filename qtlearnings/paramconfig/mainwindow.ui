@@ -17,77 +17,69 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QPushButton" name="pushButton_load">
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>0</y>
-      <width>651</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout"/>
-   </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>81</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout"/>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>89</width>
+      <y>10</y>
+      <width>101</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
+     <string>加载本地变更</string>
     </property>
    </widget>
-   <widget class="CDevPointEdit" name="lineEdit">
+   <widget class="QPushButton" name="pushButton_send">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>30</y>
-      <width>91</width>
-      <height>25</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>30</y>
-      <width>111</width>
+      <x>190</x>
+      <y>10</y>
+      <width>101</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>参数变更上传</string>
     </property>
-    <property name="checkable">
-     <bool>true</bool>
+   </widget>
+   <widget class="QPushButton" name="pushButton_preview">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>10</y>
+      <width>101</width>
+      <height>25</height>
+     </rect>
     </property>
-    <property name="checked">
-     <bool>true</bool>
+    <property name="text">
+     <string>参数变更预览</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_save">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>10</y>
+      <width>101</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>参数变更保存</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_copyright">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>520</y>
+      <width>511</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parameter Configuration Copyright@2020-2025 All rights reserved V0.0.0</string>
     </property>
    </widget>
   </widget>
@@ -103,13 +95,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>CDevPointEdit</class>
-   <extends>QLineEdit</extends>
-   <header>cdevpointedit.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

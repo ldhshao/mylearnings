@@ -7,6 +7,7 @@
 UiPage::UiPage(QWidget *parent) :
     QWidget(parent)
 {
+    setWindowFlags(/*Qt::Tool |*/ Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 }
 
 UiPage::~UiPage()
@@ -94,6 +95,10 @@ void UiPage::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Up:
         focusNextPrevChild(false);
         event->setAccepted(true);
+        break;
+    case Qt::Key_Return:
+        hide();
+        emit sig_configFinished();
         break;
     }
     qDebug()<<focusWidget();

@@ -1,15 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "Util/PageCfg.h"
 #include "UiCommon/uipage.h"
 #include "UiCommon/pagecontainer.h"
 #include "UiCommon/qkeytools.h"
+#include "UiCommon/ckeylabel.h"
 #include "cdevposctl1.h"
 #include "cdevposctl2.h"
 #include "clineselector.h"
+#include "cdeviceconfig.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
+#include <math.h>
+#include <QPixmap>
+#include <QBitmap>
 #define SYSTEM_CFG_FILEPATH "system.xml"
 #define UITEMP_CFG_FILEPATH "uitemplate.xml"
 #define PARAMS_FILEPATH     "param.dat"
@@ -24,22 +28,21 @@
 //        selection-color: #4f4f4f;\
 //    }"
 #define MENU2_STYLE         "QPushButton {font-size:28px; font:bold;}"
+#define PROPERTY_DEVICE "device"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), devUiCfgList(0)
 {
     ui->setupUi(this);
-    currMenuIdx = -1;
-    pageMgr = new PageContainer(this);
     paramAddr = nullptr;
     paramCount = 0;
     appDir = QCoreApplication::applicationDirPath();
     loadParam();
     initMenu();
     //QkeyTools::getInstance();
-    onResize(width(), height());
-    slot_systemClicked(false);
+    deviceUi = new CDeviceConfig();
+    deviceUi->hide();
 }
 
 MainWindow::~MainWindow()
@@ -54,121 +57,74 @@ void MainWindow::initMenu()
 {
     QString strDevCfg = appDir + "/" + SYSTEM_CFG_FILEPATH;
     devCfg.readDevCfgFile(strDevCfg);
-    QPushButton *pBtn = new QPushButton (this);
-    QComboBox   *pCmb = new QComboBox (this);
-    int i = 0;
-    pBtn->setText("系统");
-    pBtn->setStyleSheet(MENU1_STYLE);
-    pBtn->resize(120, 40);
-    pCmb->setStyleSheet(MENU1_CMB_STYLE);
-    pCmb->resize(120, 40);
-    pCmb->insertItem(i++, "选择设备");
-    menu2Lists.resize(devCfg.getChildrenCount());
-    menu2MgrList.resize(devCfg.getChildrenCount());
     DevCfgItem *pItem = devCfg.getHead();
     while (nullptr != pItem) {
-        int idx = i;
-        if (DevCfgItem::DevTypeSystem != pItem->getType()){
-            pCmb->insertItem(i++, pItem->getName());
-        }else{
-            idx = 0;
-        }
-        CStateButtonMgr* pBtnMgr = new CStateButtonMgr();
-        DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);
-        if (nullptr != pList){
-            DevCfgItem* pSubItem = pList->getHead();
-            list<CStateButton*> btnList;
-            while(nullptr != pSubItem){
-                CStateButton* pSubBtn = new CStateButton();
-                QString strStyle = pSubBtn->styleSheet();
-                pSubBtn->setVisible(false);
-                pSubBtn->setStyleSheet(strStyle.append(MENU2_STYLE));
-                pSubBtn->setText(pSubItem->getName());
-                btnList.push_back(pSubBtn);
-                ui->verticalLayout->addWidget(pSubBtn);
-                pBtnMgr->registerButton(pSubBtn);
-                pSubItem = pList->getNext();
-            }
-            menu2Lists[idx] = btnList;
-            menu2MgrList[idx] = pBtnMgr;
-        }
-        connect(pBtnMgr, SIGNAL(sig_button_clicked(CStateButton*)), this, SLOT(slot_menu2Clicked(CStateButton*)));
+        CKeyLabel* pBtn = new CKeyLabel(this);
+        pBtn->setText(pItem->getName());
+        QVariant var;
+        var.setValue<void*>(pItem);
+        pBtn->setProperty(PROPERTY_DEVICE, var);
+        connect(pBtn, SIGNAL(clicked(QLabel*)), this, SLOT(slot_deviceClicked(QLabel*)));
+        devList.push_back(pBtn);
         pItem = devCfg.getNext();
     }
 
-    connect(pBtn, SIGNAL(clicked(bool)), this, SLOT(slot_systemClicked(bool)));
-    connect(pCmb, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_deviceChanged(int)));
-    ui->horizontalLayout->addWidget(pBtn);
-    ui->horizontalLayout->addWidget(pCmb);
-    cmbDevices = pCmb;
-
-    pBtn = new QPushButton(this);
+    QLabel* pBtn = new QLabel(this);
     pBtn->setText("通讯");
-    pBtn->setStyleSheet(MENU1_STYLE);
-    pBtn->resize(120, 40);
-    ui->horizontalLayout->addWidget(pBtn);
-    //pBtn = new QPushButton(this);
-    //pBtn->setText("帮助");
-    //pBtn->setStyleSheet(MENU1_STYLE);
-    //pBtn->resize(120, 40);
-    //ui->horizontalLayout->addWidget(pBtn);
-    pBtn = new QPushButton(this);
-    pBtn->setText("关于我们");
-    pBtn->setStyleSheet(MENU1_STYLE);
-    pBtn->resize(120, 40);
-    ui->horizontalLayout->addWidget(pBtn);
+    devList.push_back(pBtn);
+    pBtn = new QLabel(this);
+    pBtn->setText("帮助");
+    devList.push_back(pBtn);
 
     initPage();
 }
 
 void MainWindow::initPage()
 {
-    PageCfgList pageCfgList(paramAddr);
-    PageCfg cfgTemplate;
+    GroupCfgList cfgTemplate;
     QString strTemplate = appDir + "/" + UITEMP_CFG_FILEPATH;
     cfgTemplate.readXmlFile(strTemplate);
+    devUiCfgList.setParamTbl(paramAddr);
     DevCfgItem *pItem = devCfg.getHead();
     while (nullptr != pItem) {
-        DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);
+        GroupCfgList *uiList = new GroupCfgList();
+        uiList->setName(pItem->getName());
+        DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);//1level
         if (nullptr != pList){
-            DevCfgItem* pSubItem = pList->getHead();
+            DevCfgItem* pSubItem = pList->getHead();//2level
             while(nullptr != pSubItem){
-                PageCfg* pageCfg = new PageCfg();
-                pageCfg->setName(pSubItem->getName());
-                //add 2nd leve device base info
+                GroupCfgItem* grp = nullptr;
                 GroupCfgItem *pGroup = cfgTemplate.findGroupByName(pSubItem->getType());
                 if (nullptr != pGroup){
-                    UiCfgItem* grp = pGroup->createMyself();
-                    grp->setPos(1, 1);
-                    grp->setName(pSubItem->getName());
-                    pageCfg->addChild(grp);
+                    grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
+                }else {
+                    grp = new GroupCfgList();
                 }
+                grp->setName(pSubItem->getName());
+                uiList->addChild(grp);
 
                 DevCfgList* pLel2Dev = dynamic_cast<DevCfgList*>(pSubItem);
                 if (nullptr != pLel2Dev){
-                    //add 3nd leve device base info
-                    int top = 2;
-                    DevCfgItem* pLel3Item = pLel2Dev->getHead();
+                    DevCfgItem* pLel3Item = pLel2Dev->getHead();//3level
                     while(nullptr != pLel3Item){
                         GroupCfgItem* pGrp3 = cfgTemplate.findGroupByName(pLel3Item->getType());
                         if (nullptr != pGrp3){
-                            UiCfgItem* grp = pGrp3->createMyself();
-                            grp->setPos(1, top++);
-                            grp->setName(pLel3Item->getName());
-                            pageCfg->addChild(grp);
+                            UiCfgItem* item3 = pGrp3->createMyself();
+                            item3->setName(pLel3Item->getName());
+                            grp->addChild(item3);
                         }
                         pLel3Item = pLel2Dev->getNext();
                     }
                 }
-                pageCfgList.addChild(pageCfg);
                 pSubItem = pList->getNext();
             }
         }
+        devUiCfgList.addChild(uiList);
         pItem = devCfg.getNext();
     }
 
     //check data count
-    int iCnt = pageCfgList.getDataCount();
+    int iCnt = devUiCfgList.getDataCount();
     if (nullptr != paramAddr){
         if (paramCount != iCnt){
             delete[] paramAddr;
@@ -178,71 +134,25 @@ void MainWindow::initPage()
     paramCount = iCnt;
     if(nullptr == paramAddr){
         paramAddr = new uint16_t[paramCount];
-        pageCfgList.setParamTbl(paramAddr);
+        devUiCfgList.setParamTbl(paramAddr);
     }
-    pageCfgList.createAllPage(pageList);
+    devUiCfgList.createAllPage(pageList);
 
-    vector<list<CStateButton*>>::iterator itList = menu2Lists.begin();
-    for (; itList != menu2Lists.end(); itList++){
-        list<CStateButton*>::iterator itBtnPtr = itList->begin();
-        for(; itBtnPtr != itList->end(); itBtnPtr++){
-            GroupCfgItem* pGroup = dynamic_cast<GroupCfgItem*>(pageCfgList.findGroupByName((*itBtnPtr)->text()));
-            PageCfg* pageCfg = dynamic_cast<PageCfg*>(pGroup);
-            if (nullptr != pageCfg){
-                menu2ToPageMap[(*itBtnPtr)] = pageCfg->getPage();
-            }
-        }
-    }
 }
 
 void MainWindow::deleteAll()
 {
-    int iCnt = devCfg.getChildrenCount();
-    for (int i = 0; i < iCnt; i++) {
-        list<CStateButton*> btnList = menu2Lists[i];
-        for (list<CStateButton*>::iterator it = btnList.begin(); it != btnList.end(); it++){
-            delete (*it);
-        }
-    }
-    menu2Lists.clear();
-
-    vector<CStateButtonMgr*>::iterator it = menu2MgrList.begin();
-    for (; it != menu2MgrList.end(); it++) {
+    for(auto it = devList.begin(); it != devList.end(); it++){
         delete (*it);
     }
-    menu2MgrList.clear();
 
+    delete deviceUi;
     //delete pages
     //list<UiPage*>::iterator itPage = pageList.begin();
     //for (; itPage != pageList.end(); itPage++) {
     //    delete (*it);
     //}
     //pageList.clear();
-}
-
-void MainWindow::selectMenu(int menuIdx)
-{
-    if (-1 < currMenuIdx){
-        list<CStateButton*> btnList = menu2Lists[currMenuIdx];
-        for (list<CStateButton*>::iterator it = btnList.begin(); it != btnList.end(); it++){
-            (*it)->setVisible(false);
-        }
-    }
-
-    list<CStateButton*> btnList = menu2Lists[menuIdx];
-    for (list<CStateButton*>::iterator it = btnList.begin(); it != btnList.end(); it++){
-        (*it)->setVisible(true);
-    }
-    ui->verticalLayoutWidget->resize(ui->verticalLayoutWidget->width(), menu2Lists[menuIdx].size() * 40);
-
-    currMenuIdx = menuIdx;
-
-    //show page
-    CStateButton* currBtn = menu2MgrList[currMenuIdx]->currentButton();
-    if(nullptr == currBtn){
-        currBtn = menu2Lists[currMenuIdx].front();
-    }
-    menu2MgrList[currMenuIdx]->selectButton(currBtn);
 }
 
 bool MainWindow::saveParam()
@@ -265,7 +175,7 @@ bool MainWindow::loadParam()
         inFile.seekg(0, inFile.end);
         paramCount = inFile.tellg() / sizeof(uint16_t);
         if (paramCount > 0){
-        inFile.seekg(0, inFile.beg);
+            inFile.seekg(0, inFile.beg);
             paramAddr = new uint16_t[paramCount];
             inFile.read(reinterpret_cast<char*>(paramAddr), paramCount*sizeof(uint16_t));
         }
@@ -275,13 +185,37 @@ bool MainWindow::loadParam()
 }
 void MainWindow::onResize(int width, int height)
 {
-    int l = 120, t = 140, m = 4;
-    pageMgr->move(l, t);
-    ui->horizontalLayoutWidget->resize(width - l -l, 40);
-    ui->horizontalLayoutWidget->move(l, t - 45);
-    ui->verticalLayoutWidget->resize(l, menu2Lists[currMenuIdx].size()*40);
-    ui->verticalLayoutWidget->move(0, t);
-    pageMgr->resize(width - l - m, height - t - m);
+    int t0 = 100, t1 = height - 50, t2 = 200;
+    int w0 = ui->pushButton_load->width();
+    int w1 = ui->label_copyright->width();
+    int s0 = (0.4 * width - w0 * 4) / 3;
+    ui->pushButton_load->move(0.3*width, t0);
+    ui->pushButton_send->move(0.3*width + w0 + s0, t0);
+    ui->pushButton_preview->move(0.3*width + 2*(w0 + s0), t0);
+    ui->pushButton_save->move(0.3*width + 3*(w0 + s0), t0);
+    ui->label_copyright->move((width - w1)/2, t1);
+
+    //layout device
+    QPixmap pixmap(":/images/device1.png");
+    int cols, cnt = 0;
+    cols = sqrt(devCfg.getChildrenCount() + 2);
+    if (3 > cols) cols = 3;
+    int rows = (devCfg.getChildrenCount() + 2 + cols - 1) / cols;
+    int w2 = 200;
+    int s2 = (0.4*width - w2 * cols) / (cols - 1);
+    qDebug()<<"s2 "<<s2;
+    for (auto it = devList.begin(); it!= devList.end(); it++) {
+        (*it)->resize(w2, w2);
+        (*it)->setPixmap(pixmap.scaled(w2, w2));
+        if (cnt / cols < rows - 1 || (0 == (devCfg.getChildrenCount()+2)%cols))
+            (*it)->move(0.3*width + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(w2+s2));
+        else {
+            int lost = cols - ((devCfg.getChildrenCount()+2)%cols);
+            int offset = (lost * (w2 + s2)) / 2;
+            (*it)->move(offset + 0.3*width + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(w2+s2));
+        }
+        cnt++;
+    }
 }
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
@@ -289,43 +223,32 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
 }
 
-void MainWindow::slot_systemClicked(bool)
+void MainWindow::slot_deviceClicked(QLabel* lbl)
 {
-    cmbDevices->setCurrentIndex(0);
-    selectMenu(0);
-}
-void MainWindow::slot_deviceChanged(int newIdx)
-{
-    //if (0 < newIdx){
-        selectMenu(newIdx);
-    //}
-}
-void MainWindow::slot_menu2Clicked(CStateButton* btn)
-{
-    map<CStateButton*, UiPage*>::iterator it = menu2ToPageMap.find(btn);
-    if (menu2ToPageMap.end() != it){
-        pageMgr->setContent(it->second);
-        it->second->show();
-    }
+    QVariant var = lbl->property(PROPERTY_DEVICE);
+    DevCfgList* list = static_cast<DevCfgList*>(var.value<void*>());
+    qDebug()<<"label "<<lbl<<" device "<<list;
+
+    deviceUi->updateUi(list, &devUiCfgList);
+    deviceUi->showUi(1);
 }
 
-static int idx = 0;
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_load_clicked()
 {
-   // CDevPosCtl1 *testCtl = new CDevPosCtl1();
-    //CDevPosCtl2 *testCtl = new CDevPosCtl2();
-    //CDevPosCtl1::instance()->show();
-    qDebug()<<"pos "<<CLineSelector::instance()->pos();
-    idx++;
-    CLineSelector::instance()->adjustPosition(idx*100, 100, 100, 40);
-    CLineSelector::instance()->show();
+
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_send_clicked()
 {
-    qDebug()<<"pos "<<CLineSelector::instance()->pos();
-    idx--;
-    CLineSelector::instance()->adjustPosition(idx*100, 100, 100, 40);
-    CLineSelector::instance()->show();
+
+}
+
+void MainWindow::on_pushButton_preview_clicked()
+{
+
+}
+
+void MainWindow::on_pushButton_save_clicked()
+{
 
 }

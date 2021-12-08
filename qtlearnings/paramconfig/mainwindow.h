@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "Util/devcfg.h"
+#include "Util/PageCfg.h"
 #include "UiCommon/cwidgetbutton.h"
 #include <list>
 #include <vector>
@@ -10,8 +11,8 @@
 using namespace std;
 
 class UiPage;
-class PageContainer;
-class QComboBox;
+class QLabel;
+class CDeviceConfig;
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -28,32 +29,30 @@ protected:
     void initMenu();
     void initPage();
     void deleteAll();
-    void selectMenu(int menuIdx);
     bool saveParam();
     bool loadParam();
     void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
 
 protected slots:
-    void slot_systemClicked(bool);
-    void slot_deviceChanged(int newIdx);
-    void slot_menu2Clicked(CStateButton* btn);
+    void slot_deviceClicked(QLabel* lbl);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_load_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_pushButton_send_clicked();
+
+    void on_pushButton_preview_clicked();
+
+    void on_pushButton_save_clicked();
 
 private:
     Ui::MainWindow *ui;
-    QComboBox      *cmbDevices;
     DevCfgList     devCfg;
-    vector<list<CStateButton*>> menu2Lists;
-    int                         currMenuIdx;
-    vector<CStateButtonMgr*>    menu2MgrList;
+    PageCfgList    devUiCfgList;
+    vector<QLabel*> devList;
     list<UiPage*>               pageList;
-    map<CStateButton*, UiPage*> menu2ToPageMap;
-    PageContainer              *pageMgr;
+    CDeviceConfig              *deviceUi;
     unsigned short             *paramAddr;
     int                         paramCount;
     QString                     appDir;

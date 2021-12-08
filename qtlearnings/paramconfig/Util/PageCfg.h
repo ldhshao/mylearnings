@@ -36,6 +36,9 @@ public:
     void         addToPage(UiPage* page);
     bool         chkDataConflict(); //test function
 
+    void createPage(list<UiPage*> &pageList);
+    //UiPage* getPage() {	return m_uiPage;}
+
     bool readXmlFile(QString strFile);
     UiCfgItem* findItemById(int id);
     UiCfgItem* findItemById(const QString& strId);
@@ -48,28 +51,22 @@ protected:
 
 };
 
-class PageCfg : public GroupCfgItem
+class GroupCfgList : public GroupCfgItem
 {
 public:
-    HNDZ_DECLARE_DYNCREATE(PageCfg)
-    PageCfg() :m_uiPage(nullptr) {}
-    virtual ~PageCfg();
+    HNDZ_DECLARE_DYNCREATE(GroupCfgList)
+    GroupCfgList() {}
+    virtual ~GroupCfgList();
 
-    UiPage* createPage();
-    UiPage* getPage() {	return m_uiPage;}
-
-    virtual bool initFromDomElement(QDomElement element);
-
-    virtual bool initUi(unsigned short* pStAddr);
-
+    virtual void create(QWidget* parent);
+    virtual bool initUi(unsigned short* pStAddr);//init data
+    virtual UiCfgItem* createMyself();
     GroupCfgItem* findGroupByName(const QString& strName);
 
 protected:
-
-    UiPage                 *m_uiPage;
 };
 
-class PageCfgList : public PageCfg
+class PageCfgList : public GroupCfgList
 {
 public:
     PageCfgList(unsigned short* paramTbl) : m_pParamTbl(paramTbl) {}

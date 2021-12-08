@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/background1.png</file>
         <file>images/background2.png</file>
+        <file>images/device1.png</file>
+        <file>images/system.png</file>
     </qresource>
 </RCC>

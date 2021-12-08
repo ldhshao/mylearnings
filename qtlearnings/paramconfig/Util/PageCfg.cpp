@@ -201,25 +201,14 @@ bool GroupCfgItem::chkDataConflict()
 
 void GroupCfgItem::create(QWidget *parent)
 {
-    QGroupBox* pBox = new QGroupBox(parent);
-    pBox->setTitle(getName());
-    m_pWidget = pBox;
-    //UiPage* page = dynamic_cast<UiPage*>(parent);
+    UiPage* page = new UiPage(parent);
+    //page->setTitle(getName());
+    m_pWidget = page;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for (; it != m_children.end(); it++){
         (*it)->create(m_pWidget);
-        //if (nullptr != page){
-        //    if (nullptr != (*it)->getWidget())
-        //        page->addWidget((*it)->getWidget());
-        //    if (nullptr != (*it)->getWidName())
-        //        page->addWidget((*it)->getWidName());
-        //    if (nullptr != (*it)->getWidDes())
-        //        page->addWidget((*it)->getWidDes());
-        //}
     }
-    //if (nullptr != page){
-    //    page->addWidget(m_pWidget);
-    //}
+    page->initTabOrder();
 }
 
 //version 002
@@ -416,6 +405,19 @@ UiCfgItem* GroupCfgItem::findItemById(const QString& strId)
     return pFind;
 }
 
+void GroupCfgItem::createPage(list<UiPage*> &pageList)
+{
+    create(nullptr);
+    UiPage* page = dynamic_cast<UiPage*>(m_pWidget);
+    if (nullptr != page)
+        pageList.push_back(page);
+    for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
+        page = dynamic_cast<UiPage*>((*it)->getWidget());
+        if (nullptr != page)
+            pageList.push_back(page);
+    }
+}
+
 //common function
 static int getValueIndex(vector<int> &vec, int v)
 {
@@ -433,115 +435,43 @@ static int getValueIndex(vector<int> &vec, int v)
 }
 
 //PageCfg
-HNDZ_IMPLEMENT_DYNCREATE(PageCfg, GroupCfgItem)
-PageCfg::~PageCfg()
+HNDZ_IMPLEMENT_DYNCREATE(GroupCfgList, GroupCfgItem)
+GroupCfgList::~GroupCfgList()
 {
     GroupCfgItem::deleteAll();
 }
 
-UiPage* PageCfg::createPage()
+void GroupCfgList::create(QWidget* parent)
 {
-    if (nullptr == m_uiPage){
-        m_uiPage = new UiPage();
-        //first create group
-        for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
-            (*it)->create(m_uiPage);
-        }
-        for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
-            GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(*it);
-            if (nullptr != pGroup)
-                pGroup->addToPage(m_uiPage);
-        }
+    Q_UNUSED(parent)
 
-        m_uiPage->initTabOrder();
+    for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
+        (*it)->create(0);
     }
-    return m_uiPage;
 }
-
-bool PageCfg::initFromDomElement(QDomElement element)
-{
-    if (UiCfgItem::initFromDomElement(element)){
-        if (m_type.isEmpty())
-            m_type = UiCfgItem::strTypePage;
-        return initChildrenFromDomElement(element.childNodes());
-    }
-    return false;
-}
-bool PageCfg::initUi(unsigned short *pStAddr)
+bool GroupCfgList::initUi(unsigned short* pStAddr)
 {
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         (*it)->initUi(pStAddr);
     }
-
-    int iSpanItem = 10;
-    int iSpanMargin = 4;
-    vector<int> vecLeft, vecTop;
-    vector<int> vecWidth, vecHeight;
-    //layout Group
-    if (!m_children.empty()){
-        list<UiCfgItem*>::iterator it = m_children.begin();
-        for (; it != m_children.end(); it++){
-            int l = (*it)->left();
-            int t = (*it)->top();
-            int w = (*it)->getWidget()->width();
-            int h = (*it)->getWidget()->height();
-            int iIdx = getValueIndex(vecLeft, l);
-            if (-1 != iIdx){
-                if (w > vecWidth[iIdx]) vecWidth[iIdx] = w;
-            }else {
-                vecLeft.push_back(l);
-                vecWidth.push_back(w);
-            }
-            iIdx = getValueIndex(vecTop, t);
-            if (-1 != iIdx){
-                if (h > vecHeight[iIdx]) vecHeight[iIdx] = h;
-            }else {
-                vecTop.push_back(t);
-                vecHeight.push_back(h);
-            }
-        }
-
-        it = m_children.begin();
-        for (; it != m_children.end(); it++){
-            QWidget* w = (*it)->getWidget();
-            int l = iSpanMargin, t = iSpanMargin;
-            int iIdxCol = getValueIndex(vecLeft, (*it)->left());
-            int iIdxRow = getValueIndex(vecTop, (*it)->top());
-            w->resize(vecWidth[iIdxCol], vecHeight[iIdxRow]);
-            for (int i = 0; i < iIdxCol; i++){
-                l += vecWidth[i];
-                l += iSpanItem;
-            }
-            for (int i = 0; i < iIdxRow; i++){
-                t += vecHeight[i];
-                t += iSpanItem;
-            }
-            w->move(l, t);
-            w->show();
-            qDebug()<<(*it)->getName()<<":"<<l<<","<<t<<","<<vecWidth[iIdxCol]<<","<<vecHeight[iIdxRow];
-        }
-    }
-
-    //set size
-    int w = iSpanMargin, h = iSpanMargin;
-    for (vector<int>::iterator it = vecWidth.begin(); it != vecWidth.end(); it++){
-        w += *it;
-    }
-    if (!vecWidth.empty())
-        w = w + (vecWidth.size() - 1) * iSpanItem;
-    w += iSpanMargin;
-    for (vector<int>::iterator it = vecHeight.begin(); it != vecHeight.end(); it++){
-        h += *it;
-    }
-    if (!vecHeight.empty())
-        h = h + (vecHeight.size() - 1) * iSpanItem;
-    h += iSpanMargin;
-    m_uiPage->resize(w, h);
-    m_uiPage->move(iSpanMargin, iSpanMargin);
-    qDebug()<<getName()<<":"<<w<<","<<h;
+    return true;
 }
 
-GroupCfgItem* PageCfg::findGroupByName(const QString &strName)
+UiCfgItem* GroupCfgList::createMyself()
+{
+    GroupCfgList* pList = new GroupCfgList();
+    pList->m_id = m_id;
+    pList->m_name = m_name;
+    pList->m_dataidx = m_dataidx;
+    pList->m_type = m_type;
+    pList->m_enableSourceId = m_enableSourceId;
+    pList->m_enableSourceVal = m_enableSourceVal;
+
+    copyChildren(pList);
+
+    return pList;
+}
+GroupCfgItem* GroupCfgList::findGroupByName(const QString &strName)
 {
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* pGroup = dynamic_cast<GroupCfgItem*>(*it);
@@ -562,10 +492,9 @@ bool PageCfgList::createAllPage(list<UiPage*> &pageList)
 {
     initData(0);
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
-        PageCfg *page = dynamic_cast<PageCfg*>(*it);
-        UiPage *w = page->createPage();
+        GroupCfgItem *page = dynamic_cast<GroupCfgItem*>(*it);
+        page->createPage(pageList);
         page->initUi(m_pParamTbl);
-        pageList.push_back(w);
     }
     dump();
     return true;

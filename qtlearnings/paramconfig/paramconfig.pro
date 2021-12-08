@@ -12,6 +12,8 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    cdeviceconfig.cpp \
+    cdevicepreview.cpp \
     cdevpointedit.cpp \
     cdevposctl1.cpp \
     cdevposctl2.cpp \
@@ -23,6 +25,8 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    cdeviceconfig.h \
+    cdevicepreview.h \
     cdevpointedit.h \
     cdevposctl1.h \
     cdevposctl2.h \
@@ -33,6 +37,8 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
+    cdeviceconfig.ui \
+    cdevicepreview.ui \
     cdevposctl1.ui \
     cdevposctl2.ui \
     mainwindow.ui
