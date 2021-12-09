@@ -136,6 +136,7 @@ void MainWindow::initPage()
         paramAddr = new uint16_t[paramCount];
         devUiCfgList.setParamTbl(paramAddr);
     }
+    devUiCfgList.initData(0, true);//use default value
     devUiCfgList.createAllPage(pageList);
 
 }
@@ -188,11 +189,12 @@ void MainWindow::onResize(int width, int height)
     int t0 = 100, t1 = height - 50, t2 = 200;
     int w0 = ui->pushButton_load->width();
     int w1 = ui->label_copyright->width();
-    int s0 = (0.4 * width - w0 * 4) / 3;
+    int s0 = (0.4 * width - w0 * 5) / 4;
     ui->pushButton_load->move(0.3*width, t0);
     ui->pushButton_send->move(0.3*width + w0 + s0, t0);
     ui->pushButton_preview->move(0.3*width + 2*(w0 + s0), t0);
     ui->pushButton_save->move(0.3*width + 3*(w0 + s0), t0);
+    ui->pushButton_queryrecord->move(0.3*width + 4*(w0 + s0), t0);
     ui->label_copyright->move((width - w1)/2, t1);
 
     //layout device

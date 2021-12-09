@@ -31,7 +31,7 @@ public:
 
     //virtual void setDataidx(int idx);
     virtual void create(QWidget* parent);
-    virtual bool initData(int idx);
+    virtual bool initData(int idx, bool useDef);
     virtual bool initUi(unsigned short* pStAddr);//init data
     void         addToPage(UiPage* page);
     bool         chkDataConflict(); //test function
@@ -44,6 +44,8 @@ public:
     UiCfgItem* findItemById(const QString& strId);
 
     virtual uint16_t *paramAddress() { return nullptr; }
+
+    virtual QString previewInfo();
 protected:
     void deleteAll();
     list<UiCfgItem*> m_children;

@@ -131,14 +131,14 @@ void GroupCfgItem::deleteAll()
     m_children.clear();
 }
 
-bool GroupCfgItem::initData(int idx)
+bool GroupCfgItem::initData(int idx, bool useDef)
 {
     m_dataidx = idx;
 
     int cnt = 0;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for(; it != m_children.end(); it++){
-        (*it)->initData(idx);
+        (*it)->initData(idx, useDef);
         cnt += (*it)->datacount();
         idx += (*it)->datacount();
     }
@@ -418,6 +418,15 @@ void GroupCfgItem::createPage(list<UiPage*> &pageList)
     }
 }
 
+QString GroupCfgItem::previewInfo()
+{
+    QString strInfo;
+    for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
+        strInfo.append((*it)->previewInfo() + "\n");
+    }
+    return strInfo;
+}
+
 //common function
 static int getValueIndex(vector<int> &vec, int v)
 {
@@ -490,7 +499,6 @@ PageCfgList::~PageCfgList()
 }
 bool PageCfgList::createAllPage(list<UiPage*> &pageList)
 {
-    initData(0);
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem *page = dynamic_cast<GroupCfgItem*>(*it);
         page->createPage(pageList);

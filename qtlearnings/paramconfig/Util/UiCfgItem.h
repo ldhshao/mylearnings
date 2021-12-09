@@ -46,16 +46,18 @@ public:
     virtual UiCfgItem* createMyself();
 
     virtual void create(QWidget* parent);
-    virtual bool initData(int idx);
+    virtual bool initData(int idx, bool useDef);
     virtual bool initUi(unsigned short* pStAddr);//init data
 
     virtual uint16_t *paramAddress();
+
+    virtual QString previewInfo();
 
 protected:
     int m_left, m_top, m_width, m_height;
     int m_dataidx, m_datacnt;
     QString m_type;
-    QString m_description;
+    QString m_range;
     QString m_defaultVal;
     QString m_enableSourceId;//ID path; example: 1)5 2)../5/7
     uint16_t m_enableSourceVal;
@@ -64,20 +66,24 @@ protected:
     QWidget *m_pWidName;
     QWidget *m_pWidDes;//description
 };
-class UiCfgItemEx : public UiCfgItem
+class UiCfgItemFloat : public UiCfgItem
 {
 public:
-    HNDZ_DECLARE_DYNCREATE(UiCfgItemEx)
-    UiCfgItemEx() { 	}
-    virtual ~UiCfgItemEx() {}
+    HNDZ_DECLARE_DYNCREATE(UiCfgItemFloat)
+    UiCfgItemFloat() :m_precision(1), m_decimalPlaces(0){ 	}
+    virtual ~UiCfgItemFloat() {}
 
     virtual bool initFromDomElement(QDomElement element);
     virtual UiCfgItem* createMyself();
 
-    virtual bool initUi(unsigned short* pStAddr);//init data
+    virtual void create(QWidget* parent);
+    //virtual bool initUi(unsigned short* pStAddr);//init data
 
+    virtual QString previewInfo();
 protected:
-    QString m_range;
+    QString m_unit;
+    float   m_precision;
+    uint16_t m_decimalPlaces;
 };
 class ComboboxCfgItem : public UiCfgItem
 {

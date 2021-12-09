@@ -37,7 +37,7 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     //check value
 
     setStrValue(m_type, element, "type");
-    setStrValue(m_description, element, "description");
+    setStrValue(m_range, element, "range");
     setStrValue(m_defaultVal, element, "defaultvalue");
     QString strEnableSource;
     setStrValue(strEnableSource, element, "enablesource");
@@ -89,17 +89,25 @@ void UiCfgItem::create(QWidget* parent)
                 pBoxName->setText(getName());
                 m_pWidName = pBoxName;
             }
-            if (!m_description.isEmpty()){
+            if (0 > m_range.indexOf('#')){
                 QLabel* pBoxDes = new QLabel(parent);
                 pBoxDes->setAlignment(Qt::AlignLeft);
-                pBoxDes->setText(m_description);
+                pBoxDes->setText(m_range);
                 m_pWidDes = pBoxDes;
             }
         }
     }
 }
-bool UiCfgItem::initData(int idx)
+bool UiCfgItem::initData(int idx, bool useDef)
 {
+    if (!m_defaultVal.isEmpty() && -1 < m_dataidx && useDef){
+        uint16_t usDef = static_cast<unsigned short>(m_defaultVal.toInt());
+        uint16_t *pAddr = paramAddress();
+        if (nullptr != pAddr){
+            *pAddr = usDef;
+        }
+        qDebug()<<"name "<<m_name<<" address "<<pAddr<<" default "<<usDef;
+    }
     return true;
 }
 bool UiCfgItem::initUi(unsigned short* pStAddr)
@@ -114,26 +122,54 @@ bool UiCfgItem::initUi(unsigned short* pStAddr)
         m_pWidName->show();
     }
     if (nullptr != m_pWidDes){
-        int width = QFontMetrics(m_pWidDes->font()).width(m_description);
+        QLabel *lbl = dynamic_cast<QLabel*>(m_pWidDes);
+        int width = QFontMetrics(m_pWidDes->font()).width(lbl->text());
         m_pWidDes->resize(width, height());
         m_pWidDes->show();
     }
 
     unsigned short usMin = 0, usMax = 0, usDef = 0;
-    int iPos0 =  m_description.indexOf("(");
-    int iPos1 =  m_description.indexOf(")");
+    int iPos0 =  m_range.indexOf("(");
+    int iPos1 =  m_range.indexOf(")");
     if (-1 < iPos0 && iPos0 < iPos1){
-        QString strRange = m_description.mid(iPos0+1, iPos1 - iPos0 - 1).remove(' ');
-        iPos0 = strRange.indexOf(QRegExp("\\d+-\\d+"));
-        if (-1< iPos0){
+        QString strRange = m_range.mid(iPos0+1, iPos1 - iPos0 - 1).remove(' ');
+        int pos = strRange.indexOf('-');
+        if (-1 < pos){
+            QString strMin = strRange.left(pos).trimmed();
+            QString strMax = strRange.right(strRange.length() - pos - 1).trimmed();
+            UiCfgItem *pMinItem = nullptr, *pMaxItem = nullptr;
+            uint16_t   usMin = 0xFFFF, usMax = 0xFFFF, usDef;
+            GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
+            if (strMin[0] == '#' && nullptr != pGroup){
+                pMinItem = pGroup->findItemById(strMin.right(strMin.length() - 1));
+            }else {
+                bool bOk = false;
+                usMin = strMin.toUShort(&bOk);
+            }
+            if (strMax[0] == '#' && nullptr != pGroup){
+                pMaxItem = pGroup->findItemById(strMax.right(strMax.length() - 1));
+            }else {
+                bool bOk = false;
+                usMax = strMax.toUShort(&bOk);
+            }
+            usDef = m_defaultVal.toUShort();
             unsigned short* pAddr = pStAddr + parent()->dataidx();
-            iPos1 = strRange.indexOf("-", iPos0);
-            usMin = static_cast<unsigned short>(strRange.mid(iPos0, iPos1 - iPos0).toInt());
-            usMax = static_cast<unsigned short>(strRange.mid(iPos1 + 1).toInt());
-            usDef = static_cast<unsigned short>(m_defaultVal.toInt());
-            qDebug()<<"name "<<m_name<<" min "<<usMin<<" max "<<usMax<<" addr "<<pAddr+m_dataidx;
-            CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-            CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, usMax, usDef);
+            qDebug()<<"name "<<m_name<<" address "<<pAddr+m_dataidx;
+            if (nullptr != pMinItem || nullptr != pMaxItem){
+                CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+                if (nullptr != pMinItem){
+                    if (nullptr == pMaxItem)
+                        CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMinItem->paramAddress(), usMax, usDef);
+                    else
+                        CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMinItem->paramAddress(), pMaxItem->paramAddress(), usDef);
+                }else {
+                    CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, pMaxItem->paramAddress(), usDef);
+                }
+
+            }else{
+                CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+                CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, usMax, usDef);
+            }
         }
     }
 
@@ -186,7 +222,7 @@ UiCfgItem* UiCfgItem::createMyself()
     pItem->m_dataidx = m_dataidx;
     pItem->m_datacnt = m_datacnt;
     pItem->m_type = m_type;
-    pItem->m_description = m_description;
+    pItem->m_range = m_range;
     pItem->m_defaultVal = m_defaultVal;
     pItem->m_enableSourceId = m_enableSourceId;
     pItem->m_enableSourceVal = m_enableSourceVal;
@@ -194,18 +230,44 @@ UiCfgItem* UiCfgItem::createMyself()
     return pItem;
 }
 
+QString UiCfgItem::previewInfo()
+{
+    QString strInfo(m_name + ": ");
+    QLineEdit* pEdit = dynamic_cast<QLineEdit*>(m_pWidget);
+    if (nullptr != pEdit)
+        strInfo.append(pEdit->text());
+    else{
+        QComboBox* pBox = dynamic_cast<QComboBox*>(m_pWidget);
+        if (nullptr != pBox)
+            strInfo.append(pBox->currentText());
+    }
+    return strInfo;
+}
+
 //ComboboxItem
-HNDZ_IMPLEMENT_DYNCREATE(UiCfgItemEx, UiCfgItem)
-bool UiCfgItemEx::initFromDomElement(QDomElement element)
+HNDZ_IMPLEMENT_DYNCREATE(UiCfgItemFloat, UiCfgItem)
+bool UiCfgItemFloat::initFromDomElement(QDomElement element)
 {
     UiCfgItem::initFromDomElement(element);
-    setStrValue(m_range, element, "range");
+    setStrValue(m_unit, element, "unit");
+    QString strVal = element.attribute("precision");
+    if (!strVal.isEmpty()){
+        bool bOK = false;
+        m_precision = strVal.toFloat(&bOK);
+        float f = m_precision;
+        m_decimalPlaces = 0;
+        while (fabs(f - 1) > 0.01){
+            f = f * 10;
+            m_decimalPlaces++;
+        }
+    }
+    qDebug()<<"name "<<m_name<<" precision "<<m_precision<<" decimal "<<m_decimalPlaces;
 
     return true;
 }
-UiCfgItem* UiCfgItemEx::createMyself()
+UiCfgItem* UiCfgItemFloat::createMyself()
 {
-    UiCfgItemEx* pItem = new UiCfgItemEx();
+    UiCfgItemFloat* pItem = new UiCfgItemFloat();
     pItem->m_id = m_id;
     pItem->m_name = m_name;
     pItem->m_left = m_left;
@@ -215,57 +277,65 @@ UiCfgItem* UiCfgItemEx::createMyself()
     pItem->m_dataidx = m_dataidx;
     pItem->m_datacnt = m_datacnt;
     pItem->m_type = m_type;
-    pItem->m_description = m_description;
+    pItem->m_range = m_range;
     pItem->m_defaultVal = m_defaultVal;
     pItem->m_enableSourceId = m_enableSourceId;
     pItem->m_enableSourceVal = m_enableSourceVal;
-    pItem->m_range = m_range;
+    pItem->m_unit = m_unit;
+    pItem->m_precision = m_precision;
+    pItem->m_decimalPlaces = m_decimalPlaces;
 
     return pItem;
 }
-bool UiCfgItemEx::initUi(unsigned short *pStAddr)
+void UiCfgItemFloat::create(QWidget* parent)
 {
-    UiCfgItem::initUi(pStAddr);
-
-    int pos = m_range.indexOf('-');
-    if (-1 < pos){
-        QString strMin = m_range.left(pos).trimmed();
-        QString strMax = m_range.right(m_range.length() - pos - 1).trimmed();
-        UiCfgItem *pMinItem = nullptr, *pMaxItem = nullptr;
-        uint16_t   usMin = 0xFFFF, usMax = 0xFFFF, usDef;
-        GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
-        if (strMin[0] == '#' && nullptr != pGroup){
-            pMinItem = pGroup->findItemById(strMin.right(strMin.length() - 1));
-        }else {
-            bool bOk = false;
-            usMin = strMin.toUShort(&bOk);
-            bOk = false;
+    if (nullptr == m_pWidget){
+        m_pWidget = new CKeyDnEdit(parent);
+        if (!m_name.isEmpty()){
+            QLabel* pBoxName = new QLabel(parent);
+            pBoxName->setAlignment(Qt::AlignLeft);
+            pBoxName->setText(getName());
+            m_pWidName = pBoxName;
         }
-        if (strMax[0] == '#' && nullptr != pGroup){
-            pMaxItem = pGroup->findItemById(strMax.right(strMax.length() - 1));
-        }else {
-            bool bOk = false;
-            usMax = strMax.toUShort(&bOk);
-            bOk = false;
-        }
-        usDef = m_defaultVal.toUShort();
-        unsigned short* pAddr = pStAddr + parent()->dataidx();
-        if (nullptr != pMinItem || nullptr != pMaxItem){
-            CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-            if (nullptr != pMinItem){
-                if (nullptr == pMaxItem)
-                    CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMinItem->paramAddress(), usMax, usDef);
-                else
-                    CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMinItem->paramAddress(), pMaxItem->paramAddress(), usDef);
-            }else {
-                CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, pMaxItem->paramAddress(), usDef);
-            }
-
+        QLabel* pBoxDes = new QLabel(parent);
+        pBoxDes->setAlignment(Qt::AlignLeft);
+        QString strDes;
+        if (0 < m_decimalPlaces){
+            QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
+            strDes = QString::asprintf(strFormat.toStdString().c_str(), m_precision).append(m_unit);
         }else{
-            CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-            CBinder::BindEdit(pEdit, pAddr+m_dataidx, usMin, usMax, usDef);
+            strDes = m_unit;
         }
+        if (0 > m_range.indexOf('#')){
+            strDes.append(m_range);
+        }
+        pBoxDes->setText(strDes);
+        m_pWidDes = pBoxDes;
     }
+}
+//bool UiCfgItemFloat::initUi(unsigned short *pStAddr)
+//{
+//    UiCfgItem::initUi(pStAddr);
+//
+//}
+QString UiCfgItemFloat::previewInfo()
+{
+    QString strInfo(m_name + ": ");
+    uint16_t* param = paramAddress();
+    if (nullptr != param){
+        if (0 == *param || 0 == m_decimalPlaces){
+            strInfo.append(QString::asprintf("%d", *param));
+        }else {
+            QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
+            QString strDes = QString::asprintf(strFormat.toStdString().c_str(), (*param)*m_precision);
+            strInfo.append(strDes);
+        }
+        strInfo.append(m_unit);
+    }else{
+        qDebug()<<"error: name "<<m_name<<" param address";
+    }
+
+    return strInfo;
 }
 
 //ComboboxItem
@@ -296,7 +366,6 @@ UiCfgItem* ComboboxCfgItem::createMyself()
     pItem->m_dataidx = m_dataidx;
     pItem->m_datacnt = m_datacnt;
     pItem->m_type = m_type;
-    pItem->m_description = m_description;
     pItem->m_defaultVal = m_defaultVal;
     pItem->m_params = m_params;
     pItem->m_enableSourceId = m_enableSourceId;

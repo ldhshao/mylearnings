@@ -82,6 +82,19 @@
      <string>Parameter Configuration Copyright@2020-2025 All rights reserved V0.0.0</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_queryrecord">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>10</y>
+      <width>101</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>查询修改记录</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
