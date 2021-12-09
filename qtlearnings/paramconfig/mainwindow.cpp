@@ -14,6 +14,7 @@
 #include <math.h>
 #include <QPixmap>
 #include <QBitmap>
+#include <QKeyEvent>
 #define SYSTEM_CFG_FILEPATH "system.xml"
 #define UITEMP_CFG_FILEPATH "uitemplate.xml"
 #define PARAMS_FILEPATH     "param.dat"
@@ -29,6 +30,7 @@
 //    }"
 #define MENU2_STYLE         "QPushButton {font-size:28px; font:bold;}"
 #define PROPERTY_DEVICE "device"
+#define PROPERTY_INDEX "index"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -58,23 +60,36 @@ void MainWindow::initMenu()
     QString strDevCfg = appDir + "/" + SYSTEM_CFG_FILEPATH;
     devCfg.readDevCfgFile(strDevCfg);
     DevCfgItem *pItem = devCfg.getHead();
+    int idx = 0;
     while (nullptr != pItem) {
         CKeyLabel* pBtn = new CKeyLabel(this);
         pBtn->setText(pItem->getName());
+        pBtn->setFocusPolicy(Qt::StrongFocus);
         QVariant var;
         var.setValue<void*>(pItem);
         pBtn->setProperty(PROPERTY_DEVICE, var);
+        pBtn->setProperty(PROPERTY_INDEX, idx++);
         connect(pBtn, SIGNAL(clicked(QLabel*)), this, SLOT(slot_deviceClicked(QLabel*)));
         devList.push_back(pBtn);
         pItem = devCfg.getNext();
     }
 
-    QLabel* pBtn = new QLabel(this);
+    QLabel* pBtn = new CKeyLabel(this);
     pBtn->setText("通讯");
+    pBtn->setFocusPolicy(Qt::StrongFocus);
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
     devList.push_back(pBtn);
-    pBtn = new QLabel(this);
+    pBtn = new CKeyLabel(this);
     pBtn->setText("帮助");
+    pBtn->setFocusPolicy(Qt::StrongFocus);
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
     devList.push_back(pBtn);
+
+    //setTabOrder(ui->pushButton_load, ui->pushButton_send);
+    //setTabOrder(ui->pushButton_send, ui->pushButton_preview);
+    //setTabOrder(ui->pushButton_preview, ui->pushButton_save);
+    //setTabOrder(ui->pushButton_save, ui->pushButton_queryrecord);
+    //setTabOrder(ui->pushButton_queryrecord, devList[0]);
 
     initPage();
 }
@@ -199,9 +214,7 @@ void MainWindow::onResize(int width, int height)
 
     //layout device
     QPixmap pixmap(":/images/device1.png");
-    int cols, cnt = 0;
-    cols = sqrt(devCfg.getChildrenCount() + 2);
-    if (3 > cols) cols = 3;
+    int cols = getDeviceCols(), cnt = 0;
     int rows = (devCfg.getChildrenCount() + 2 + cols - 1) / cols;
     int w2 = 200;
     int s2 = (0.4*width - w2 * cols) / (cols - 1);
@@ -225,6 +238,101 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QMainWindow::resizeEvent(event);
 }
 
+int MainWindow::getDeviceCols()
+{
+    int cols = sqrt(devList.size());
+    if (3 > cols) cols = 3;
+    return cols;
+}
+
+QWidget* MainWindow::getCloseWidget(QWidget* wid, bool up)
+{
+    QPushButton* pBtn = dynamic_cast<QPushButton*>(wid);
+    QLabel* pLbl = dynamic_cast<QLabel*>(wid);
+    int x0 = wid->pos().rx();
+    int cols = getDeviceCols();
+    int rows = (devList.size() + cols - 1) / cols + 1;
+    int row = 0;
+    int distMin = 0;
+    QWidget *pTarget = nullptr;
+
+    if (nullptr != pBtn){
+        row = up? (rows -1) : (1);
+    } else if (nullptr != pLbl){
+        int idx = pLbl->property(PROPERTY_INDEX).toInt();
+        row = idx / cols + 1;
+        row = up ? (row -1) : ((row+1)%rows);
+    }
+    if (0 == row){
+        vector<QWidget*> btnList;
+        btnList.push_back(ui->pushButton_load);
+        btnList.push_back(ui->pushButton_send);
+        btnList.push_back(ui->pushButton_preview);
+        btnList.push_back(ui->pushButton_save);
+        btnList.push_back(ui->pushButton_queryrecord);
+        bool init =false;
+        for (int i = 0; i < btnList.size(); i++) {
+            int dist = abs(btnList[i]->pos().rx() - x0);
+            if (!init){
+                distMin = dist;
+                pTarget = btnList[i];
+                init = true;
+            }else if (dist < distMin){
+                distMin = dist;
+                pTarget = btnList[i];
+            }
+        }
+    }else {
+        row--;
+        bool init =false;
+        for (int i = row*cols; i < (row+1)*cols && i < devList.size(); i++) {
+            int dist = abs(devList[i]->pos().rx() - x0);
+            if (!init){
+                distMin = dist;
+                pTarget = devList[i];
+                init = true;
+            } else if (dist < distMin){
+                distMin = dist;
+                pTarget = devList[i];
+            }
+        }
+    }
+    return pTarget;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    QPushButton* pBtn = dynamic_cast<QPushButton*>(focusWidget());
+    QLabel* pLbl = dynamic_cast<QLabel*>(focusWidget());
+    qDebug()<<"MainWindow "<<__FUNCTION__;
+    switch (event->key()) {
+        case Qt::Key_Return:
+            if (nullptr != pBtn){
+                if (pBtn == ui->pushButton_load) on_pushButton_load_clicked();
+                else if (pBtn == ui->pushButton_send) on_pushButton_send_clicked();
+                else if (pBtn == ui->pushButton_preview) on_pushButton_preview_clicked();
+                else if (pBtn == ui->pushButton_save) on_pushButton_save_clicked();
+                else if (pBtn == ui->pushButton_queryrecord) on_pushButton_queryrecord_clicked();
+            }
+            if (nullptr != pLbl){
+                qDebug()<<__FUNCTION__<<" lbl "<<pLbl;
+                slot_deviceClicked(pLbl);
+            }
+            return ;
+        case Qt::Key_Up:
+            getCloseWidget(focusWidget(), true)->setFocus();
+            return ;
+        case Qt::Key_Down:
+            getCloseWidget(focusWidget(), false)->setFocus();
+            return ;
+        case Qt::Key_Left:
+            focusNextPrevChild(false);
+            return ;
+        case Qt::Key_Right:
+            focusNextPrevChild(true);
+            return ;
+    }
+}
 void MainWindow::slot_deviceClicked(QLabel* lbl)
 {
     QVariant var = lbl->property(PROPERTY_DEVICE);
@@ -237,20 +345,29 @@ void MainWindow::slot_deviceClicked(QLabel* lbl)
 
 void MainWindow::on_pushButton_load_clicked()
 {
-
+    qDebug()<<__FUNCTION__;
 }
 
 void MainWindow::on_pushButton_send_clicked()
 {
+    qDebug()<<__FUNCTION__;
 
 }
 
 void MainWindow::on_pushButton_preview_clicked()
 {
+    qDebug()<<__FUNCTION__;
 
 }
 
 void MainWindow::on_pushButton_save_clicked()
 {
+    qDebug()<<__FUNCTION__;
+
+}
+
+void MainWindow::on_pushButton_queryrecord_clicked()
+{
+    qDebug()<<__FUNCTION__;
 
 }

@@ -31,8 +31,11 @@ protected:
     void deleteAll();
     bool saveParam();
     bool loadParam();
+    QWidget* getCloseWidget(QWidget* wid, bool up);
+    int getDeviceCols();
     void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 protected slots:
     void slot_deviceClicked(QLabel* lbl);
@@ -45,6 +48,8 @@ private slots:
     void on_pushButton_preview_clicked();
 
     void on_pushButton_save_clicked();
+
+    void on_pushButton_queryrecord_clicked();
 
 private:
     Ui::MainWindow *ui;

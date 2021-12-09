@@ -3,6 +3,7 @@ DEPENDPATH += $$PWD
 
 UICOMMON = UiCommon
 HEADERS +=\
+          $$PWD/ckeybutton.h \
           $$PWD/ckeylabel.h \
           $$UICOMMON/cwidgetbutton.h \
           $$UICOMMON/pagecontainer.h \
@@ -18,6 +19,7 @@ HEADERS +=\
           $$UICOMMON/cenablemngr.h
 
 SOURCES +=\
+          $$PWD/ckeybutton.cpp \
           $$PWD/ckeylabel.cpp \
           $$UICOMMON/cwidgetbutton.cpp \
           $$UICOMMON/pagecontainer.cpp \

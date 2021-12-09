@@ -11,6 +11,8 @@ public:
 
 protected:
     virtual void mouseReleaseEvent(QMouseEvent * ev);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
 
     signals:
     void clicked(QLabel* lbl);

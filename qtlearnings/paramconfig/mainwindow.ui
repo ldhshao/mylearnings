@@ -17,7 +17,7 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton_load">
+   <widget class="CKeyButton" name="pushButton_load">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -30,7 +30,7 @@
      <string>加载本地变更</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_send">
+   <widget class="CKeyButton" name="pushButton_send">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -43,7 +43,7 @@
      <string>参数变更上传</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_preview">
+   <widget class="CKeyButton" name="pushButton_preview">
     <property name="geometry">
      <rect>
       <x>290</x>
@@ -56,7 +56,7 @@
      <string>参数变更预览</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_save">
+   <widget class="CKeyButton" name="pushButton_save">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -82,7 +82,7 @@
      <string>Parameter Configuration Copyright@2020-2025 All rights reserved V0.0.0</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_queryrecord">
+   <widget class="CKeyButton" name="pushButton_queryrecord">
     <property name="geometry">
      <rect>
       <x>490</x>
@@ -108,6 +108,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CKeyButton</class>
+   <extends>QPushButton</extends>
+   <header>UiCommon/ckeybutton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
