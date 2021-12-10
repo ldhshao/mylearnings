@@ -50,6 +50,7 @@ int GroupCfgItem::getDataCount()
 bool GroupCfgItem::initFromDomElement(QDomElement element)
 {
     if (UiCfgItem::initFromDomElement(element)){
+        setIntValue(m_titleDepth, element, "titledepth");
         if (m_type.isEmpty())
             m_type = UiCfgItem::strTypeGroup;
         return initChildrenFromDomElement(element.childNodes());
@@ -102,6 +103,7 @@ UiCfgItem* GroupCfgItem::createMyself()
     //pList->m_height = m_height;
     pList->m_dataidx = m_dataidx;
     pList->m_type = m_type;
+    pList->m_titleDepth = m_titleDepth;
     //pList->m_description = m_description;
     //pList->m_defaultVal = m_defaultVal;
     pList->m_enableSourceId = m_enableSourceId;

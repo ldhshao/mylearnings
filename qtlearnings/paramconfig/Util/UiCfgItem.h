@@ -22,6 +22,7 @@ public:
     static QString strTypeGroup;
     static QString strTypePage;
 
+    QString getNamePath(int ancestorDepth);
     void setPos(int left, int top) { m_left = left; m_top = top;}
     void setSize(int width, int height) { m_width =width; m_height = height; }
     virtual void setDataidx(int idx) { m_dataidx = idx; }

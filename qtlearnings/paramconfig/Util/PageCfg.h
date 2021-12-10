@@ -10,7 +10,7 @@ class GroupCfgItem : public UiCfgItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
-    GroupCfgItem() {
+    GroupCfgItem() :m_titleDepth(1){
         m_type = UiCfgItem::strTypeGroup;
     }
     virtual ~GroupCfgItem();
@@ -21,6 +21,7 @@ public:
     int      getDataCount();
     void     addChild(UiCfgItem* item) { item->setParent(this); m_children.push_back(item); }
     void     clear()             { m_children.clear(); }
+    uint8_t  titleDepth()        { return m_titleDepth; }
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
@@ -50,6 +51,7 @@ protected:
     void deleteAll();
     list<UiCfgItem*> m_children;
     list<UiCfgItem*>::iterator m_it;
+    uint8_t          m_titleDepth;
 
 };
 

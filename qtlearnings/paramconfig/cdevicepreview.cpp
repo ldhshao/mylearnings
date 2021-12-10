@@ -19,7 +19,7 @@ CDevicePreview::~CDevicePreview()
 void CDevicePreview::updateByDevice(GroupCfgItem* dev)
 {
     if (nullptr != dev){
-        ui->label_title->setText(dev->getName());
+        ui->label_title->setText(dev->getNamePath(dev->titleDepth() - 1));
         ui->label_content->setText(dev->previewInfo());
         devUiCfg = dev;
     }

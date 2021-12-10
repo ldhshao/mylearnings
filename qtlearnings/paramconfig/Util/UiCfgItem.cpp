@@ -55,6 +55,29 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
 
     return true;
 }
+QString UiCfgItem::getNamePath(int ancestorDepth)
+{
+    if (0 >= ancestorDepth)
+        return m_name;
+
+    QString fullName;
+    list<QString> ancestors;
+    UiCfgItem* par = parent();
+    while (ancestorDepth > 0 && nullptr != par){
+        QString parName = par->getName();
+        if (parName.isEmpty())
+            break;
+        ancestors.push_back(parName);
+        par = par->parent();
+        ancestorDepth--;
+    }
+    ancestors.reverse();
+    for (auto it = ancestors.begin(); it != ancestors.end(); it++)
+        fullName.append(*it);
+    fullName.append(m_name);
+
+    return fullName;
+}
 void UiCfgItem::dump()
 {
     qDebug()<<"name "<<m_name<<" dataidx "<<m_dataidx<<" count "<<m_datacnt<<" addr "<<paramAddress();
