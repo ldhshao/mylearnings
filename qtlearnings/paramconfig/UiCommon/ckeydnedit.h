@@ -36,7 +36,8 @@ public:
     //void needDisplay(QKeyEvent *ev);
 protected:
     void keyPressEvent(QKeyEvent* ev);
-    //virtual void focusInEvent(QFocusEvent* ev);
+    virtual void focusInEvent(QFocusEvent *ev);
+    virtual void focusOutEvent(QFocusEvent *ev);
     //bool event(QEvent *ev);
  signals:
     void keydown(QKeyEvent* ev);

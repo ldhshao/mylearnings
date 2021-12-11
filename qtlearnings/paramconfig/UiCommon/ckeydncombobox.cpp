@@ -15,10 +15,14 @@ CKeyDnComboBox::CKeyDnComboBox(QWidget *parent) :
 //    return false;
 //}
 
-//void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
-//{
-//    CStateComboBox::focusInEvent(ev);
-//}
+void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
+{
+    setStyleSheet("background-color:rgba(200,60,60,100%)");
+}
+void CKeyDnComboBox::focusOutEvent(QFocusEvent *ev)
+{
+    setStyleSheet("");
+}
 
 void CKeyDnComboBox::keyPressEvent(QKeyEvent *ev)
 {

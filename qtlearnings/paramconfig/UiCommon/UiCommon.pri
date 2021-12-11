@@ -6,7 +6,6 @@ HEADERS +=\
           $$PWD/ckeybutton.h \
           $$PWD/ckeylabel.h \
           $$UICOMMON/cwidgetbutton.h \
-          $$UICOMMON/pagecontainer.h \
           $$UICOMMON/uipage.h        \
           $$UICOMMON/qkeytools_global.h \
           $$UICOMMON/qkeytools.h        \
@@ -22,7 +21,6 @@ SOURCES +=\
           $$PWD/ckeybutton.cpp \
           $$PWD/ckeylabel.cpp \
           $$UICOMMON/cwidgetbutton.cpp \
-          $$UICOMMON/pagecontainer.cpp \
           $$UICOMMON/uipage.cpp        \
           $$UICOMMON/qkeytools.cpp     \
           $$UICOMMON/uistatectl.cpp    \
@@ -33,5 +31,4 @@ SOURCES +=\
           $$UICOMMON/cenablemngr.cpp
 
 FORMS += \
-          $$UICOMMON/pagecontainer.ui \
           $$UICOMMON/qkeytools.ui

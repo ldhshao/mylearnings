@@ -97,8 +97,8 @@ UiCfgItem* GroupCfgItem::createMyself()
     GroupCfgItem* pList = new GroupCfgItem();
     pList->m_id = m_id;
     pList->m_name = m_name;
-    pList->m_left = m_left;
-    pList->m_top = m_top;
+    pList->m_col = m_col;
+    pList->m_row = m_row;
     //pList->m_width = m_width;
     //pList->m_height = m_height;
     pList->m_dataidx = m_dataidx;
@@ -141,12 +141,13 @@ bool GroupCfgItem::initData(int idx, bool useDef)
     list<UiCfgItem*>::iterator it = m_children.begin();
     for(; it != m_children.end(); it++){
         (*it)->initData(idx, useDef);
+        if (m_cols < (*it)->col()) m_cols = (*it)->col();
         cnt += (*it)->datacount();
         idx += (*it)->datacount();
     }
     m_datacnt = cnt;
     //check data conflict
-    chkDataConflict();
+    //chkDataConflict();
 
     return true;
 }
@@ -210,6 +211,7 @@ void GroupCfgItem::create(QWidget *parent)
     for (; it != m_children.end(); it++){
         (*it)->create(m_pWidget);
     }
+    page->fillColList();
     page->initTabOrder();
 }
 
@@ -221,7 +223,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr)
     int iSpanDes = 2;
     int iSpanItem = 10;
     int iSpanMargin = 4;
-    int iTitleHeight = 36;
+    int iTitleHeight = 80;
     //find cols and rows
     //count max width and max height
     struct SRowItemInfo{
@@ -254,7 +256,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr)
             if (w2->size().height() > h) h = w2->size().height();
         }
 
-        int l = (*it)->left(), t = (*it)->top();
+        int l = (*it)->col(), t = (*it)->row();
         map<int, struct SRowItemInfo>::iterator itCol = colWidths.find(l);
         if (itCol != colWidths.end()){
             if (itCol->second.iName < wName) itCol->second.iName = wName;
@@ -293,9 +295,9 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr)
         QWidget *w0 = (*it)->getWidget();
         QWidget *w1 = (*it)->getWidName();
         QWidget *w2 = (*it)->getWidDes();
-        int top = rowInfos[(*it)->top()];
-        int namePos = colInfos[(*it)->left()].iName;
-        int widPos = colInfos[(*it)->left()].iWidget;
+        int top = rowInfos[(*it)->row()];
+        int namePos = colInfos[(*it)->col()].iName;
+        int widPos = colInfos[(*it)->col()].iWidget;
         qDebug()<<(*it)->getName()<<": top "<<top;
         if (nullptr != w0){
             w0->move(widPos, top);
@@ -318,32 +320,14 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr)
     if (iWidth < iWidthMin) iWidth = iWidthMin;
     m_pWidget->resize(iWidth, iHeight);
     qDebug()<<"group "<<getName()<<": "<<iWidth<<","<<iHeight;
+    UiPage* page = dynamic_cast<UiPage*>(m_pWidget);
+    if (nullptr != page){
+        page->setTitle(getNamePath(m_titleDepth-1));
+        page->setTitleHeight(iTitleHeight);
+        page->setInitWidthHeight(iWidth, iHeight);
+    }
 
     return true;
-}
-
-void GroupCfgItem::addToPage(UiPage* page)
-{
-    list<UiCfgItem*>::iterator it = m_children.begin();
-    for (; it != m_children.end(); it++){
-        GroupCfgItem* pGroup = dynamic_cast<GroupCfgItem*>(*it);
-        if (nullptr != pGroup){
-            pGroup->addToPage(page);
-        }
-        QWidget *w0 = (*it)->getWidget();
-        QWidget *w1 = (*it)->getWidName();
-        QWidget *w2 = (*it)->getWidDes();
-        if (nullptr != w0){
-            page->addWidget(w0);
-        }
-        if (nullptr != w1){
-            page->addWidget(w1);
-        }
-        if (nullptr != w2){
-            page->addWidget(w2);
-        }
-    }
-    page->addWidget(m_pWidget);
 }
 
 bool GroupCfgItem::readXmlFile(QString strFile)
@@ -425,6 +409,16 @@ QString GroupCfgItem::previewInfo()
     QString strInfo;
     for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
         strInfo.append((*it)->previewInfo() + "\n");
+    }
+    return strInfo;
+}
+
+QString GroupCfgItem::previewInfo(int col)
+{
+    QString strInfo;
+    for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
+        if ((*it)->col() == col)
+            strInfo.append((*it)->previewInfo() + "\n");
     }
     return strInfo;
 }

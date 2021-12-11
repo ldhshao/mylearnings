@@ -10,7 +10,7 @@ class GroupCfgItem : public UiCfgItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
-    GroupCfgItem() :m_titleDepth(1){
+    GroupCfgItem() :m_titleDepth(1),m_cols(1){
         m_type = UiCfgItem::strTypeGroup;
     }
     virtual ~GroupCfgItem();
@@ -34,7 +34,6 @@ public:
     virtual void create(QWidget* parent);
     virtual bool initData(int idx, bool useDef);
     virtual bool initUi(unsigned short* pStAddr);//init data
-    void         addToPage(UiPage* page);
     bool         chkDataConflict(); //test function
 
     void createPage(list<UiPage*> &pageList);
@@ -47,11 +46,13 @@ public:
     virtual uint16_t *paramAddress() { return nullptr; }
 
     virtual QString previewInfo();
+    QString previewInfo(int col);
 protected:
     void deleteAll();
     list<UiCfgItem*> m_children;
     list<UiCfgItem*>::iterator m_it;
     uint8_t          m_titleDepth;
+    uint8_t          m_cols;
 
 };
 

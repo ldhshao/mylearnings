@@ -6,6 +6,8 @@
 #include <list>
 using namespace std;
 
+class QLabel;
+#define UIPAGE_COL_NUM 2
 class UiPage : public QWidget
 {
     Q_OBJECT
@@ -14,9 +16,10 @@ public:
     explicit UiPage(QWidget *parent = nullptr);
     ~UiPage();
 
-    void addWidget(QWidget* w);
-    QWidget* getHead();
-    QWidget* getNext();
+    void setTitle(QString strTitle);
+    void setTitleHeight(int h) { titleHeight = h; }
+    void setInitWidthHeight(int w, int h) { initWidth = w; initHeight = h; }
+    void fillColList();
     void initTabOrder();
 
 signals:
@@ -25,14 +28,19 @@ signals:
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
 
 protected slots:
 
 private:
+    void fillColList(QWidget* w);
     void deleteAll();
-    list<QWidget*>     ctlList;
+    QLabel            *title;
     list<QWidget*>::iterator m_it;
+    list<QWidget*>     colList[UIPAGE_COL_NUM];
     CStateCtlMgr       ctlMgr;//manage focus control in page
+    int                titleHeight;
+    int                initWidth, initHeight;
 };
 
 #endif // PAGECONTAINER_H

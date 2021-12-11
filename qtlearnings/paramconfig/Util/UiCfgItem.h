@@ -7,7 +7,7 @@ class UiCfgItem : public XmlItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(UiCfgItem)
-    UiCfgItem(UiCfgItem *parent = nullptr) : m_left(0), m_top(0), m_width(0), m_height(0),m_dataidx(-1),m_datacnt(1),
+    UiCfgItem(UiCfgItem *parent = nullptr) : m_col(0), m_row(0), m_width(0), m_height(0),m_dataidx(-1),m_datacnt(1),
                   m_pWidget(nullptr), m_pWidName(nullptr), m_pWidDes(nullptr){
         m_enableSourceId = -1; m_enableSourceVal = 0;
         m_parent = parent;
@@ -23,12 +23,11 @@ public:
     static QString strTypePage;
 
     QString getNamePath(int ancestorDepth);
-    void setPos(int left, int top) { m_left = left; m_top = top;}
     void setSize(int width, int height) { m_width =width; m_height = height; }
     virtual void setDataidx(int idx) { m_dataidx = idx; }
     void setParent(UiCfgItem* parent) { m_parent = parent; }
-    int  left() {	return m_left;	}
-    int  top() {	return m_top;	}
+    int  col() {	return m_col;	}
+    int  row() {	return m_row;	}
     int  width() {	return m_width;	}
     int  height() {	return m_height;	}
     int  dataidx() { return m_dataidx; }
@@ -55,7 +54,8 @@ public:
     virtual QString previewInfo();
 
 protected:
-    int m_left, m_top, m_width, m_height;
+    int m_col, m_row;
+    int m_width, m_height;
     int m_dataidx, m_datacnt;
     QString m_type;
     QString m_range;

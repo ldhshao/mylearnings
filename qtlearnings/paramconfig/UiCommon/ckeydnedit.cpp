@@ -15,14 +15,17 @@ CKeyDnEdit::CKeyDnEdit(QWidget *parent) :
     connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(slot_textChanged(const QString&)));
 }
 
-//void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
-//{
-//    CStateLineEdit::focusInEvent(ev);
-//    this->showText();
-//    this->setCursorPosition(this->text().length());
-//    qDebug()<<__func__;
-//}
-//
+void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
+{
+    setStyleSheet("background-color:rgba(200,60,60,100%)");
+    qDebug()<<__func__;
+}
+
+void CKeyDnEdit::focusOutEvent(QFocusEvent *ev)
+{
+    setStyleSheet("");
+    qDebug()<<__func__;
+}
 ////qh滤波处理 不处理tab按键
 //bool CKeyDnEdit::event(QEvent *ev)
 //{

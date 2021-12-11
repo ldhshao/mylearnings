@@ -28,8 +28,8 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
 {
     XmlItem::initFromDomElement(element);
 
-    setIntValue(m_left, element, "left");
-    setIntValue(m_top, element, "top");
+    setIntValue(m_col, element, "col");
+    setIntValue(m_row, element, "row");
     setIntValue(m_width, element, "width");
     setIntValue(m_height, element, "height");
     setIntValue(m_dataidx, element, "dataidx");
@@ -97,8 +97,8 @@ void UiCfgItem::create(QWidget* parent)
         }else if (m_type == UiCfgItem::strTypeDevPointEdit){
             m_pWidget = new CDevPointEdit(parent);
         }else if (m_type == UiCfgItem::strTypeCombobox){
-            m_pWidget = new CMyComboBox(parent);
-            //m_pWidget = new CKeyDnComboBox(parent);
+            //m_pWidget = new CMyComboBox(parent);
+            m_pWidget = new CKeyDnComboBox(parent);
         }else if (m_type == UiCfgItem::strTypeGroup){
             QGroupBox* pBox = new QGroupBox(parent);
             pBox->setTitle(getName());
@@ -112,13 +112,17 @@ void UiCfgItem::create(QWidget* parent)
                 pBoxName->setText(getName());
                 m_pWidName = pBoxName;
             }
-            if (0 > m_range.indexOf('#')){
+            if (!m_range.isEmpty() && 0 > m_range.indexOf('#')){
                 QLabel* pBoxDes = new QLabel(parent);
                 pBoxDes->setAlignment(Qt::AlignLeft);
                 pBoxDes->setText(m_range);
                 m_pWidDes = pBoxDes;
             }
         }
+        if (nullptr != m_pWidget) m_pWidget->move(m_col, m_row);
+        if (nullptr != m_pWidName) m_pWidName->move(m_col, m_row);
+        if (nullptr != m_pWidDes) m_pWidDes->move(m_col, m_row);
+        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
     }
 }
 bool UiCfgItem::initData(int idx, bool useDef)
@@ -238,8 +242,8 @@ UiCfgItem* UiCfgItem::createMyself()
     UiCfgItem* pItem = new UiCfgItem();
     pItem->m_id = m_id;
     pItem->m_name = m_name;
-    pItem->m_left = m_left;
-    pItem->m_top = m_top;
+    pItem->m_col = m_col;
+    pItem->m_row = m_row;
     pItem->m_width = m_width;
     pItem->m_height = m_height;
     pItem->m_dataidx = m_dataidx;
@@ -293,8 +297,8 @@ UiCfgItem* UiCfgItemFloat::createMyself()
     UiCfgItemFloat* pItem = new UiCfgItemFloat();
     pItem->m_id = m_id;
     pItem->m_name = m_name;
-    pItem->m_left = m_left;
-    pItem->m_top = m_top;
+    pItem->m_col = m_col;
+    pItem->m_row = m_row;
     pItem->m_width = m_width;
     pItem->m_height = m_height;
     pItem->m_dataidx = m_dataidx;
@@ -334,6 +338,11 @@ void UiCfgItemFloat::create(QWidget* parent)
         }
         pBoxDes->setText(strDes);
         m_pWidDes = pBoxDes;
+
+        if (nullptr != m_pWidget) m_pWidget->move(m_col, m_row);
+        if (nullptr != m_pWidName) m_pWidName->move(m_col, m_row);
+        if (nullptr != m_pWidDes) m_pWidDes->move(m_col, m_row);
+        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
     }
 }
 //bool UiCfgItemFloat::initUi(unsigned short *pStAddr)
@@ -382,8 +391,8 @@ UiCfgItem* ComboboxCfgItem::createMyself()
     ComboboxCfgItem* pItem = new ComboboxCfgItem();
     pItem->m_id = m_id;
     pItem->m_name = m_name;
-    pItem->m_left = m_left;
-    pItem->m_top = m_top;
+    pItem->m_col = m_col;
+    pItem->m_row = m_row;
     pItem->m_width = m_width;
     pItem->m_height = m_height;
     pItem->m_dataidx = m_dataidx;

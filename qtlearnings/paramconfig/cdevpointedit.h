@@ -17,6 +17,7 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
     virtual void mouseReleaseEvent(QMouseEvent *e);
+    virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
     uint16_t *pVal;
 };

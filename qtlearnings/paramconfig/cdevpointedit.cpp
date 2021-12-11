@@ -78,7 +78,13 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
     }
 }
 
+void CDevPointEdit::focusInEvent(QFocusEvent *event)
+{
+    qDebug()<<"CDevPointEdit::focusInEvent";
+    setStyleSheet("background-color:rgba(200,60,60,100%)");
+}
 void CDevPointEdit::focusOutEvent(QFocusEvent *event)
 {
     qDebug()<<"CDevPointEdit::focusOutEvent";
+    setStyleSheet("");
 }

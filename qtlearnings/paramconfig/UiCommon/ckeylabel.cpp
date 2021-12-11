@@ -23,5 +23,5 @@ void CKeyLabel::focusOutEvent(QFocusEvent *ev)
 {
     Q_UNUSED(ev)
     qDebug()<<"CKeyLabel "<<__FUNCTION__<<" "<<this;
-    setStyleSheet("background-color: rgba(80, 80, 100, 100%)");
+    setStyleSheet("");
 }

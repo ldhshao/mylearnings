@@ -20,7 +20,8 @@ void CDevicePreview::updateByDevice(GroupCfgItem* dev)
 {
     if (nullptr != dev){
         ui->label_title->setText(dev->getNamePath(dev->titleDepth() - 1));
-        ui->label_content->setText(dev->previewInfo());
+        ui->label_content1->setText(dev->previewInfo(1));
+        ui->label_content2->setText(dev->previewInfo(2));
         devUiCfg = dev;
     }
 }
