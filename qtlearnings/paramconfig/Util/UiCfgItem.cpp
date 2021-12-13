@@ -11,6 +11,7 @@
 #include "UiCommon/ckeydncombobox.h"
 #include "UiCommon/cbinder.h"
 #include "UiCommon/cenablemngr.h"
+#include "UiCommon/uipage.h"
 #include "../cdevpointedit.h"
 #include "Util/PageCfg.h"
 using namespace std;
@@ -86,6 +87,7 @@ void UiCfgItem::create(QWidget* parent)
 {
     if (nullptr == m_pWidget){
         bool bGroup = false;
+        UiPage* page = dynamic_cast<UiPage*>(parent);
         if (m_type == UiCfgItem::strTypeCheckBox){
             //QCheckBox* pBox = new QCheckBox();
             CStateCheckBox *pBox = new CStateCheckBox(parent);
@@ -94,11 +96,14 @@ void UiCfgItem::create(QWidget* parent)
             //m_pWidget = new CMyLineEdit(parent);
             //m_pWidget = new CStateLineEdit(parent);
             m_pWidget = new CKeyDnEdit(parent);
+            QObject::connect(m_pWidget, SIGNAL(sig_valueChanged(uint16_t *, uint32_t)), page, SLOT(slot_valueChanged(uint16_t *, uint32_t )));
         }else if (m_type == UiCfgItem::strTypeDevPointEdit){
             m_pWidget = new CDevPointEdit(parent);
+            QObject::connect(m_pWidget, SIGNAL(sig_valueChanged(uint16_t *, uint32_t)), page, SLOT(slot_valueChanged(uint16_t *, uint32_t )));
         }else if (m_type == UiCfgItem::strTypeCombobox){
             //m_pWidget = new CMyComboBox(parent);
             m_pWidget = new CKeyDnComboBox(parent);
+            QObject::connect(m_pWidget, SIGNAL(sig_valueChanged(uint16_t *, uint32_t)), page, SLOT(slot_valueChanged(uint16_t *, uint32_t )));
         }else if (m_type == UiCfgItem::strTypeGroup){
             QGroupBox* pBox = new QGroupBox(parent);
             pBox->setTitle(getName());
@@ -122,7 +127,7 @@ void UiCfgItem::create(QWidget* parent)
         if (nullptr != m_pWidget) m_pWidget->move(m_col, m_row);
         if (nullptr != m_pWidName) m_pWidName->move(m_col, m_row);
         if (nullptr != m_pWidDes) m_pWidDes->move(m_col, m_row);
-        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
+        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
     }
 }
 bool UiCfgItem::initData(int idx, bool useDef)

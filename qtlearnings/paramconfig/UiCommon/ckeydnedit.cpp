@@ -1,4 +1,5 @@
 ﻿#include "ckeydnedit.h"
+#include "bindobj.h"
 #include <QKeyEvent>
 #include <QDebug>
 //#include <QMessageBox>
@@ -17,13 +18,14 @@ CKeyDnEdit::CKeyDnEdit(QWidget *parent) :
 
 void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
 {
-    setStyleSheet("background-color:rgba(200,60,60,100%)");
+    //setStyleSheet("background-color:rgba(200,60,60,100%)");
+    QLineEdit::focusInEvent(ev);
     qDebug()<<__func__;
 }
 
 void CKeyDnEdit::focusOutEvent(QFocusEvent *ev)
 {
-    setStyleSheet("");
+    QLineEdit::focusOutEvent(ev);
     qDebug()<<__func__;
 }
 ////qh滤波处理 不处理tab按键
@@ -56,6 +58,7 @@ void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
         case Qt::Key_Down:
         case Qt::Key_Up:
         case Qt::Key_X:
+        case Qt::Key_Escape:
             ev->setAccepted(false);
         break;
     }
@@ -68,29 +71,6 @@ void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
     pBind->setState(IBindObj::BS_SOURCEKEY);
     pBind->keyEventFilter(ev);
     setText(pBind->showSet());
-    /*
-    if(ret == kd_check) //是否发送按键事件给窗体
-    {
-        this->setText(pBind->checkSet());
-    }
-    else if(ret == kd_emit)
-    {
-        emit this->keydown(ev);
-    }
-    else if(ret == kd_check_emit)
-    {
-        this->setText(pBind->checkSet());
-        emit this->keydown(ev);
-    }
-    else if(ret == kd_show) // 只show 不check 不发送按键事件
-    {
-        this->setText(pBind->showSet());
-    }
-    else if(ret == kd_show_emit)
-    {
-        this->setText(pBind->showSet());
-        emit this->keydown(ev);
-    }*/
 }
 
 void CKeyDnEdit::showText()
@@ -114,6 +94,11 @@ void CKeyDnEdit::slot_textChanged(const QString& newTxt)
 
         if (pBind->isModified()){
             //emit other data by UI
+        }
+
+        BindUint16 *pBindU16 = dynamic_cast<BindUint16*>(pBind);
+        if (nullptr != pBindU16){
+            emit sig_valueChanged(pBindU16->valPtr(), *(pBindU16->valPtr()));
         }
 
         pBind->clearState();

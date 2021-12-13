@@ -41,6 +41,7 @@ protected:
     //bool event(QEvent *ev);
  signals:
     void keydown(QKeyEvent* ev);
+    void sig_valueChanged(uint16_t *pVal, uint32_t valNew);
 protected slots:
     void slot_textEdited(const QString& newTxt);
     void slot_textChanged(const QString& newTxt);

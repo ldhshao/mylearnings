@@ -20,7 +20,7 @@ protected:
     }
 
 protected slots:
-    void slot_valueChanged(uint16_t* pVal, uint16_t valNew);
+    void slot_valueChanged(uint16_t* pVal, uint32_t valNew);
 
 private:
     map<uint16_t*, map<uint16_t, list<QWidget*>>>  valUiMap;

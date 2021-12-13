@@ -28,6 +28,7 @@ void CDevPointEdit::setValue(uint32_t val)
     *(pVal + 1) = (val >> 16);
     qDebug()<<"write addr "<<pVal<<" val "<<val;
     showText();
+    emit sig_valueChanged(pVal, val);
 }
 
 uint32_t CDevPointEdit::getValue()
@@ -48,6 +49,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
     switch (e->key()) {
     case Qt::Key_Down:
     case Qt::Key_Up:
+    case Qt::Key_Escape:
         e->setAccepted(false);
         break;
     default:
@@ -81,10 +83,12 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
 void CDevPointEdit::focusInEvent(QFocusEvent *event)
 {
     qDebug()<<"CDevPointEdit::focusInEvent";
-    setStyleSheet("background-color:rgba(200,60,60,100%)");
+    //setStyleSheet("background-color:rgba(200,60,60,100%)");
+    QLineEdit::focusInEvent(event);
 }
 void CDevPointEdit::focusOutEvent(QFocusEvent *event)
 {
     qDebug()<<"CDevPointEdit::focusOutEvent";
-    setStyleSheet("");
+    //setStyleSheet("");
+    QLineEdit::focusOutEvent(event);
 }

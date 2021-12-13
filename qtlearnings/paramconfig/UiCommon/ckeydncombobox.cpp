@@ -17,11 +17,13 @@ CKeyDnComboBox::CKeyDnComboBox(QWidget *parent) :
 
 void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
 {
-    setStyleSheet("background-color:rgba(200,60,60,100%)");
+    //setStyleSheet("background-color:rgba(200,60,60,100%)");
+    QComboBox::focusInEvent(ev);
 }
 void CKeyDnComboBox::focusOutEvent(QFocusEvent *ev)
 {
-    setStyleSheet("");
+    //setStyleSheet("");
+    QComboBox::focusOutEvent(ev);
 }
 
 void CKeyDnComboBox::keyPressEvent(QKeyEvent *ev)
@@ -41,6 +43,7 @@ void CKeyDnComboBox::keyPressEvent(QKeyEvent *ev)
     case Qt::Key_Up:
     case Qt::Key_Down:
     case Qt::Key_Return:
+    case Qt::Key_Escape:
         ev->setAccepted(false);
         break;
     default:

@@ -18,7 +18,7 @@ public:
     void setValuePtr(uint16_t* val) { pVal = val; }
 
 signals:
-    void sig_valueChanged(uint16_t *pVal, uint16_t valNew);
+    void sig_valueChanged(uint16_t *pVal, uint32_t valNew);
 
 protected:
     void keyPressEvent(QKeyEvent* ev);

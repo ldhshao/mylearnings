@@ -159,6 +159,7 @@ public:
 
     void SetSinglenum(){isSingle = true;}
     bool isValid(uint16_t val);
+    uint16_t* valPtr() { return pVal; }
 
 protected:
 

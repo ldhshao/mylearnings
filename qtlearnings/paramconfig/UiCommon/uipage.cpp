@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QKeyEvent>
 #include <QResizeEvent>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QDebug>
 
 UiPage::UiPage(QWidget *parent) :
@@ -12,6 +14,7 @@ UiPage::UiPage(QWidget *parent) :
     titleHeight = 80;
     initWidth = 200;
     initHeight = 200;
+    init = false;
     setWindowFlags(/*Qt::Tool | Qt::WindowStaysOnTopHint |*/ Qt::FramelessWindowHint);
     title = new QLabel(this);
     title->setAlignment(Qt::AlignCenter);
@@ -49,7 +52,7 @@ void UiPage::fillColList(QWidget* w)
     if (col <=0 || col > UIPAGE_COL_NUM) qDebug()<<"wrong pos "<<w->pos()<<" widget "<<w;
     if(0 < col && UIPAGE_COL_NUM >= col)
         colList[col-1].push_back(w);
-    //qDebug()<<"col "<<col<<" wid "<<w;
+    qDebug()<<"col "<<col<<" wid "<<w;
 }
 
 void UiPage::initTabOrder()
@@ -93,8 +96,21 @@ void UiPage::keyPressEvent(QKeyEvent *event)
         focusNextPrevChild(false);
         event->setAccepted(true);
         break;
-    case Qt::Key_Return:
     case Qt::Key_Escape:
+        if (0 < mparamAddrList.size()){
+            QMessageBox msgBox(QMessageBox::Question, "参数设置","参数已被修改， 是否保存?");
+            QAbstractButton* cancelBtn = dynamic_cast<QAbstractButton*>(msgBox.addButton("不保存", QMessageBox::NoRole));
+            msgBox.addButton("保存", QMessageBox::YesRole);
+            msgBox.exec();
+            if (msgBox.clickedButton() == cancelBtn){
+                qDebug()<<"don't save";
+                //reback
+                mparamAddrList.clear();
+            }
+        }
+    case Qt::Key_Return:
+        //save modified param address to global modified param address list
+        mparamAddrList.clear();
         hide();
         emit sig_configFinished();
         break;
@@ -116,9 +132,11 @@ void UiPage::focusInEvent(QFocusEvent *event)
 
 void UiPage::resizeEvent(QResizeEvent *event)
 {
+    if (init) return ;
+
     QSize s0 = event->oldSize();
     QSize s1 = event->size();
-    qDebug()<<__FUNCTION__<<" old "<<s0<<" new "<<s1;
+    qDebug()<<__FUNCTION__<<this<<" old "<<s0<<" new "<<s1;
     int deltX = (s1.width() - initWidth)/(UIPAGE_COL_NUM+1);
     title->resize(s1.width(), titleHeight);
     if (s0.width() > 0){
@@ -131,7 +149,25 @@ void UiPage::resizeEvent(QResizeEvent *event)
                 int x = (*it)->pos().x();
                 int y = (*it)->pos().y();
                 (*it)->move(x + deltX*(i+1), y);
+                qDebug()<<*it<<" pos "<<(*it)->pos();
             }
         }
     }
+    init = true;
 }
+
+void UiPage::slot_valueChanged(uint16_t* pVal, uint32_t newVal)
+{
+    bool bFind = false;
+    for (auto it = mparamAddrList.begin(); it != mparamAddrList.end(); it++) {
+        if( pVal == (*it)){
+            bFind = true;
+            break;
+        }
+    }
+    if (!bFind){
+        mparamAddrList.push_back(pVal);
+        if (newVal > 0xFFFF) mparamAddrList.push_back(pVal+1);
+    }
+}
+
