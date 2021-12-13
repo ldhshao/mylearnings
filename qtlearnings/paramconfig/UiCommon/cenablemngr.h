@@ -6,6 +6,10 @@ using namespace std;
 
 class CKeyDnComboBox;
 class QWidget;
+struct SEnablePair{
+    uint16_t *addr;
+    uint16_t  val;
+};
 class CEnableMngr : public QObject
 {
     Q_OBJECT
@@ -23,7 +27,8 @@ protected slots:
     void slot_valueChanged(uint16_t* pVal, uint32_t valNew);
 
 private:
-    map<uint16_t*, map<uint16_t, list<QWidget*>>>  valUiMap;
+    map<QWidget*, list<struct SEnablePair>>  uiEnableMap;
+    map<uint16_t*, list<QWidget*>>           valUiMap;
 };
 
 #endif // CKEYDNEDIT_H

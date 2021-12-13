@@ -220,6 +220,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr)
             if(nullptr != pCmb){
                 CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, m_pWidget);
             }
+            m_enableSource = pEnSource;
         }
     }
     return true;
@@ -274,6 +275,27 @@ QString UiCfgItem::previewInfo()
             strInfo.append(pBox->currentText());
     }
     return strInfo;
+}
+
+QString UiCfgItem::enableReason()
+{
+    QString strReason;
+    UiCfgItem* pItem = this;
+    UiCfgItem* enSource = m_enableSource;
+    while (nullptr != pItem){
+        if (nullptr != enSource && *enSource->paramAddress() != pItem->m_enableSourceVal){
+            strReason.append("原因:");
+            CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(enSource->getWidget());
+            GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(enSource->parent());
+            strReason.append(grp->getNamePath(grp->titleDepth()-1)).append(enSource->previewInfo());
+            qDebug()<<"enablesource "<<enSource->getNamePath(10)<<" enableval "<<pItem->m_enableSourceVal;
+            break;
+        }
+        pItem = pItem->parent();
+        enSource = pItem->m_enableSource;
+    }
+
+    return strReason;
 }
 
 //ComboboxItem

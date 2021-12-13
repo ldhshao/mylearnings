@@ -10,7 +10,7 @@ public:
     UiCfgItem(UiCfgItem *parent = nullptr) : m_col(0), m_row(0), m_width(0), m_height(0),m_dataidx(-1),m_datacnt(1),
                   m_pWidget(nullptr), m_pWidName(nullptr), m_pWidDes(nullptr){
         m_enableSourceId = -1; m_enableSourceVal = 0;
-        m_parent = parent;
+        m_parent = parent; m_enableSource = nullptr;
     }
     virtual ~UiCfgItem() {}
 
@@ -34,6 +34,7 @@ public:
     int  datacount() { return m_datacnt; }
     QString  enableSourceId() {	return m_enableSourceId; }
     uint16_t  enableSourceVal() { return m_enableSourceVal; }
+    QString    enableReason();
     UiCfgItem* parent() { return m_parent; }
     bool isType(const QString &type) {	return m_type == type; }
     QWidget* getWidget() {	return m_pWidget;	}
@@ -63,6 +64,7 @@ protected:
     QString m_enableSourceId;//ID path; example: 1)5 2)../5/7
     uint16_t m_enableSourceVal;
     UiCfgItem  *m_parent;
+    UiCfgItem  *m_enableSource;
     QWidget *m_pWidget;
     QWidget *m_pWidName;
     QWidget *m_pWidDes;//description

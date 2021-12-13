@@ -5,6 +5,7 @@
 using namespace std;
 
 class UiPage;
+class CKeyDnComboBox;
 
 class GroupCfgItem : public UiCfgItem
 {
@@ -47,6 +48,7 @@ public:
 
     virtual QString previewInfo();
     QString previewInfo(int col);
+
 protected:
     void deleteAll();
     list<UiCfgItem*> m_children;
@@ -67,6 +69,7 @@ public:
     virtual bool initUi(unsigned short* pStAddr);//init data
     virtual UiCfgItem* createMyself();
     GroupCfgItem* findGroupByName(const QString& strName);
+    void addEnableSource(CKeyDnComboBox* pCmb, uint16_t val);
 
 protected:
 };

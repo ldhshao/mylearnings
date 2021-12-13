@@ -1,5 +1,7 @@
 #include "PageCfg.h"
 #include "UiCommon/uipage.h"
+#include "UiCommon/ckeydncombobox.h"
+#include "UiCommon/cenablemngr.h"
 #include <QGroupBox>
 #include <set>
 #include <vector>
@@ -218,6 +220,19 @@ void GroupCfgItem::create(QWidget *parent)
 //version 002
 bool GroupCfgItem::initUi(unsigned short* pStAddr)
 {
+    //deal enable souce for page
+    GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
+    if (nullptr!= pGroup){
+        UiCfgItem* pEnSource = nullptr;
+        if (nullptr != (pEnSource = pGroup->findItemById(m_enableSourceId))){
+            CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pEnSource->getWidget());
+            if(nullptr != pCmb){
+                CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, m_pWidget);
+            }
+            m_enableSource = pEnSource;
+        }
+    }
+
     //only for group
     int iSpanName = 4;
     int iSpanDes = 2;
@@ -382,11 +397,18 @@ UiCfgItem* GroupCfgItem::findItemById(const QString& strId)
         int i = 0;
         int iCnt = idList.count();
         for (; i < iCnt && nullptr!= grp; i++){
-            item = grp->findItemById(idList[i].toInt());
-            grp = dynamic_cast<GroupCfgItem*>(item);
+            if (".." == idList[i]){
+                grp = dynamic_cast<GroupCfgItem*>(grp->parent());
+            }else {
+                item = grp->findItemById(idList[i].toInt());
+                grp = dynamic_cast<GroupCfgItem*>(item);
+            }
         }
         if (i == iCnt)
             pFind = item;
+        else{
+            qDebug()<<"error: wrong enable source id "<<strId;
+        }
     }
     return pFind;
 }
@@ -454,8 +476,28 @@ void GroupCfgList::create(QWidget* parent)
         (*it)->create(0);
     }
 }
+void GroupCfgList::addEnableSource(CKeyDnComboBox* pCmb, uint16_t val)
+{
+    for (auto it = m_children.begin(); it != m_children.end(); it++){
+        CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), val, (*it)->getWidget());
+    }
+}
+
 bool GroupCfgList::initUi(unsigned short* pStAddr)
 {
+    //deal enable souce for page
+    GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
+    if (nullptr!= pGroup){
+        UiCfgItem* pEnSource = nullptr;
+        if (nullptr != (pEnSource = pGroup->findItemById(m_enableSourceId))){
+            CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pEnSource->getWidget());
+            if(nullptr != pCmb){
+                addEnableSource(pCmb, m_enableSourceVal);
+            }
+            m_enableSource = pEnSource;
+        }
+    }
+
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         (*it)->initUi(pStAddr);
     }
