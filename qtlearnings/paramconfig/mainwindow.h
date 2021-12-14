@@ -33,12 +33,17 @@ protected:
     bool loadParam();
     QWidget* getCloseWidget(QWidget* wid, bool up);
     int getDeviceCols();
+    bool initWorkDir();
+    void addModifiedParamIndex(uint32_t idx);
+    void connectPages();
     void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
 
 protected slots:
     void slot_deviceClicked(QLabel* lbl);
+    void slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList);
+    void slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList);
 
 private slots:
     void on_pushButton_load_clicked();
@@ -58,8 +63,10 @@ private:
     vector<QLabel*> devList;
     list<UiPage*>               pageList;
     CDeviceConfig              *deviceUi;
-    unsigned short             *paramAddr;
+    unsigned short             *paramLocalAddr;
+    unsigned short             *paramServerAddr;
     int                         paramCount;
-    QString                     appDir;
+    QString                     workDir;
+    list<uint32_t>              mparamIdxList;
 };
 #endif // MAINWINDOW_H

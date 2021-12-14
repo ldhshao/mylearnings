@@ -55,6 +55,16 @@ void UiPage::fillColList(QWidget* w)
     qDebug()<<"col "<<col<<" wid "<<w;
 }
 
+void UiPage::updateUi()
+{
+    QObjectList oList = children();
+    for(auto it = oList.begin(); it != oList.end(); it++){
+        CMyCtl* ctl = dynamic_cast<CMyCtl*>(*it);
+        if (nullptr != ctl)
+            ctl->updateText();
+    }
+}
+
 void UiPage::initTabOrder()
 {
     QWidget *wid = nullptr;
@@ -102,14 +112,19 @@ void UiPage::keyPressEvent(QKeyEvent *event)
             QAbstractButton* cancelBtn = dynamic_cast<QAbstractButton*>(msgBox.addButton("不保存", QMessageBox::NoRole));
             msgBox.addButton("保存", QMessageBox::YesRole);
             msgBox.exec();
-            if (msgBox.clickedButton() == cancelBtn){
+            if (!mparamAddrList.empty() && msgBox.clickedButton() == cancelBtn){
                 qDebug()<<"don't save";
-                //reback
+                emit sig_rollBack_paramAddrList(&mparamAddrList);
+                updateUi();
                 mparamAddrList.clear();
             }
         }
     case Qt::Key_Return:
         //save modified param address to global modified param address list
+        if (!mparamAddrList.empty()){
+            emit sig_modifiedParamAddrList(&mparamAddrList);
+            qDebug()<<mparamAddrList;
+        }
         mparamAddrList.clear();
         hide();
         emit sig_configFinished();
@@ -121,13 +136,6 @@ void UiPage::keyPressEvent(QKeyEvent *event)
 void UiPage::focusInEvent(QFocusEvent *event)
 {
     qDebug()<<"UiPage::focusInEvent";
-    //qDebug()<<"CMachineSelector active "<<CMachineSelector::instance()->isActiveWindow();
-    //qDebug()<<"CPortSelector active "<<CPortSelector::instance()->isActiveWindow();
-    //qDebug()<<"Application focus widget "<<QApplication::focusWidget();
-    //qDebug()<<"Application activeWindow "<<QApplication::activeWindow();
-    //if (!CMachineSelector::instance()->isActiveWindow() && !CPortSelector::instance()->isActiveWindow()){
-    //    prevSelector();
-    //}
 }
 
 void UiPage::resizeEvent(QResizeEvent *event)

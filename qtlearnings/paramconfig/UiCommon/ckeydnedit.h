@@ -5,7 +5,7 @@
 #include "ibindobj.h"
 
 
-class CKeyDnEdit : public CStateLineEdit
+class CKeyDnEdit : public CStateLineEdit, public CMyCtl
 {
     Q_OBJECT
 
@@ -16,6 +16,7 @@ public:
             delete pBind;
     }
 
+    virtual void updateText() {	showText();	}
     void showText();
     bool setEditText(const QString& strText);
     void setAccessibleName(QString str)
@@ -48,6 +49,7 @@ protected slots:
 
 private:
     QString m_accessiblename;
+    bool    m_editing;
 };
 
 #endif // CKEYDNEDIT_H

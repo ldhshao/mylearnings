@@ -42,7 +42,6 @@ void CDevicePreview::showConfigPage(GroupCfgItem *dev)
             msgBox.exec();
             return ;
         }
-        connect(page, SIGNAL(sig_configFinished()), this, SLOT(slot_configFinished()));
         page->resize(width(), height());
         page->move(mapToGlobal(QPoint(0, 0)));
         qDebug()<<"width "<<width()<<" height "<<height()<<" pagepos "<<mapToGlobal(QPoint(0,0));

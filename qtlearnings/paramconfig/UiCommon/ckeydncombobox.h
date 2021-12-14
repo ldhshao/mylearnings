@@ -4,7 +4,7 @@
 #include "uistatectl.h"
 
 
-class CKeyDnComboBox : public CStateComboBox
+class CKeyDnComboBox : public CStateComboBox, public CMyCtl
 {
     Q_OBJECT
 
@@ -12,6 +12,8 @@ public:
     CKeyDnComboBox(QWidget *parent = 0);
     virtual ~CKeyDnComboBox(){
     }
+
+    virtual void updateText();
 
     //bool setComboBoxText(const QString& strText);
     uint16_t* valuePtr() { return pVal; }
@@ -30,6 +32,7 @@ protected slots:
 
 private:
     uint16_t *pVal;
+    bool      updating;
 };
 
 #endif // CKEYDNEDIT_H

@@ -24,6 +24,7 @@ public:
     ~CDeviceConfig();
     void updateUi(DevCfgList* dev, PageCfgList* uiCfg);
     void showUi(int reason);
+    CDevicePreview* getPreview() {	return preview; }
 
 protected:
     void initMenu2(GroupCfgItem* grpCfg);

@@ -501,6 +501,7 @@ bool GroupCfgList::initUi(unsigned short* pStAddr)
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         (*it)->initUi(pStAddr);
     }
+
     return true;
 }
 

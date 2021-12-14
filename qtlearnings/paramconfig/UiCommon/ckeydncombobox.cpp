@@ -7,13 +7,18 @@
 CKeyDnComboBox::CKeyDnComboBox(QWidget *parent) :
     CStateComboBox(parent), pVal(nullptr)
 {
+    updating = false;
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_currentIndexChanged(int)));
 }
 
-//bool CKeyDnComboBox::setComboBoxText(const QString& strText)
-//{
-//    return false;
-//}
+void CKeyDnComboBox::updateText()
+{
+    updating = true;
+    if (nullptr != pVal){
+        setCurrentIndex(static_cast<int>(*pVal));
+    }
+    updating = false;
+}
 
 void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
 {
@@ -58,7 +63,8 @@ void CKeyDnComboBox::slot_currentIndexChanged(int index)
     if (nullptr != pVal){
         if (index != *pVal){
             *pVal = index;
-            emit sig_valueChanged(pVal, *pVal);
+            if (!updating)
+                emit sig_valueChanged(pVal, *pVal);
         }
     }
 }

@@ -15,7 +15,7 @@ enum{
 class IBindObj
 {
 public:
-    IBindObj(){}
+    IBindObj():_state(BS_INIT){}
     virtual ~IBindObj(){} // 使用父类指针析构子类对象
 
     enum {

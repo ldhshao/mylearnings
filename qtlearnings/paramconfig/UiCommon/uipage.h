@@ -22,9 +22,12 @@ public:
     void setInitWidthHeight(int w, int h) { initWidth = w; initHeight = h; }
     void fillColList();
     void initTabOrder();
+    void updateUi();
 
 signals:
     void sig_configFinished();
+    void sig_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList);
+    void sig_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event);

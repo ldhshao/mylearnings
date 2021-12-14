@@ -106,4 +106,12 @@ public:
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
 };
+
+class CMyCtl
+{
+public:
+    CMyCtl(){}
+
+    virtual void updateText() {}
+};
 #endif // CWIDGETBUTTON_H

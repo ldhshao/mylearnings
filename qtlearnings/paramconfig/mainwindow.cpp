@@ -4,6 +4,7 @@
 #include "UiCommon/pagecontainer.h"
 #include "UiCommon/qkeytools.h"
 #include "UiCommon/ckeylabel.h"
+#include "cdevicepreview.h"
 #include "cdevposctl1.h"
 #include "cdevposctl2.h"
 #include "clineselector.h"
@@ -14,7 +15,11 @@
 #include <math.h>
 #include <QPixmap>
 #include <QBitmap>
+#include <QDir>
+#include <QFileInfo>
 #include <QKeyEvent>
+#define WORK_FILEPATH "/opt/data/paramconfig"
+//#define WORK_FILEPATH "/home/hndz-dhliu"
 #define SYSTEM_CFG_FILEPATH "system.xml"
 #define UITEMP_CFG_FILEPATH "uitemplate.xml"
 #define PARAMS_FILEPATH     "param.dat"
@@ -37,27 +42,64 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), devUiCfgList(0)
 {
     ui->setupUi(this);
-    paramAddr = nullptr;
+    paramLocalAddr = nullptr;
+    paramServerAddr = nullptr;
     paramCount = 0;
-    appDir = QCoreApplication::applicationDirPath();
-    loadParam();
-    initMenu();
-    //QkeyTools::getInstance();
     deviceUi = new CDeviceConfig();
     deviceUi->hide();
+
+    initWorkDir();
+    initMenu();
+    //QkeyTools::getInstance();
 }
 
 MainWindow::~MainWindow()
 {
     saveParam();
-    delete []paramAddr;
+    delete []paramLocalAddr;
+    delete []paramServerAddr;
     deleteAll();
     delete ui;
 }
 
+bool MainWindow::initWorkDir()
+{
+    workDir = WORK_FILEPATH;
+    //查找最新的配置版本
+    QDir *temp = new QDir;
+    bool exist = temp->exists(workDir);
+    if(!exist)
+    {
+        if (!temp->mkdir(workDir)){
+            return false;
+        }
+        //get newest config data
+    }else {
+        temp->setPath(workDir);
+        QFileInfoList dirList = temp->entryInfoList(QDir::Dirs);
+        for (auto it = dirList.rbegin(); it != dirList.rend(); it++) {
+            if ("." == it->fileName() || ".." == it->fileName()) continue;
+            QString strDir(it->fileName());
+            if (!temp->exists(strDir + "/" + SYSTEM_CFG_FILEPATH))
+                continue;
+            qDebug()<<strDir;
+            if (!temp->exists(strDir + "/" + UITEMP_CFG_FILEPATH))
+                continue;
+            if (!temp->exists(strDir + "/" + PARAMS_FILEPATH))
+                continue;
+            workDir.append("/").append(it->fileName());
+            qDebug()<<workDir;
+            return true;;
+        }
+    }
+
+    return false;
+}
+
 void MainWindow::initMenu()
 {
-    QString strDevCfg = appDir + "/" + SYSTEM_CFG_FILEPATH;
+    qDebug()<<workDir;
+    QString strDevCfg = workDir + "/" + SYSTEM_CFG_FILEPATH;
     devCfg.readDevCfgFile(strDevCfg);
     DevCfgItem *pItem = devCfg.getHead();
     int idx = 0;
@@ -85,21 +127,14 @@ void MainWindow::initMenu()
     pBtn->setProperty(PROPERTY_INDEX, idx++);
     devList.push_back(pBtn);
 
-    //setTabOrder(ui->pushButton_load, ui->pushButton_send);
-    //setTabOrder(ui->pushButton_send, ui->pushButton_preview);
-    //setTabOrder(ui->pushButton_preview, ui->pushButton_save);
-    //setTabOrder(ui->pushButton_save, ui->pushButton_queryrecord);
-    //setTabOrder(ui->pushButton_queryrecord, devList[0]);
-
     initPage();
 }
 
 void MainWindow::initPage()
 {
     GroupCfgList cfgTemplate;
-    QString strTemplate = appDir + "/" + UITEMP_CFG_FILEPATH;
+    QString strTemplate = workDir + "/" + UITEMP_CFG_FILEPATH;
     cfgTemplate.readXmlFile(strTemplate);
-    devUiCfgList.setParamTbl(paramAddr);
     DevCfgItem *pItem = devCfg.getHead();
     while (nullptr != pItem) {
         GroupCfgList *uiList = new GroupCfgList();
@@ -139,21 +174,22 @@ void MainWindow::initPage()
     }
 
     //check data count
-    int iCnt = devUiCfgList.getDataCount();
-    if (nullptr != paramAddr){
-        if (paramCount != iCnt){
-            delete[] paramAddr;
-            paramAddr = nullptr;
-        }
-    }
-    paramCount = iCnt;
-    if(nullptr == paramAddr){
-        paramAddr = new uint16_t[paramCount];
-        devUiCfgList.setParamTbl(paramAddr);
-    }
-    devUiCfgList.initData(0, true);//use default value
+    loadParam();
+
+    devUiCfgList.setParamTbl(paramLocalAddr);
+    devUiCfgList.initData(0, false);//
     devUiCfgList.createAllPage(pageList);
 
+    connectPages();
+}
+
+void MainWindow::connectPages()
+{
+    for (auto it = pageList.begin(); it !=pageList.end(); it++) {
+        QObject::connect(*it, SIGNAL(sig_configFinished()), deviceUi->getPreview(), SLOT(slot_configFinished()));
+        QObject::connect(*it, SIGNAL(sig_modifiedParamAddrList(list<uint16_t*> *)), this, SLOT(slot_modifiedParamAddrList(list<uint16_t*> *)));
+        QObject::connect(*it, SIGNAL(sig_rollBack_paramAddrList(list<uint16_t*> *)), this, SLOT(slot_rollBack_paramAddrList(list<uint16_t*> *)));
+    }
 }
 
 void MainWindow::deleteAll()
@@ -173,31 +209,38 @@ void MainWindow::deleteAll()
 
 bool MainWindow::saveParam()
 {
-    if (nullptr != paramAddr){
+    if (nullptr != paramLocalAddr){
        ofstream outFile;
-       QString strParam = appDir + "/" + PARAMS_FILEPATH;
+       QString strParam = workDir + "/" + PARAMS_FILEPATH;
        outFile.open(strParam.toStdString(), ios_base::out|ios_base::binary);
-       outFile.write(reinterpret_cast<char*>(paramAddr), paramCount*sizeof (uint16_t));
+       outFile.write(reinterpret_cast<char*>(paramLocalAddr), paramCount*sizeof (uint16_t));
        outFile.close();
     }
     return true;
 }
 bool MainWindow::loadParam()
 {
-    if (nullptr == paramAddr){
+    bool ret = false;
+    if (nullptr == paramLocalAddr){
         ifstream inFile;
-        QString strParam = appDir + "/" + PARAMS_FILEPATH;
+        QString strParam = workDir + "/" + PARAMS_FILEPATH;
         inFile.open(strParam.toStdString(), ios_base::in | ios_base::binary);
         inFile.seekg(0, inFile.end);
         paramCount = inFile.tellg() / sizeof(uint16_t);
-        if (paramCount > 0){
+        int params = devUiCfgList.getDataCount();
+        if (paramCount == params){//check param count or config md5
             inFile.seekg(0, inFile.beg);
-            paramAddr = new uint16_t[paramCount];
-            inFile.read(reinterpret_cast<char*>(paramAddr), paramCount*sizeof(uint16_t));
+            paramLocalAddr = new uint16_t[paramCount];
+            paramServerAddr = new uint16_t[paramCount];
+            inFile.read(reinterpret_cast<char*>(paramLocalAddr), paramCount*sizeof(uint16_t));
+            ret = true;
+        }else {//get params from remote
         }
         inFile.close();
+        memcpy(static_cast<void*>(paramServerAddr),static_cast<void*>(paramLocalAddr),paramCount*sizeof(uint16_t));
     }
-    return true;
+    qDebug()<<__FUNCTION__<<" param addr "<<paramLocalAddr<<" param count "<<paramCount<<" result "<<ret;
+    return ret;
 }
 void MainWindow::onResize(int width, int height)
 {
@@ -341,6 +384,37 @@ void MainWindow::slot_deviceClicked(QLabel* lbl)
 
     deviceUi->updateUi(list, &devUiCfgList);
     deviceUi->showUi(1);
+}
+
+void MainWindow::slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList)
+{
+    qDebug()<<__FUNCTION__<<*pMparamAddrList;
+    for (auto it = pMparamAddrList->begin(); it != pMparamAddrList->end(); it++) {
+        uint32_t idx = (*it) - paramLocalAddr;
+        addModifiedParamIndex(idx);
+    }
+}
+
+void MainWindow::slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList)
+{
+    qDebug()<<__FUNCTION__<<*pMparamAddrList;
+    for (auto it = pMparamAddrList->begin(); it != pMparamAddrList->end(); it++) {
+        uint32_t idx = (*it) - paramLocalAddr;
+        qDebug()<<"modified "<<*(*it)<<" old "<<*(paramServerAddr+idx);
+        *(*it) = *(paramServerAddr + idx);
+    }
+}
+
+void MainWindow::addModifiedParamIndex(uint32_t idx)
+{
+    auto it = mparamIdxList.begin();
+    for (; it != mparamIdxList.end(); it++) {
+        if (*it == idx)
+            break;
+    }
+
+    if (it == mparamIdxList.end())
+        mparamIdxList.push_back(idx);
 }
 
 void MainWindow::on_pushButton_load_clicked()

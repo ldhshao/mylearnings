@@ -12,6 +12,7 @@ CKeyDnEdit::CKeyDnEdit(QWidget *parent) :
     pBind = NULL;
     XOffset = 0;
     YOffset = 0;
+    m_editing = false;
     connect(this, SIGNAL(textEdited(const QString &)), this, SLOT(slot_textEdited(const QString&)));
     connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(slot_textChanged(const QString&)));
 }
@@ -25,6 +26,7 @@ void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
 
 void CKeyDnEdit::focusOutEvent(QFocusEvent *ev)
 {
+    m_editing = false;
     QLineEdit::focusOutEvent(ev);
     qDebug()<<__func__;
 }
@@ -60,7 +62,11 @@ void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
         case Qt::Key_X:
         case Qt::Key_Escape:
             ev->setAccepted(false);
-        break;
+            break;
+        case Qt::Key_Return:
+            if (m_editing) m_editing = false;
+            else ev->setAccepted(false);
+            return ;
     }
     if(pBind == NULL)
     {
@@ -70,6 +76,7 @@ void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
 
     pBind->setState(IBindObj::BS_SOURCEKEY);
     pBind->keyEventFilter(ev);
+    m_editing = true;
     setText(pBind->showSet());
 }
 
@@ -94,11 +101,10 @@ void CKeyDnEdit::slot_textChanged(const QString& newTxt)
 
         if (pBind->isModified()){
             //emit other data by UI
-        }
-
-        BindUint16 *pBindU16 = dynamic_cast<BindUint16*>(pBind);
-        if (nullptr != pBindU16){
-            emit sig_valueChanged(pBindU16->valPtr(), *(pBindU16->valPtr()));
+            BindUint16 *pBindU16 = dynamic_cast<BindUint16*>(pBind);
+            if (nullptr != pBindU16){
+                emit sig_valueChanged(pBindU16->valPtr(), *(pBindU16->valPtr()));
+            }
         }
 
         pBind->clearState();

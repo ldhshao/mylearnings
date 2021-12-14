@@ -29,6 +29,8 @@ void CDevPointEdit::setValue(uint32_t val)
     qDebug()<<"write addr "<<pVal<<" val "<<val;
     showText();
     emit sig_valueChanged(pVal, val);
+    if (val < 0xFFFF)
+        emit sig_valueChanged(pVal+1, *(pVal + 1));
 }
 
 uint32_t CDevPointEdit::getValue()
@@ -40,6 +42,15 @@ void CDevPointEdit::showText()
 {
     if (nullptr != pVal){
         uint32_t val = getValue();
+        setText(CDevPosMgr::instance()->makeStrDevPoint(val));
+    }
+}
+
+void CDevPointEdit::updateText()
+{
+    if (nullptr != pVal){
+        uint32_t val = getValue();
+        CDevPosMgr::instance()->setDevPoint(val, true);
         setText(CDevPosMgr::instance()->makeStrDevPoint(val));
     }
 }
