@@ -13,11 +13,15 @@
 #include <QCoreApplication>
 #include <fstream>
 #include <math.h>
+#include <time.h>
 #include <QPixmap>
 #include <QBitmap>
 #include <QDir>
 #include <QFileInfo>
+#include <QFileDialog>
 #include <QKeyEvent>
+#include <QMessageBox>
+#include <QPushButton>
 #define WORK_FILEPATH "/opt/data/paramconfig"
 //#define WORK_FILEPATH "/home/hndz-dhliu"
 #define SYSTEM_CFG_FILEPATH "system.xml"
@@ -420,6 +424,39 @@ void MainWindow::addModifiedParamIndex(uint32_t idx)
 void MainWindow::on_pushButton_load_clicked()
 {
     qDebug()<<__FUNCTION__;
+    //获取应用程序的路径
+    QString dlgTitle="选择一个文件"; //对话框标题
+    QString filter="数据文件(*.dat);;所有文件(*.*)"; //文件过滤器
+    QString fileName=QFileDialog::getOpenFileName(this,dlgTitle,workDir,filter);
+    if (!fileName.isEmpty()){
+        qDebug()<<fileName;
+        ifstream inFile;
+        int count = 0;
+        inFile.open(fileName.toStdString(), ios_base::in | ios_base::binary);
+        inFile.seekg(0, inFile.end);
+        int len = inFile.tellg();
+        char * buf = new char [len];
+        if (0 != len%6) qDebug()<<"error: wrond modified param data with len "<<len;
+
+        mparamIdxList.clear();
+        inFile.seekg(0, inFile.beg);
+        inFile.read (buf,len);
+        for (int i = 0; i < len; i+= 6) {
+            uint32_t *pIdx = static_cast<uint32_t*>((void*)(buf+i));
+            uint16_t *pVal = static_cast<uint16_t*>((void*)(buf+i+4));
+            qDebug()<<*pIdx<<*pVal;
+            *(paramLocalAddr + *pIdx) = *pVal;
+            mparamIdxList.push_back(*pIdx);
+        }
+
+        inFile.close();
+        delete [] buf;
+        //all page update
+        //以下语句在加载变更表后会引起关闭异常，原因待确定 2021.12.15
+        for(auto it = pageList.begin(); it != pageList.end(); it++){
+            (*it)->updateUi();
+        }
+    }
 }
 
 void MainWindow::on_pushButton_send_clicked()
@@ -437,7 +474,36 @@ void MainWindow::on_pushButton_preview_clicked()
 void MainWindow::on_pushButton_save_clicked()
 {
     qDebug()<<__FUNCTION__;
+    //save params modified
+    if (!mparamIdxList.empty()){
+        ofstream outFile;
+        QString strParam = workDir + "/";
+        time_t rawtime;
+        struct tm * timeinfo;
+        qDebug()<<mparamIdxList;
 
+        time (&rawtime);
+        timeinfo = localtime (&rawtime);
+        strParam.append(QString::asprintf("%d%02d%02d%02d%02d%02dmodified.dat",
+                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
+        outFile.open(strParam.toStdString(), ios_base::out|ios_base::binary);
+        char *buf = new char[6*mparamIdxList.size()];
+        int i = 0;
+        for(auto it = mparamIdxList.begin(); it != mparamIdxList.end(); it++){
+            uint32_t* pIdx = static_cast<uint32_t*>((void*)(buf+i));
+            uint16_t* pVal = static_cast<uint16_t*>((void*)(buf + i+4));
+            *pIdx = *it;
+            *pVal = *(paramLocalAddr + *it);
+            i += 6;
+        }
+        outFile.write(buf, i);
+        outFile.close();
+        qDebug()<<buf<<" len "<<i;
+        //notify to user file path
+        QMessageBox msgBox(QMessageBox::Information, "通知", QString("文件已保存到:").append(strParam));
+        msgBox.addButton("确定", QMessageBox::AcceptRole);
+        msgBox.exec();
+    }
 }
 
 void MainWindow::on_pushButton_queryrecord_clicked()
