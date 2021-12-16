@@ -5,6 +5,7 @@ UICOMMON = UiCommon
 HEADERS +=\
           $$PWD/ckeybutton.h \
           $$PWD/ckeylabel.h \
+          $$PWD/ckeytablewidget.h \
           $$UICOMMON/cwidgetbutton.h \
           $$UICOMMON/uipage.h        \
           $$UICOMMON/qkeytools_global.h \
@@ -20,6 +21,7 @@ HEADERS +=\
 SOURCES +=\
           $$PWD/ckeybutton.cpp \
           $$PWD/ckeylabel.cpp \
+          $$PWD/ckeytablewidget.cpp \
           $$UICOMMON/cwidgetbutton.cpp \
           $$UICOMMON/uipage.cpp        \
           $$UICOMMON/qkeytools.cpp     \

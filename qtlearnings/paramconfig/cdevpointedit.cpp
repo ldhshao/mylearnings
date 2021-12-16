@@ -33,6 +33,14 @@ void CDevPointEdit::setValue(uint32_t val)
         emit sig_valueChanged(pVal+1, *(pVal + 1));
 }
 
+bool CDevPointEdit::setEditText(const QString &strText)
+{
+    bool bRet = true;
+    setValue(CDevPosMgr::instance()->makeDevPoint(strText));
+
+    return bRet;
+}
+
 uint32_t CDevPointEdit::getValue()
 {
     return (*pVal + (*(pVal + 1)<<16));

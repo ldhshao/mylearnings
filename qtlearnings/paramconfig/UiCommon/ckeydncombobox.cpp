@@ -20,6 +20,17 @@ void CKeyDnComboBox::updateText()
     updating = false;
 }
 
+bool CKeyDnComboBox::setEditText(const QString &strText)
+{
+    bool bRet = true;
+    int iFind = findText(strText);
+    if (-1 < iFind){
+        setCurrentIndex(iFind);
+    }
+
+    return bRet;
+}
+
 void CKeyDnComboBox::focusInEvent(QFocusEvent *ev)
 {
     //setStyleSheet("background-color:rgba(200,60,60,100%)");

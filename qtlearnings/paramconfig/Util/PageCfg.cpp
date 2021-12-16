@@ -227,7 +227,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr)
         if (nullptr != (pEnSource = pGroup->findItemById(m_enableSourceId))){
             CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pEnSource->getWidget());
             if(nullptr != pCmb){
-                CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, m_pWidget);
+                CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, this);
             }
             m_enableSource = pEnSource;
         }
@@ -413,6 +413,19 @@ UiCfgItem* GroupCfgItem::findItemById(const QString& strId)
     return pFind;
 }
 
+UiCfgItem* GroupCfgItem::findItemByDataIdx(int dataidx)
+{
+    UiCfgItem *pFind = nullptr;
+    list<UiCfgItem*>::iterator it = m_children.begin();
+    for (; it != m_children.end(); it++){
+        if (dataidx == m_dataidx + (*it)->dataidx()){
+            pFind = (*it);
+            break;
+        }
+    }
+    return pFind;
+}
+
 void GroupCfgItem::createPage(list<UiPage*> &pageList)
 {
     create(nullptr);
@@ -479,7 +492,7 @@ void GroupCfgList::create(QWidget* parent)
 void GroupCfgList::addEnableSource(CKeyDnComboBox* pCmb, uint16_t val)
 {
     for (auto it = m_children.begin(); it != m_children.end(); it++){
-        CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), val, (*it)->getWidget());
+        //CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), val, *it);
     }
 }
 
@@ -531,6 +544,22 @@ GroupCfgItem* GroupCfgList::findGroupByName(const QString &strName)
     return nullptr;
 }
 
+UiCfgItem* GroupCfgList::findItemByDataIdx(int dataidx)
+{
+    UiCfgItem *pFind = nullptr;
+    list<UiCfgItem*>::iterator it = m_children.begin();
+    for (; it != m_children.end(); it++){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            UiCfgItem* item = grp->findItemByDataIdx(dataidx);
+            if (nullptr != item){
+                pFind = item;
+                break;
+            }
+        }
+    }
+    return pFind;
+}
 //PageCfgList
 PageCfgList::~PageCfgList()
 {

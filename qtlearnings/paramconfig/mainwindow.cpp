@@ -9,6 +9,7 @@
 #include "cdevposctl2.h"
 #include "clineselector.h"
 #include "cdeviceconfig.h"
+#include "cmodparampreview.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -468,7 +469,34 @@ void MainWindow::on_pushButton_send_clicked()
 void MainWindow::on_pushButton_preview_clicked()
 {
     qDebug()<<__FUNCTION__;
+    //if (mparamIdxList.empty()){
+    //    QMessageBox msgBox(QMessageBox::Information, "通知", QString("参数未修改:"));
+    //    msgBox.addButton("确定", QMessageBox::AcceptRole);
+    //    msgBox.exec();
+    //    return ;
+    //}
 
+    list<UiCfgItem*> itemList;
+    for (auto it = mparamIdxList.begin(); it != mparamIdxList.end(); it++) {
+        UiCfgItem* item = devUiCfgList.findItemByDataIdx(*it);
+        if (nullptr != item)
+            itemList.push_back(item);
+    }
+
+    qDebug()<<itemList;
+    CModParamPreview dlg(&itemList);
+    if (QDialog::Accepted == dlg.exec()){
+        qDebug()<<mparamIdxList;
+        mparamIdxList.clear();
+        for (auto it = itemList.begin(); it != itemList.end(); it++) {
+            uint32_t idx = static_cast<uint32_t>((*it)->dataidx() + (*it)->parent()->dataidx());
+            int cnt = (*it)->datacount();
+            while(cnt-- > 0)
+                mparamIdxList.push_back(idx++);
+        }
+
+        qDebug()<<mparamIdxList;
+    }
 }
 
 void MainWindow::on_pushButton_save_clicked()

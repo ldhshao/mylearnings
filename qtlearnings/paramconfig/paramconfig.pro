@@ -21,6 +21,7 @@ SOURCES += \
     ckeycheckbox.cpp \
     ckeycombobox.cpp \
     clineselector.cpp \
+    cmodparampreview.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -34,6 +35,7 @@ HEADERS += \
     ckeycheckbox.h \
     ckeycombobox.h \
     clineselector.h \
+    cmodparampreview.h \
     mainwindow.h
 
 FORMS += \
@@ -41,6 +43,7 @@ FORMS += \
     cdevicepreview.ui \
     cdevposctl1.ui \
     cdevposctl2.ui \
+    cmodparampreview.ui \
     mainwindow.ui
 
 DESTDIR = $$PWD/../bin

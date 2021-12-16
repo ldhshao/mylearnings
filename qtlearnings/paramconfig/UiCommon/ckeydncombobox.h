@@ -15,7 +15,7 @@ public:
 
     virtual void updateText();
 
-    //bool setComboBoxText(const QString& strText);
+    bool setEditText(const QString& strText);
     uint16_t* valuePtr() { return pVal; }
     void setValuePtr(uint16_t* val) { pVal = val; }
 

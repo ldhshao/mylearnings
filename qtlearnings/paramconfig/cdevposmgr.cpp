@@ -153,6 +153,22 @@ QString CDevPosMgr::makeStrDevPoint(uint32_t devPoint)
     return strDevPoint;
 }
 
+uint32_t CDevPosMgr::makeDevPoint(QString strDevPoint)
+{
+    //deal int string
+    //deal string CS1.12.3
+    uint32_t devPt = 0;
+    QStringList compList = strDevPoint.split('.');
+    if (3 == compList.count()){
+        //
+    }else {
+        uint32_t tmp = strDevPoint.toUInt();
+        if (isDevPointValid(tmp)) devPt = tmp;
+    }
+
+    return devPt;
+}
+
 bool CDevPosMgr::isDevPointValid(uint32_t devPoint)
 {
     int l = get_line_from_dev_point(devPoint);

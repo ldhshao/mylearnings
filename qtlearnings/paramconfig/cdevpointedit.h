@@ -14,6 +14,7 @@ public:
     virtual void updateText();
     void setValuePtr(uint16_t* val);
     void setValue(uint32_t val);
+    bool setEditText(const QString& strText);
     uint32_t getValue();
     void showText();
 

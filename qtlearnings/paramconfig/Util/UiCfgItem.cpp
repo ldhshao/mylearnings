@@ -79,6 +79,25 @@ QString UiCfgItem::getNamePath(int ancestorDepth)
 
     return fullName;
 }
+QString UiCfgItem::getFullName()
+{
+    QString fullName;
+    list<QString> ancestors;
+    UiCfgItem* par = parent();
+    while (nullptr != par){
+        QString parName = par->getName();
+        if (parName.isEmpty())
+            break;
+        ancestors.push_back(parName);
+        par = par->parent();
+    }
+    ancestors.reverse();
+    for (auto it = ancestors.begin(); it != ancestors.end(); it++)
+        fullName.append(*it).append("-");
+    fullName.append(m_name);
+
+    return fullName;
+}
 void UiCfgItem::dump()
 {
     qDebug()<<"name "<<m_name<<" dataidx "<<m_dataidx<<" count "<<m_datacnt<<" addr "<<paramAddress();
@@ -218,7 +237,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr)
         if (nullptr != (pEnSource = pGroup->findItemById(m_enableSourceId))){
             CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pEnSource->getWidget());
             if(nullptr != pCmb){
-                CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, m_pWidget);
+                CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, this);
             }
             m_enableSource = pEnSource;
         }
@@ -266,15 +285,23 @@ UiCfgItem* UiCfgItem::createMyself()
 QString UiCfgItem::previewInfo()
 {
     QString strInfo(m_name + ": ");
+    strInfo.append(strDataValue());
+
+    return strInfo;
+}
+
+QString UiCfgItem::strDataValue()
+{
+    QString strValue;
     QLineEdit* pEdit = dynamic_cast<QLineEdit*>(m_pWidget);
     if (nullptr != pEdit)
-        strInfo.append(pEdit->text());
+        strValue = pEdit->text();
     else{
         QComboBox* pBox = dynamic_cast<QComboBox*>(m_pWidget);
         if (nullptr != pBox)
-            strInfo.append(pBox->currentText());
+            strValue = pBox->currentText();
     }
-    return strInfo;
+    return strValue;
 }
 
 QString UiCfgItem::enableReason()
@@ -296,6 +323,24 @@ QString UiCfgItem::enableReason()
     }
 
     return strReason;
+}
+
+void UiCfgItem::setDefaultVal()
+{
+    if(!m_defaultVal.isEmpty()){
+        CKeyDnEdit* edit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+        if (nullptr != edit){
+            edit->setEditText(m_defaultVal);
+        }
+        CDevPointEdit* edit1 = dynamic_cast<CDevPointEdit*>(m_pWidget);
+        if (nullptr != edit1){
+            edit1->setEditText(m_defaultVal);
+        }
+        CKeyDnComboBox* cmb = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
+        if (nullptr != cmb){
+            cmb->setEditText(m_defaultVal);
+        }
+    }
 }
 
 //ComboboxItem
@@ -345,6 +390,7 @@ void UiCfgItemFloat::create(QWidget* parent)
 {
     if (nullptr == m_pWidget){
         m_pWidget = new CKeyDnEdit(parent);
+        QObject::connect(m_pWidget, SIGNAL(sig_valueChanged(uint16_t *, uint32_t)), dynamic_cast<UiPage*>(parent), SLOT(slot_valueChanged(uint16_t *, uint32_t )));
         if (!m_name.isEmpty()){
             QLabel* pBoxName = new QLabel(parent);
             pBoxName->setAlignment(Qt::AlignLeft);
@@ -377,24 +423,24 @@ void UiCfgItemFloat::create(QWidget* parent)
 //    UiCfgItem::initUi(pStAddr);
 //
 //}
-QString UiCfgItemFloat::previewInfo()
+QString UiCfgItemFloat::strDataValue()
 {
-    QString strInfo(m_name + ": ");
+    QString strValue;
     uint16_t* param = paramAddress();
     if (nullptr != param){
         if (0 == *param || 0 == m_decimalPlaces){
-            strInfo.append(QString::asprintf("%d", *param));
+            strValue.append(QString::asprintf("%d", *param));
         }else {
             QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
             QString strDes = QString::asprintf(strFormat.toStdString().c_str(), (*param)*m_precision);
-            strInfo.append(strDes);
+            strValue.append(strDes);
         }
-        strInfo.append(m_unit);
+        strValue.append(m_unit);
     }else{
         qDebug()<<"error: name "<<m_name<<" param address";
     }
 
-    return strInfo;
+    return strValue;
 }
 
 //ComboboxItem

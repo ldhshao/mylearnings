@@ -23,6 +23,7 @@ public:
     static QString strTypePage;
 
     QString getNamePath(int ancestorDepth);
+    QString getFullName();
     void setSize(int width, int height) { m_width =width; m_height = height; }
     virtual void setDataidx(int idx) { m_dataidx = idx; }
     void setParent(UiCfgItem* parent) { m_parent = parent; }
@@ -34,6 +35,7 @@ public:
     int  datacount() { return m_datacnt; }
     QString  enableSourceId() {	return m_enableSourceId; }
     uint16_t  enableSourceVal() { return m_enableSourceVal; }
+    UiCfgItem* enableSource() { return m_enableSource; }
     QString    enableReason();
     UiCfgItem* parent() { return m_parent; }
     bool isType(const QString &type) {	return m_type == type; }
@@ -53,6 +55,8 @@ public:
     virtual uint16_t *paramAddress();
 
     virtual QString previewInfo();
+    virtual QString strDataValue();
+    void setDefaultVal();
 
 protected:
     int m_col, m_row;
@@ -82,7 +86,7 @@ public:
     virtual void create(QWidget* parent);
     //virtual bool initUi(unsigned short* pStAddr);//init data
 
-    virtual QString previewInfo();
+    virtual QString strDataValue();
 protected:
     QString m_unit;
     float   m_precision;

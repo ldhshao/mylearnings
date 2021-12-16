@@ -43,6 +43,7 @@ public:
     bool readXmlFile(QString strFile);
     UiCfgItem* findItemById(int id);
     UiCfgItem* findItemById(const QString& strId);
+    virtual UiCfgItem* findItemByDataIdx(int dataidx);
 
     virtual uint16_t *paramAddress() { return nullptr; }
 
@@ -69,6 +70,7 @@ public:
     virtual bool initUi(unsigned short* pStAddr);//init data
     virtual UiCfgItem* createMyself();
     GroupCfgItem* findGroupByName(const QString& strName);
+    virtual UiCfgItem* findItemByDataIdx(int dataidx);
     void addEnableSource(CKeyDnComboBox* pCmb, uint16_t val);
 
 protected:

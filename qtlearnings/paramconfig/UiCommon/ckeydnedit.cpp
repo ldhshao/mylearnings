@@ -117,6 +117,13 @@ bool CKeyDnEdit::setEditText(const QString &strText)
     if (nullptr != pBind){
         bRet = pBind->setValue(strText);
         setText(pBind->showSet());
+        if (pBind->isModified()){
+            BindUint16 *pBindU16 = dynamic_cast<BindUint16*>(pBind);
+            if (nullptr != pBindU16){
+                emit sig_valueChanged(pBindU16->valPtr(), *(pBindU16->valPtr()));
+            }
+            pBind->clearState();
+        }
     }else {
         setText(strText);
     }
