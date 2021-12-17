@@ -3,6 +3,8 @@
 #include "UiCommon/cenablemngr.h"
 #include "ui_cmodparampreview.h"
 #include <QResizeEvent>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDebug>
 
 #define PROPERTY_INDEX "index"
@@ -64,6 +66,22 @@ void CModParamPreview::initTable()
         }
     }
     ui->tableWidget->resizeColumnsToContents();
+    ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
+    autoSetSize();
+}
+
+void CModParamPreview::autoSetSize()
+{
+    int m = 16, s = 8;
+    int sbw = 40;
+    QRect deskRect = QApplication::desktop()->availableGeometry();
+    int btnH = ui->pushButton_cancel->height();
+    int tblHMax = deskRect.height() - 2*m - btnH - s, tblH = (ui->tableWidget->rowCount()+1) * ui->tableWidget->rowHeight(0)+sbw;
+    int tblW = ui->tableWidget->columnWidth(0) + ui->tableWidget->columnWidth(1) + ui->tableWidget->columnWidth(2) + ui->tableWidget->columnWidth(3) + sbw;
+    if (tblH > tblHMax) tblH = tblHMax;
+    else if (tblH < height()) tblH = height();
+    ui->tableWidget->resize(tblW, tblH);
+    resize(tblW + 2*m, tblH+2*m+s+btnH);
 }
 
 void CModParamPreview::slot_operateParam()
@@ -181,7 +199,8 @@ void CModParamPreview::resizeEvent(QResizeEvent *event)
 
     ui->tableWidget->resize(w - 2*m, h - 2*m- s - btnH);
     ui->tableWidget->move(m, m);
-    ui->pushButton_sync->move(m, h - m - btnH);
+    ui->label_lineno->move(m, h - m - btnH);
+    ui->pushButton_sync->move(m + ui->label_lineno->width() + s, h - m - btnH);
     ui->pushButton_cancel->move(w - m - 2*btnW - s, h - m - btnH);
     ui->pushButton_ok->move(w - m - btnW, h - m - btnH);
 }

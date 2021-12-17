@@ -39,6 +39,7 @@ private slots:
 
 private:
     void initTable();
+    void autoSetSize();
 
     Ui::CModParamPreview *ui;
     list<UiCfgItem*>     *itemList;
