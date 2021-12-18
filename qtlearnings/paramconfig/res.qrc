@@ -3,5 +3,11 @@
         <file>images/background2.png</file>
         <file>images/device1.png</file>
         <file>images/system.png</file>
+        <file>images/logo.png</file>
+        <file>images/top.png</file>
+        <file>images/crusher.png</file>
+        <file>images/help.png</file>
+        <file>images/close.png</file>
+        <file>images/comm.png</file>
     </qresource>
 </RCC>

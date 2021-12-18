@@ -10,6 +10,7 @@
 #include "clineselector.h"
 #include "cdeviceconfig.h"
 #include "cmodparampreview.h"
+#include "cmodparamquery.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -39,27 +40,52 @@
 //        selection-color: #4f4f4f;\
 //    }"
 #define MENU2_STYLE         "QPushButton {font-size:28px; font:bold;}"
+#define BTN_STYLE           "font-size:20px;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);"
+#define VER_STYLE           "font-size:20px;color:rgba(255,255,255,100%);"
+#define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
+#define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
+#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
 #define PROPERTY_DEVICE "device"
 #define PROPERTY_INDEX "index"
+#define PROPERTY_IMAGE "image"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), devUiCfgList(0)
 {
+    initTitle();
     ui->setupUi(this);
+    setStyleSheet(WIDGET_BKCOLOR);
+    int btnW = 130, btnH = 40;
+    ui->pushButton_load->resize(btnW, btnH);
+    ui->pushButton_send->resize(btnW, btnH);
+    ui->pushButton_preview->resize(btnW, btnH);
+    ui->pushButton_save->resize(btnW, btnH);
+    ui->pushButton_queryrecord->resize(btnW, btnH);
+    ui->pushButton_load->setStyleSheet(BTN_STYLE);
+    ui->pushButton_send->setStyleSheet(BTN_STYLE);
+    ui->pushButton_preview->setStyleSheet(BTN_STYLE);
+    ui->pushButton_save->setStyleSheet(BTN_STYLE);
+    ui->pushButton_queryrecord->setStyleSheet(BTN_STYLE);
+    ui->label_copyright->setStyleSheet(COPYRIGHT_STYLE);
     paramLocalAddr = nullptr;
     paramServerAddr = nullptr;
     paramCount = 0;
     deviceUi = new CDeviceConfig();
     deviceUi->hide();
+    timerInterval = 1000;
+    emitTimer = new QTimer(this);
+    connect(emitTimer, SIGNAL(timeout()), this, SLOT(slot_emitTimer()));
 
     initWorkDir();
     initMenu();
     //QkeyTools::getInstance();
+    emitTimer->start(timerInterval);
 }
 
 MainWindow::~MainWindow()
 {
+    emitTimer->stop();
     saveParam();
     delete []paramLocalAddr;
     delete []paramServerAddr;
@@ -101,6 +127,27 @@ bool MainWindow::initWorkDir()
     return false;
 }
 
+void MainWindow::initTitle()
+{
+    topLbl = new QLabel(this);
+    logoLbl = new QLabel(this);
+    titleLbl = new QLabel("KTC236通信控制系统参数设置",this);
+    verLbl = new QLabel("版本:VL0.0.0",this);
+    timeLbl = new QLabel(this);
+    int tW = 1920, tH = 154;
+    int lW = 204, lH = 41;
+    QPixmap pmTop(":/images/top.png");
+    QPixmap pmLogo(":/images/logo.png");
+    topLbl->resize(tW, tH);
+    topLbl->setPixmap(pmTop);
+    logoLbl->resize(lW, lH);
+    logoLbl->setPixmap(pmLogo);
+    titleLbl->setStyleSheet(TITLE_STYLE);
+    verLbl->setStyleSheet(VER_STYLE);
+    timeLbl->setStyleSheet(VER_STYLE);
+    timeLbl->resize(200, 30);
+}
+
 void MainWindow::initMenu()
 {
     qDebug()<<workDir;
@@ -116,6 +163,10 @@ void MainWindow::initMenu()
         var.setValue<void*>(pItem);
         pBtn->setProperty(PROPERTY_DEVICE, var);
         pBtn->setProperty(PROPERTY_INDEX, idx++);
+        if (pItem->getName() == "破碎机")
+            pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
+        else
+            pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
         connect(pBtn, SIGNAL(clicked(QLabel*)), this, SLOT(slot_deviceClicked(QLabel*)));
         devList.push_back(pBtn);
         pItem = devCfg.getNext();
@@ -125,11 +176,19 @@ void MainWindow::initMenu()
     pBtn->setText("通讯");
     pBtn->setFocusPolicy(Qt::StrongFocus);
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    pBtn->setProperty(PROPERTY_IMAGE, ":/images/comm.png");
     devList.push_back(pBtn);
     pBtn = new CKeyLabel(this);
     pBtn->setText("帮助");
     pBtn->setFocusPolicy(Qt::StrongFocus);
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    pBtn->setProperty(PROPERTY_IMAGE, ":/images/help.png");
+    devList.push_back(pBtn);
+    pBtn = new CKeyLabel(this);
+    pBtn->setText("关闭");
+    pBtn->setFocusPolicy(Qt::StrongFocus);
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
+    pBtn->setProperty(PROPERTY_IMAGE, ":/images/close.png");
     devList.push_back(pBtn);
 
     initPage();
@@ -250,9 +309,21 @@ bool MainWindow::loadParam()
 void MainWindow::onResize(int width, int height)
 {
     int t0 = 100, t1 = height - 50, t2 = 200;
+    int th = 154, logol = 10, verl = 300;
     int w0 = ui->pushButton_load->width();
     int w1 = ui->label_copyright->width();
     int s0 = (0.4 * width - w0 * 5) / 4;
+    topLbl->move(0,0);
+    logoLbl->move(logol, 0);
+    int tWidth = QFontMetrics(titleLbl->font()).width(titleLbl->text());
+    int tHeight = QFontMetrics(titleLbl->font()).height();
+    titleLbl->resize(tWidth, tHeight);
+    tWidth = QFontMetrics(verLbl->font()).width(verLbl->text());
+    tHeight = QFontMetrics(verLbl->font()).height();
+    verLbl->resize(tWidth, tHeight);
+    titleLbl->move((width - titleLbl->width())/2,20);
+    verLbl->move(verl, 30);
+    timeLbl->move(width - 450, 30);
     ui->pushButton_load->move(0.3*width, t0);
     ui->pushButton_send->move(0.3*width + w0 + s0, t0);
     ui->pushButton_preview->move(0.3*width + 2*(w0 + s0), t0);
@@ -261,19 +332,22 @@ void MainWindow::onResize(int width, int height)
     ui->label_copyright->move((width - w1)/2, t1);
 
     //layout device
-    QPixmap pixmap(":/images/device1.png");
     int cols = getDeviceCols(), cnt = 0;
-    int rows = (devCfg.getChildrenCount() + 2 + cols - 1) / cols;
+    int rows = (devList.size() + cols - 1) / cols;
     int w2 = 200;
     int s2 = (0.4*width - w2 * cols) / (cols - 1);
     qDebug()<<"s2 "<<s2;
     for (auto it = devList.begin(); it!= devList.end(); it++) {
         (*it)->resize(w2, w2);
-        (*it)->setPixmap(pixmap.scaled(w2, w2));
-        if (cnt / cols < rows - 1 || (0 == (devCfg.getChildrenCount()+2)%cols))
+        QString strImg = (*it)->property(PROPERTY_IMAGE).toString();
+        if (!strImg.isEmpty()){
+            QPixmap pixmap(strImg);
+            (*it)->setPixmap(pixmap.scaled(w2, w2));
+        }
+        if (cnt / cols < rows - 1 || (0 == devList.size()%cols))
             (*it)->move(0.3*width + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(w2+s2));
         else {
-            int lost = cols - ((devCfg.getChildrenCount()+2)%cols);
+            int lost = cols - (devList.size()%cols);
             int offset = (lost * (w2 + s2)) / 2;
             (*it)->move(offset + 0.3*width + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(w2+s2));
         }
@@ -350,18 +424,10 @@ QWidget* MainWindow::getCloseWidget(QWidget* wid, bool up)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    QPushButton* pBtn = dynamic_cast<QPushButton*>(focusWidget());
     QLabel* pLbl = dynamic_cast<QLabel*>(focusWidget());
     qDebug()<<"MainWindow "<<__FUNCTION__;
     switch (event->key()) {
         case Qt::Key_Return:
-            if (nullptr != pBtn){
-                if (pBtn == ui->pushButton_load) on_pushButton_load_clicked();
-                else if (pBtn == ui->pushButton_send) on_pushButton_send_clicked();
-                else if (pBtn == ui->pushButton_preview) on_pushButton_preview_clicked();
-                else if (pBtn == ui->pushButton_save) on_pushButton_save_clicked();
-                else if (pBtn == ui->pushButton_queryrecord) on_pushButton_queryrecord_clicked();
-            }
             if (nullptr != pLbl){
                 qDebug()<<__FUNCTION__<<" lbl "<<pLbl;
                 slot_deviceClicked(pLbl);
@@ -537,5 +603,21 @@ void MainWindow::on_pushButton_save_clicked()
 void MainWindow::on_pushButton_queryrecord_clicked()
 {
     qDebug()<<__FUNCTION__;
+    CModParamQuery dlg;
+    //Dialog dlg;
+    dlg.exec();
+}
 
+void MainWindow::slot_emitTimer()
+{
+    emitTimer->stop();
+    QString strTime;
+        time_t rawtime;
+        struct tm * timeinfo;
+        time (&rawtime);
+        timeinfo = localtime (&rawtime);
+        strTime.append(QString::asprintf("%d-%02d-%02d %02d:%02d:%02d",
+                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
+        timeLbl->setText(strTime);
+    emitTimer->start(timerInterval);
 }

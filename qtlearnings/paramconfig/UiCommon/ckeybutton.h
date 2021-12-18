@@ -11,6 +11,12 @@ public:
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void focusInEvent(QFocusEvent *ev);
+    virtual void focusOutEvent(QFocusEvent *ev);
+
+    QString removeStyle(const QString& strStyle, QString strAttr);
+
+    QString m_preStyle;
 };
 
 #endif // CKEYBUTTON_H

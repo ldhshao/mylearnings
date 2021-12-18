@@ -7,6 +7,9 @@
 #include <QKeyEvent>
 #include <QDebug>
 
+#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
+#define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
+#define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
 #define PROPERTY_DEVICE "device"
 #define PROPERTY_INDEX "index"
 CDeviceConfig::CDeviceConfig(QWidget *parent) :
@@ -14,6 +17,9 @@ CDeviceConfig::CDeviceConfig(QWidget *parent) :
     ui(new Ui::CDeviceConfig)
 {
     ui->setupUi(this);
+    setStyleSheet(WIDGET_BKCOLOR);
+    ui->label_title->setStyleSheet(TITLE_STYLE);
+    ui->label_copyright->setStyleSheet(COPYRIGHT_STYLE);
     devCfg = nullptr;
     devUiCfgList = nullptr;
     menuWidth = 100;
@@ -41,6 +47,7 @@ void CDeviceConfig::updateUi(DevCfgList* dev, PageCfgList* uiCfg)
 {
     devCfg = dev;
     devUiCfgList = uiCfg;
+    ui->label_title->setText(devCfg->getName() + "参数配置");
     if (nullptr != devCfg && nullptr != devUiCfgList){
         GroupCfgItem* grpItem = devUiCfgList->findGroupByName(devCfg->getName());
         if (nullptr != grpItem)
@@ -112,8 +119,14 @@ void CDeviceConfig::showPreview(CStateButton* menu)
 
 void CDeviceConfig::onResize(int width, int height)
 {
-    int l = 120, t = 140, m = 4, s = 10;
+    int l = 120, t = 100, m = 4, s = 10;
     int i = 0;
+
+    //layout title
+    int tWidth = QFontMetrics(ui->label_title->font()).width(ui->label_title->text());
+    int tHeight = QFontMetrics(ui->label_title->font()).height();
+    ui->label_title->resize(tWidth, tHeight);
+    ui->label_title->move((width - tWidth)/2, 20);
 
     //layout menu2
     int span = menuHeight + s;

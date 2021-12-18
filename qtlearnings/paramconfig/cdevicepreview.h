@@ -23,6 +23,8 @@ public:
     bool isConfiging() { return (nullptr != pageCfg); }
 
 protected:
+    void onResize(int width, int height);
+    virtual void resizeEvent(QResizeEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
     virtual void mouseDoubleClickEvent(QMouseEvent *event);
 

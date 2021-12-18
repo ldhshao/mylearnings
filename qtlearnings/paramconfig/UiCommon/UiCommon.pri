@@ -4,6 +4,7 @@ DEPENDPATH += $$PWD
 UICOMMON = UiCommon
 HEADERS +=\
           $$PWD/ckeybutton.h \
+          $$PWD/ckeydateedit.h \
           $$PWD/ckeylabel.h \
           $$PWD/ckeytablewidget.h \
           $$UICOMMON/cwidgetbutton.h \
@@ -20,6 +21,7 @@ HEADERS +=\
 
 SOURCES +=\
           $$PWD/ckeybutton.cpp \
+          $$PWD/ckeydateedit.cpp \
           $$PWD/ckeylabel.cpp \
           $$PWD/ckeytablewidget.cpp \
           $$UICOMMON/cwidgetbutton.cpp \

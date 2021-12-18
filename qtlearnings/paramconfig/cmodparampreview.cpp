@@ -216,14 +216,6 @@ void CModParamPreview::keyPressEvent(QKeyEvent *event)
     qDebug()<<pBtn;
     qDebug()<<pTbl;
     switch (event->key()) {
-        case Qt::Key_Return:
-            if (nullptr != pBtn){
-                if (pBtn == ui->pushButton_cancel)
-                    on_pushButton_cancel_clicked();
-                else if (pBtn == ui->pushButton_ok)
-                    on_pushButton_ok_clicked();
-            }
-            return ;
         case Qt::Key_Up:
             if (nullptr != pTbl){
                 if (0 == pTbl->currentRow()){

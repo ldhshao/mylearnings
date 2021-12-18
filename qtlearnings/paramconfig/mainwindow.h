@@ -26,6 +26,7 @@ public:
     ~MainWindow();
 
 protected:
+    void initTitle();
     void initMenu();
     void initPage();
     void deleteAll();
@@ -44,6 +45,7 @@ protected slots:
     void slot_deviceClicked(QLabel* lbl);
     void slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList);
     void slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList);
+    void slot_emitTimer();
 
 private slots:
     void on_pushButton_load_clicked();
@@ -68,5 +70,8 @@ private:
     int                         paramCount;
     QString                     workDir;
     list<uint32_t>              mparamIdxList;
+    QLabel                     *topLbl, *titleLbl, *logoLbl, *verLbl, *timeLbl;
+    QTimer               	   *emitTimer;
+    int                         timerInterval;
 };
 #endif // MAINWINDOW_H
