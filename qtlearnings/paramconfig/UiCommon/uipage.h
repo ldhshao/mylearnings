@@ -23,6 +23,7 @@ public:
     void fillColList();
     void initTabOrder();
     void updateUi();
+    void showPage();
 
 signals:
     void sig_configFinished();

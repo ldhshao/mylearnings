@@ -29,11 +29,13 @@ CDevicePreview::~CDevicePreview()
 
 void CDevicePreview::updateByDevice(GroupCfgItem* dev)
 {
+    qDebug()<<"preview "<<__FUNCTION__;
     if (nullptr != dev){
         ui->label_title->setText(dev->getNamePath(dev->titleDepth() - 1));
         ui->label_content1->setText(dev->previewInfo(1));
         ui->label_content2->setText(dev->previewInfo(2));
         devUiCfg = dev;
+        qDebug()<<"preview update";
         onResize(width(), height());
     }
 }
@@ -54,7 +56,7 @@ void CDevicePreview::showConfigPage(GroupCfgItem *dev)
         page->resize(width(), height());
         page->move(mapToGlobal(QPoint(0, 0)));
         qDebug()<<"width "<<width()<<" height "<<height()<<" pagepos "<<mapToGlobal(QPoint(0,0));
-        page->show();
+        page->showPage();
         pageCfg = page;
     }
 }

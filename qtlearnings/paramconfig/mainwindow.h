@@ -71,6 +71,7 @@ private:
     QString                     workDir;
     list<uint32_t>              mparamIdxList;
     QLabel                     *topLbl, *titleLbl, *logoLbl, *verLbl, *timeLbl;
+    QLabel                     *bkLbl;
     QTimer               	   *emitTimer;
     int                         timerInterval;
 };

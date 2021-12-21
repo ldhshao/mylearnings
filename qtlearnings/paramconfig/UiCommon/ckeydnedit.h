@@ -33,19 +33,16 @@ public:
     void SetTipOffset(int x, int y) { XOffset = x; YOffset = y; }
     int XOffset;
     int YOffset;
-    /* 需要显示在编辑框 */
-    //void needDisplay(QKeyEvent *ev);
 protected:
     void keyPressEvent(QKeyEvent* ev);
     virtual void focusInEvent(QFocusEvent *ev);
     virtual void focusOutEvent(QFocusEvent *ev);
-    //bool event(QEvent *ev);
  signals:
     void keydown(QKeyEvent* ev);
     void sig_valueChanged(uint16_t *pVal, uint32_t valNew);
 protected slots:
-    void slot_textEdited(const QString& newTxt);
-    void slot_textChanged(const QString& newTxt);
+    //void slot_textEdited(const QString& newTxt);
+    //void slot_textChanged(const QString& newTxt);
 
 private:
     QString m_accessiblename;

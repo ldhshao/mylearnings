@@ -1,6 +1,5 @@
 #include "cdevpointedit.h"
 #include "cdevposmgr.h"
-#include "cdevposctl1.h"
 #include "clineselector.h"
 #include <QKeyEvent>
 #include <QDebug>
@@ -8,12 +7,13 @@
 CDevPointEdit::CDevPointEdit(QWidget *parent):QLineEdit(parent)
 {
     pVal = nullptr;
+    state = DPES_IDLE;
 }
 
 CDevPointEdit::CDevPointEdit(const QString &text, QWidget *parent):QLineEdit(text, parent)
 {
     pVal = nullptr;
-    //
+    state = DPES_IDLE;
 }
 
 void CDevPointEdit::setValuePtr(uint16_t* val)
@@ -58,21 +58,36 @@ void CDevPointEdit::updateText()
 {
     if (nullptr != pVal){
         uint32_t val = getValue();
-        CDevPosMgr::instance()->setDevPoint(val, true);
+        CDevPosMgr::instance()->setDevPoint(val, portType, true);
         setText(CDevPosMgr::instance()->makeStrDevPoint(val));
     }
 }
 
 void CDevPointEdit::keyPressEvent(QKeyEvent *e)
 {
-    switch (e->key()) {
+    int k = e->key();
+    switch (k) {
     case Qt::Key_Down:
     case Qt::Key_Up:
     case Qt::Key_Escape:
+    case Qt::Key_Backspace:
         e->setAccepted(false);
         break;
+    case Qt::Key_Return:
+        if (DPES_IDLE == state){
+            mouseReleaseEvent(nullptr);
+        }else if (DPES_EDITING == state){
+            state = DPES_CONFIRM;
+        }else if (DPES_CONFIRM == state){
+            state = DPES_IDLE;
+            e->setAccepted(false);
+        }
+        break;
     default:
-        QLineEdit::keyPressEvent(e);
+        if ((Qt::Key_0 <= k && k <= Qt::Key_9) || (Qt::Key_A <= k && k <= Qt::Key_Z))
+            e->setAccepted(false);
+        else
+            QLineEdit::keyPressEvent(e);
     }
 }
 void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
@@ -85,9 +100,10 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
     uint32_t val = *pVal + (*(pVal + 1)<<16);
     qDebug()<<"read addr "<<pVal<<" val "<<val;
     CLineSelector::instance()->show();
-    clearFocus();
+    //clearFocus();
 
     CPortSelector::instance()->setAttachEdit(this);
+    CPortSelector::instance()->setPortType(portType);
     if (CDevPosMgr::instance()->isDevPointValid(val)){
         int l = get_line_from_dev_point(val) - 1;
         int m = get_machine_from_dev_point(val);
@@ -96,7 +112,9 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
         CMachineSelector::instance()->selectButtonByIndex(m);
         CPortSelector::instance()->activateWindow();
     }else{
+        CLineSelector::instance()->selectButtonByIndex(-1);
     }
+    state = DPES_EDITING;
 }
 
 void CDevPointEdit::focusInEvent(QFocusEvent *event)
@@ -109,5 +127,8 @@ void CDevPointEdit::focusOutEvent(QFocusEvent *event)
 {
     qDebug()<<"CDevPointEdit::focusOutEvent";
     //setStyleSheet("");
+    if (DPES_EDITING != state){
     QLineEdit::focusOutEvent(event);
+    state = DPES_IDLE;
+    }
 }

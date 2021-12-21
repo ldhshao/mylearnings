@@ -15,7 +15,6 @@ SOURCES += \
     cdeviceconfig.cpp \
     cdevicepreview.cpp \
     cdevpointedit.cpp \
-    cdevposctl1.cpp \
     cdevposctl2.cpp \
     cdevposmgr.cpp \
     ckeycheckbox.cpp \
@@ -30,7 +29,6 @@ HEADERS += \
     cdeviceconfig.h \
     cdevicepreview.h \
     cdevpointedit.h \
-    cdevposctl1.h \
     cdevposctl2.h \
     cdevposmgr.h \
     ckeycheckbox.h \
@@ -43,7 +41,6 @@ HEADERS += \
 FORMS += \
     cdeviceconfig.ui \
     cdevicepreview.ui \
-    cdevposctl1.ui \
     cdevposctl2.ui \
     cmodparampreview.ui \
     cmodparamquery.ui \

@@ -5,7 +5,6 @@
 #include "UiCommon/qkeytools.h"
 #include "UiCommon/ckeylabel.h"
 #include "cdevicepreview.h"
-#include "cdevposctl1.h"
 #include "cdevposctl2.h"
 #include "clineselector.h"
 #include "cdeviceconfig.h"
@@ -44,7 +43,8 @@
 #define VER_STYLE           "font-size:20px;color:rgba(255,255,255,100%);"
 #define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
 #define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
-#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
+//#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
+#define WIDGET_BKCOLOR        "border-image: url(:/images/mainback.png);"
 #define PROPERTY_DEVICE "device"
 #define PROPERTY_INDEX "index"
 #define PROPERTY_IMAGE "image"
@@ -55,7 +55,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     initTitle();
     ui->setupUi(this);
-    setStyleSheet(WIDGET_BKCOLOR);
     int btnW = 130, btnH = 40;
     ui->pushButton_load->resize(btnW, btnH);
     ui->pushButton_send->resize(btnW, btnH);
@@ -129,6 +128,7 @@ bool MainWindow::initWorkDir()
 
 void MainWindow::initTitle()
 {
+    bkLbl = new QLabel(this);
     topLbl = new QLabel(this);
     logoLbl = new QLabel(this);
     titleLbl = new QLabel("KTC236通信控制系统参数设置",this);
@@ -142,6 +142,7 @@ void MainWindow::initTitle()
     topLbl->setPixmap(pmTop);
     logoLbl->resize(lW, lH);
     logoLbl->setPixmap(pmLogo);
+    bkLbl->setStyleSheet(WIDGET_BKCOLOR);
     titleLbl->setStyleSheet(TITLE_STYLE);
     verLbl->setStyleSheet(VER_STYLE);
     timeLbl->setStyleSheet(VER_STYLE);
@@ -253,6 +254,7 @@ void MainWindow::connectPages()
         QObject::connect(*it, SIGNAL(sig_configFinished()), deviceUi->getPreview(), SLOT(slot_configFinished()));
         QObject::connect(*it, SIGNAL(sig_modifiedParamAddrList(list<uint16_t*> *)), this, SLOT(slot_modifiedParamAddrList(list<uint16_t*> *)));
         QObject::connect(*it, SIGNAL(sig_rollBack_paramAddrList(list<uint16_t*> *)), this, SLOT(slot_rollBack_paramAddrList(list<uint16_t*> *)));
+        qDebug()<<"bind uipage "<<*it;
     }
 }
 
@@ -313,6 +315,8 @@ void MainWindow::onResize(int width, int height)
     int w0 = ui->pushButton_load->width();
     int w1 = ui->label_copyright->width();
     int s0 = (0.4 * width - w0 * 5) / 4;
+    bkLbl->resize(width, height);
+    bkLbl->move(0,0);
     topLbl->move(0,0);
     logoLbl->move(logol, 0);
     int tWidth = QFontMetrics(titleLbl->font()).width(titleLbl->text());

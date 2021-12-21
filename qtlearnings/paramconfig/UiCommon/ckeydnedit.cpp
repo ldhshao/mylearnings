@@ -13,8 +13,8 @@ CKeyDnEdit::CKeyDnEdit(QWidget *parent) :
     XOffset = 0;
     YOffset = 0;
     m_editing = false;
-    connect(this, SIGNAL(textEdited(const QString &)), this, SLOT(slot_textEdited(const QString&)));
-    connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(slot_textChanged(const QString&)));
+    //connect(this, SIGNAL(textEdited(const QString &)), this, SLOT(slot_textEdited(const QString&)));
+    //connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(slot_textChanged(const QString&)));
 }
 
 void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
@@ -26,31 +26,11 @@ void CKeyDnEdit::focusInEvent(QFocusEvent *ev)
 
 void CKeyDnEdit::focusOutEvent(QFocusEvent *ev)
 {
+    setEditText(text());
     m_editing = false;
     QLineEdit::focusOutEvent(ev);
     qDebug()<<__func__;
 }
-////qh滤波处理 不处理tab按键
-//bool CKeyDnEdit::event(QEvent *ev)
-//{
-//    if (ev->type() == QEvent::KeyPress)
-//    {
-//        QKeyEvent *ke = static_cast<QKeyEvent *>(ev);
-//        if (ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab)
-//        {
-//            return true;
-//        }
-//    }
-//    return QWidget::event(ev);
-//}
-//
-//void CKeyDnEdit::needDisplay(QKeyEvent *ev)
-//{
-//    /*字符加数字则直接显示*/
-//    if((ev->key() >= Qt::Key_0 && ev->key() <= Qt::Key_9) || (ev->key() >= Qt::Key_A && ev->key() <= Qt::Key_Z) || ev->key() == Qt::Key_Backspace){
-//        QLineEdit::keyPressEvent(ev);
-//    }
-//}
 
 void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
 {
@@ -63,9 +43,31 @@ void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
         case Qt::Key_Escape:
             ev->setAccepted(false);
             break;
+        case Qt::Key_0:
+        case Qt::Key_1:
+        case Qt::Key_2:
+        case Qt::Key_3:
+        case Qt::Key_4:
+        case Qt::Key_5:
+        case Qt::Key_6:
+        case Qt::Key_7:
+        case Qt::Key_8:
+        case Qt::Key_9:
+        case Qt::Key_Backspace:
+            QLineEdit::keyPressEvent(ev);
+            break;
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+            if (nullptr !=pBind) {
+                pBind->keyEventFilter(ev);
+                setText(pBind->showSet());
+            }
+            break;
         case Qt::Key_Return:
-            if (m_editing) m_editing = false;
-            else ev->setAccepted(false);
+            if (m_editing) {
+                setEditText(text());
+                m_editing = false;
+            }else ev->setAccepted(false);
             return ;
     }
     if(pBind == NULL)
@@ -75,9 +77,9 @@ void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
     }
 
     pBind->setState(IBindObj::BS_SOURCEKEY);
-    pBind->keyEventFilter(ev);
+    //pBind->keyEventFilter(ev);
     m_editing = true;
-    setText(pBind->showSet());
+    //setText(pBind->showSet());
 }
 
 void CKeyDnEdit::showText()
@@ -86,6 +88,7 @@ void CKeyDnEdit::showText()
         this->setText(pBind->showSet());
 }
 
+#if 0
 void CKeyDnEdit::slot_textEdited(const QString& newTxt)
 {
     qDebug()<<"text edited";
@@ -111,6 +114,7 @@ void CKeyDnEdit::slot_textChanged(const QString& newTxt)
     }
     qDebug()<<"text changed";
 }
+#endif
 bool CKeyDnEdit::setEditText(const QString &strText)
 {
     bool bRet = true;

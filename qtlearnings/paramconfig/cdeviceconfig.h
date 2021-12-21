@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 
-class PageContainer;
+class QLabel;
 class DevCfgList;
 class PageCfgList;
 class GroupCfgItem;
@@ -42,7 +42,6 @@ protected slots:
 
 private:
     Ui::CDeviceConfig *ui;
-    //PageContainer              *pageMgr;
     DevCfgList*     devCfg;
     PageCfgList*    devUiCfgList;
     vector<CStateButton*> menu2List;
@@ -51,8 +50,12 @@ private:
     CStateButtonMgr     menu2Mgr;
     CStateButtonMgr     menu3Mgr;
     CStateButtonMgr     menu4Mgr;
+    int                 menu2Cnt;
+    int                 menu3Cnt;
+    int                 menu4Cnt;
     CStateButton       *menuExit;
     CDevicePreview     *preview;
+    QLabel             *bkLbl;
     int                 menuWidth;
     int                 menuHeight;
 

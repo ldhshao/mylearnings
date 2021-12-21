@@ -428,14 +428,14 @@ UiCfgItem* GroupCfgItem::findItemByDataIdx(int dataidx)
 
 void GroupCfgItem::createPage(list<UiPage*> &pageList)
 {
-    create(nullptr);
+    //create(nullptr);
     UiPage* page = dynamic_cast<UiPage*>(m_pWidget);
     if (nullptr != page)
         pageList.push_back(page);
     for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
-        page = dynamic_cast<UiPage*>((*it)->getWidget());
-        if (nullptr != page)
-            pageList.push_back(page);
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp)
+            grp->createPage(pageList);
     }
 }
 
@@ -567,6 +567,7 @@ PageCfgList::~PageCfgList()
 }
 bool PageCfgList::createAllPage(list<UiPage*> &pageList)
 {
+    create(nullptr);
     for(list<UiCfgItem*>::iterator it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem *page = dynamic_cast<GroupCfgItem*>(*it);
         page->createPage(pageList);

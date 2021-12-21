@@ -94,6 +94,18 @@ void UiPage::initTabOrder()
     }
 }
 
+void UiPage::showPage()
+{
+    for (auto it = colList[0].begin(); it != colList[0].end(); it++) {
+        if (nullptr != dynamic_cast<QLineEdit*>(*it) ||
+                        nullptr != dynamic_cast<QComboBox*>(*it)){
+            (*it)->setFocus();
+            break;
+        }
+    }
+    show();
+}
+
 void UiPage::keyPressEvent(QKeyEvent *event)
 {
     qDebug()<<focusWidget();
@@ -128,6 +140,7 @@ void UiPage::keyPressEvent(QKeyEvent *event)
         mparamAddrList.clear();
         hide();
         emit sig_configFinished();
+        qDebug()<<"emit sig_configFinished()"<<this;
         break;
     }
     qDebug()<<focusWidget();

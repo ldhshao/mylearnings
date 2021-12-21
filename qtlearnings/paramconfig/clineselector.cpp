@@ -37,16 +37,20 @@ void CButtonSelector::adjustPosition(int x, int y, int w, int h)
     int sw = deskRect.width(), sh = deskRect.height();
     qDebug()<<"sw "<<sw<<" sh "<<sh;
     if (y + h + height() > sh){//show up
-        if (x + width() > sw){//align with right
-            move(x + w - width(), y-height());
-        }else{
+        if (x + width() <= sw){//align with left
             move(x, y-height());
+        }else if (width() < x + w){//align with right
+            move(x + w - width(), y-height());
+        }else{//align with center
+            move(0, y-height());
         }
     }else {
-        if (x + width() > sw){//align with right
-            move(x + w - width(), y+h);
-        }else{
+        if (x + width() <= sw){//align with left
             move(x, y+h);
+        }else if (width() < x + w){//align with right
+            move(x + w - width(), y+h);
+        }else{//align with center
+            move(0, y+h);
         }
     }
     qDebug()<<"new pos "<<pos();
@@ -171,18 +175,18 @@ void CLineSelector::prevSelector()
 
 CMachineSelector::CMachineSelector(QWidget *parent) : CButtonSelector(parent),currLine(-1)
 {
-    int w = 60, h = 40;
+    int w = 60, h = 40, row = 0, lineBtnCnt = 20;
     for (int i = 0; i < MACHINE_MAX; i++) {
         CStateButton* btn = new CKeyStateButton(this);
         btn->resize(w,h);
         btn->setText(QString::asprintf("%d\n(%d)", i+1, i+1));
         btn->setProperty(PROPERTY_INDEX, i);
-        btn->move(i*w, 0);
+        btn->move((i % lineBtnCnt)*w, row*h);
         btnMgr.registerButton(btn);
         btnList.push_back(btn);
+        if (lineBtnCnt -1 == (i % lineBtnCnt)) row++;
     }
     connect(&btnMgr, SIGNAL(sig_button_clicked(CStateButton*)), this, SLOT(slot_btnClicked(CStateButton*)));
-    //hide();
 }
 
 CMachineSelector* CMachineSelector::instance()
@@ -193,7 +197,7 @@ CMachineSelector* CMachineSelector::instance()
 
 void CMachineSelector::showMachines(int line)
 {
-    int w = 60, h = 40;
+    int w = 60, h = 40, lineBtnCnt = 20;
     int cnt = CDevPosMgr::instance()->getMachineCount(line);
     int i = 0;
     for (; i < cnt; i++) {
@@ -203,8 +207,13 @@ void CMachineSelector::showMachines(int line)
     for (; i < MACHINE_MAX; i++) {
         btnList[i]->setVisible(false);
     }
-    resize(cnt*w, h);
+    if (cnt <= lineBtnCnt)
+        resize(cnt*w, h);
+    else {
+        resize(lineBtnCnt*w, (cnt + lineBtnCnt - 1)/lineBtnCnt * h);
+    }
     currLine = line;
+    btnMgr.selectButton(nullptr);
     qDebug()<<"showMachines";
     show();
 }
@@ -261,7 +270,7 @@ CPortSelector* CPortSelector::instance()
 void CPortSelector::showPorts(int line, int machine)
 {
     int w = 60, h = 40, m=6;
-    list<bool> portList = CDevPosMgr::instance()->getMachinePorts(line, machine);
+    list<bool> portList = CDevPosMgr::instance()->getMachinePorts(line, machine, portType);
     int cnt = portList.size();
     int i = 0;
     uint32_t devPt = 0;
@@ -299,6 +308,7 @@ void CPortSelector::showPorts(int line, int machine)
     currLine = line;
     currMachine = machine;
     chkLoading = false;
+    btnList[0]->setFocus();
     show();
 }
 
@@ -308,16 +318,20 @@ void CPortSelector::adjustPosition(int x, int y, int w, int h)
     qDebug()<<"x "<<x<<" y "<<y<<" w "<<w<<" h "<<h;
     int sw = deskRect.width(), sh = deskRect.height();
     if (y + h + height() > sh){//show up
-        if (x + width() > sw){//align with right
-            move(x + w - width(), y-height());
-        }else{
+        if (x + width() <= sw){//align with left
             move(x, y-height());
+        }else if (width() < x + w){//align with right
+            move(x + w - width(), y-height());
+        }else{//align with center
+            move(0, y-height());
         }
     }else {
-        if (x + width() > sw){//align with right
-            move(x + w - width(), y+h);
-        }else{
+        if (x + width() <= sw){//align with left
             move(x, y+h);
+        }else if (width() < x + w){//align with right
+            move(x + w - width(), y+h);
+        }else{//align with center
+            move(0, y+h);
         }
     }
     qDebug()<<"new pos "<<pos();
@@ -328,11 +342,13 @@ void CPortSelector::on_checkbox_stateChanged(int newState)
     if (!chkLoading){
         QCheckBox* chk = dynamic_cast<QCheckBox*>(sender());
         int p = chk->property(PROPERTY_INDEX).toInt();
-        CDevPosMgr::instance()->setPortValue(currLine, currMachine,p, (Qt::Checked == newState)?true:false);
+        CDevPosMgr::instance()->setPortValue(currLine, currMachine, portType, p, (Qt::Checked == newState)?true:false);
         if (Qt::Checked == newState){
             if (nullptr != pEdit){
                 uint32_t devPt = make_dev_point(currLine+1, currMachine, p);
                 pEdit->setValue(devPt);
+                pEdit->endEdit();
+                pEdit->setFocus();
             }
             hide();
             CLineSelector::instance()->hide();
@@ -357,9 +373,17 @@ void CPortSelector::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_Up:
+        if (nullptr != pEdit) {
+            pEdit->endEdit();
+            pEdit->setFocus();
+        }
         hide();
         break;
     case Qt::Key_Escape:
+        if (nullptr != pEdit){
+            pEdit->endEdit();
+            pEdit->setFocus();
+        }
         hide();
         CMachineSelector::instance()->hideSelector();
         CLineSelector::instance()->hideSelector();

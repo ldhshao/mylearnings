@@ -74,6 +74,7 @@ public:
     static CPortSelector* instance();
     void   showPorts(int line, int machine);
     void   setAttachEdit(CDevPointEdit* edit) {	pEdit = edit; }
+    void   setPortType(uint8_t type) { portType = type; }
     void   adjustPosition(int x, int y, int w, int h);
 
 protected:
@@ -82,6 +83,7 @@ protected:
     vector<QCheckBox*> btnList;
     int      currLine;
     int      currMachine;
+    uint8_t  portType;
     bool     chkLoading;
     CDevPointEdit *pEdit;
     QTimer               *emitTimer;

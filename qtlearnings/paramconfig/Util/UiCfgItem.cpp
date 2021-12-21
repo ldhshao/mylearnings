@@ -13,6 +13,7 @@
 #include "UiCommon/cenablemngr.h"
 #include "UiCommon/uipage.h"
 #include "../cdevpointedit.h"
+#include "../cdevposmgr.h"
 #include "Util/PageCfg.h"
 using namespace std;
 
@@ -227,6 +228,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr)
     if (UiCfgItem::strTypeDevPointEdit == m_type){
         unsigned short* pAddr = pStAddr + parent()->dataidx();
         CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(m_pWidget);
+        pEdit->setPortType(-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
         CBinder::BindEdit(pEdit, pAddr + m_dataidx, 0);
         if (2 > m_datacnt) qDebug()<<"error: name "<<m_name<<" with datacount "<<m_datacnt;
     }

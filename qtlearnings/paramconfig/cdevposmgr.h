@@ -5,7 +5,7 @@
 using namespace std;
 
 #define LINE_MAX    10
-#define MACHINE_MAX 16
+#define MACHINE_MAX 255
 #define PORT_MAX    12
 #define LINE_BITS_COUNT    8
 #define MACHINE_BITS_COUNT 8
@@ -25,11 +25,11 @@ public:
     static CDevPosMgr* instance();
 
     QStringList getLineNames();
-    list<list<bool>> getLinePorts(int l);
-    list<bool> getMachinePorts(int l, int m);
+    list<list<bool>> getLinePorts(int l, int portType);
+    list<bool> getMachinePorts(int l, int m, int portType);
     int        getMachineCount(int l);
-    void       setPortValue(int l, int m, int port, bool use);
-    void       setDevPoint(uint32_t devPt, bool use);
+    void       setPortValue(int l, int m, int portType, int port, bool use);
+    void       setDevPoint(uint32_t devPt, int portType, bool use);
     QString    makeStrDevPoint(uint32_t devPoint);
     uint32_t   makeDevPoint(QString strDevPoint);
     bool       isDevPointValid(uint32_t);
@@ -39,13 +39,18 @@ public:
       LINETYPE_DIO,
       LINETYPE_CNT
     };
+    enum {
+      PORTTYPE_IN = 0,
+      PORTTYPE_OUT,
+      PORTTYPE_CNT
+    };
 protected:
     CDevPosMgr();
 
     QString lineNames[LINE_MAX];
     uint8_t lineTypes[LINE_MAX];
     uint16_t* lineMachineCounts[LINE_MAX];
-    bool      portInfos[LINE_MAX][MACHINE_MAX][PORT_MAX];
+    bool      portInfos[LINE_MAX][MACHINE_MAX][PORTTYPE_CNT][PORT_MAX];
     uint16_t  lineCount;
     uint8_t   portCount[LINETYPE_CNT];
 };

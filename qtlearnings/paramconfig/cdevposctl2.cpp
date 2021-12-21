@@ -179,13 +179,13 @@ void CDevPosCtl2::on_checkbox_stateChanged(int newState)
             currChk = nullptr;
         }
         unsigned int pos = chk->property(PROPERTY_INDEX).toUInt();
-        CDevPosMgr::instance()->setPortValue(l, get_machine(pos), get_port(pos), use);
-        for (int i = 0; i < MACHINE_MAX*PORT_MAX; i++) {
-            if (!chkPorts[i]->isChecked()){
-                chkPorts[i]->setEnabled(!use);
-            }
-        }
-        ui->comboBox_line->setEnabled(!use);
+        //CDevPosMgr::instance()->setPortValue(l, get_machine(pos), get_port(pos), use);
+        //for (int i = 0; i < MACHINE_MAX*PORT_MAX; i++) {
+        //    if (!chkPorts[i]->isChecked()){
+        //        chkPorts[i]->setEnabled(!use);
+        //    }
+        //}
+        //ui->comboBox_line->setEnabled(!use);
         qDebug()<<"sender "<<chk<<"state "<<newState;
     }
 }
@@ -194,9 +194,9 @@ void CDevPosCtl2::on_comboBox_line_currentIndexChanged(int index)
 {
     int line = index - 1;
     chkLoading = true;
-    list<list<bool>> portList = CDevPosMgr::instance()->getLinePorts(line);
-    showCtlsByPortList(portList);
-    chkLoading = false;
+    //list<list<bool>> portList = CDevPosMgr::instance()->getLinePorts(line);
+    //showCtlsByPortList(portList);
+    //chkLoading = false;
 }
 
 void CDevPosCtl2::on_pushButton_cancel_clicked()
@@ -204,7 +204,7 @@ void CDevPosCtl2::on_pushButton_cancel_clicked()
     if(nullptr != currChk && currChk->isChecked()){
         int l = ui->comboBox_line->currentIndex() - 1;
         unsigned int pos = currChk->property(PROPERTY_INDEX).toUInt();
-        CDevPosMgr::instance()->setPortValue(l, get_machine(pos), get_port(pos), false);
+        //CDevPosMgr::instance()->setPortValue(l, get_machine(pos), get_port(pos), false);
     }
     close();
 }

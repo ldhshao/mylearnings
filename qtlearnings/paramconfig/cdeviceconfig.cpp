@@ -7,7 +7,8 @@
 #include <QKeyEvent>
 #include <QDebug>
 
-#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
+//#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
+#define WIDGET_BKCOLOR        "border-image: url(:/images/mainback.png);"
 #define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
 #define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
 #define PROPERTY_DEVICE "device"
@@ -16,12 +17,16 @@ CDeviceConfig::CDeviceConfig(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CDeviceConfig)
 {
+    bkLbl = new QLabel(this);
+    bkLbl->setStyleSheet(WIDGET_BKCOLOR);
     ui->setupUi(this);
-    setStyleSheet(WIDGET_BKCOLOR);
     ui->label_title->setStyleSheet(TITLE_STYLE);
     ui->label_copyright->setStyleSheet(COPYRIGHT_STYLE);
     devCfg = nullptr;
     devUiCfgList = nullptr;
+    menu2Cnt = 0;
+    menu3Cnt = 0;
+    menu4Cnt = 0;
     menuWidth = 100;
     menuHeight = 40;
     menuExit = new CKeyStateButton(this);
@@ -41,6 +46,7 @@ CDeviceConfig::~CDeviceConfig()
     delete ui;
     delete menuExit;
     delete preview;
+    delete bkLbl;
 }
 
 void CDeviceConfig::updateUi(DevCfgList* dev, PageCfgList* uiCfg)
@@ -89,6 +95,7 @@ void CDeviceConfig::initMenu2(GroupCfgItem* grpItem)
         pItem = grpItem->getNext();
         idx++;
     }
+    menu2Cnt = idx;
     qDebug()<<__FUNCTION__<<" idx "<<idx;
     for (; idx < cnt0; idx++) {
         menu2List[idx]->setVisible(false);
@@ -121,6 +128,10 @@ void CDeviceConfig::onResize(int width, int height)
 {
     int l = 120, t = 100, m = 4, s = 10;
     int i = 0;
+
+    //layout background
+    bkLbl->resize(width, height);
+    bkLbl->move(0, 0);
 
     //layout title
     int tWidth = QFontMetrics(ui->label_title->font()).width(ui->label_title->text());
@@ -194,7 +205,7 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
             if (!bMenu4Show){//menu3 show
                 int idx = menu2Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
                 qDebug()<<"1 index "<<idx;
-                idx = (idx - 1 + menu2List.size() + 1) % (menu2List.size() + 1);
+                idx = (idx - 1 + menu2Cnt + 1) % (menu2Cnt + 1);
                 qDebug()<<"2 index "<<idx;
                 if (idx == menu2List.size())
                     menu2Mgr.selectButton(menuExit);
@@ -205,15 +216,16 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
                     (*it)->hide();
                 }
                 menu4Mgr.selectButton(nullptr);
+                onResize(width(),height());
             }
             return ;
         case Qt::Key_Down:
             if (!bMenu4Show){//menu3 show
                 int idx = menu2Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
                 qDebug()<<"3 index "<<idx;
-                idx = (idx + 1) % (menu2List.size() + 1);
+                idx = (idx + 1) % (menu2Cnt + 1);
                 qDebug()<<"4 index "<<idx;
-                if (idx == menu2List.size())
+                if (idx == menu2Cnt)
                     menu2Mgr.selectButton(menuExit);
                 else
                     menu2Mgr.selectButton(menu2List[idx]);
@@ -223,12 +235,12 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Left:
             if (!bMenu4Show){//menu3 show
                 int idx = menu3Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
-                idx = (idx - 1 + menu3List.size()) % menu3List.size();
+                idx = (idx - 1 + menu3Cnt) % menu3Cnt;
                 menu3Mgr.selectButton(menu3List[idx]);
                 showPreview(menu3List[idx]);
             }else {//menu4 show
                 int idx = menu4Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
-                idx = (idx - 1 + menu4List.size()) % menu4List.size();
+                idx = (idx - 1 + menu4Cnt) % menu4Cnt;
                 menu4Mgr.selectButton(menu4List[idx]);
                 showPreview(menu4List[idx]);
             }
@@ -236,12 +248,12 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Right:
             if (!bMenu4Show){//menu3 show
                 int idx = menu3Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
-                idx = (idx + 1) % menu3List.size();
+                idx = (idx + 1) % menu3Cnt;
                 menu3Mgr.selectButton(menu3List[idx]);
                 showPreview(menu3List[idx]);
             }else {//menu4 show
                 int idx = menu4Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
-                idx = (idx + 1) % menu4List.size();
+                idx = (idx + 1) % menu4Cnt;
                 menu4Mgr.selectButton(menu4List[idx]);
                 showPreview(menu4List[idx]);
             }
@@ -294,6 +306,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
             menu3List[idx]->show();
             idx++;
     }
+    menu3Cnt = idx;
     for (; idx < cnt0; idx++) {
         menu3List[idx]->hide();
     }
@@ -330,6 +343,7 @@ void CDeviceConfig::slot_menu3_clicked(CStateButton* pBtn)
             pItem = list->getNext();
             idx++;
         }
+        menu4Cnt = idx;
         qDebug()<<__FUNCTION__<<" idx "<<idx;
         for (; idx < cnt0; idx++) {
             menu4List[idx]->setVisible(false);
@@ -338,6 +352,7 @@ void CDeviceConfig::slot_menu3_clicked(CStateButton* pBtn)
 
         onResize(width(), height());
     }else {
+        menu4Cnt = 1;
         //show config UI
         preview->showConfigPage(group);
     }

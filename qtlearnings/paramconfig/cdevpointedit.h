@@ -17,6 +17,15 @@ public:
     bool setEditText(const QString& strText);
     uint32_t getValue();
     void showText();
+    void setPortType(int type) { portType = type; }
+    uint8_t getPortType() { return portType; }
+    void endEdit() { if (DPES_EDITING == state) state = DPES_CONFIRM; }
+
+    enum {
+      DPES_IDLE = 0,
+      DPES_EDITING,
+      DPES_CONFIRM
+    };
 
 signals:
     void sig_valueChanged(uint16_t *pVal, uint32_t valNew);
@@ -27,6 +36,8 @@ protected:
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
     uint16_t *pVal;
+    uint8_t   portType;
+    uint8_t   state;
 };
 
 #endif // CDEVPOINTEDIT_H
