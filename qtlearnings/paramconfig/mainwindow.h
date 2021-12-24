@@ -12,7 +12,9 @@ using namespace std;
 
 class UiPage;
 class QLabel;
+class CKeyLabel;
 class CDeviceConfig;
+class CDeviceIconWidget;
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -42,10 +44,12 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
 
 protected slots:
-    void slot_deviceClicked(QLabel* lbl);
+    //void slot_deviceClicked(QLabel* lbl);
+    void slot_deviceClicked(QWidget* w);
     void slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList);
     void slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList);
     void slot_emitTimer();
+    void slot_closeClicked(QLabel* lbl);
 
 private slots:
     void on_pushButton_load_clicked();
@@ -62,7 +66,8 @@ private:
     Ui::MainWindow *ui;
     DevCfgList     devCfg;
     PageCfgList    devUiCfgList;
-    vector<QLabel*> devList;
+    //vector<QLabel*> devList;
+    vector<CDeviceIconWidget*> devList;
     list<UiPage*>               pageList;
     CDeviceConfig              *deviceUi;
     unsigned short             *paramLocalAddr;
@@ -72,6 +77,7 @@ private:
     list<uint32_t>              mparamIdxList;
     QLabel                     *topLbl, *titleLbl, *logoLbl, *verLbl, *timeLbl;
     QLabel                     *bkLbl;
+    CKeyLabel                  *closeLbl;
     QTimer               	   *emitTimer;
     int                         timerInterval;
 };

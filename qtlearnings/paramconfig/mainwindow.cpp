@@ -10,6 +10,7 @@
 #include "cdeviceconfig.h"
 #include "cmodparampreview.h"
 #include "cmodparamquery.h"
+#include "cdeviceiconwidget.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -41,7 +42,7 @@
 #define MENU2_STYLE         "QPushButton {font-size:28px; font:bold;}"
 #define BTN_STYLE           "font-size:20px;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);"
 #define VER_STYLE           "font-size:20px;color:rgba(255,255,255,100%);"
-#define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
+#define TITLE_STYLE         "font:bold 28px;color:rgba(255,255,255,100%);"
 #define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
 //#define WIDGET_BKCOLOR      "background-color: rgba(12, 33, 107, 0%);"
 #define WIDGET_BKCOLOR        "border-image: url(:/images/mainback.png);"
@@ -55,17 +56,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     initTitle();
     ui->setupUi(this);
-    int btnW = 130, btnH = 40;
-    ui->pushButton_load->resize(btnW, btnH);
-    ui->pushButton_send->resize(btnW, btnH);
-    ui->pushButton_preview->resize(btnW, btnH);
-    ui->pushButton_save->resize(btnW, btnH);
-    ui->pushButton_queryrecord->resize(btnW, btnH);
-    ui->pushButton_load->setStyleSheet(BTN_STYLE);
-    ui->pushButton_send->setStyleSheet(BTN_STYLE);
-    ui->pushButton_preview->setStyleSheet(BTN_STYLE);
-    ui->pushButton_save->setStyleSheet(BTN_STYLE);
-    ui->pushButton_queryrecord->setStyleSheet(BTN_STYLE);
+    QPixmap pmClose(":/images/close.png");//close connect failed when before setuoUI, unkown reason
+    closeLbl = new CKeyLabel(this);
+    closeLbl->setFocusPolicy(Qt::ClickFocus);
+    closeLbl->resize(32,32);
+    closeLbl->setPixmap(pmClose.scaled(28,28));
+    connect(closeLbl, SIGNAL(clicked(QLabel*)), this, SLOT(slot_closeClicked(QLabel*)));
     ui->label_copyright->setStyleSheet(COPYRIGHT_STYLE);
     paramLocalAddr = nullptr;
     paramServerAddr = nullptr;
@@ -134,19 +130,10 @@ void MainWindow::initTitle()
     titleLbl = new QLabel("KTC236通信控制系统参数设置",this);
     verLbl = new QLabel("版本:VL0.0.0",this);
     timeLbl = new QLabel(this);
-    int tW = 1920, tH = 154;
-    int lW = 204, lH = 41;
-    QPixmap pmTop(":/images/top.png");
-    QPixmap pmLogo(":/images/logo.png");
-    topLbl->resize(tW, tH);
-    topLbl->setPixmap(pmTop);
-    logoLbl->resize(lW, lH);
-    logoLbl->setPixmap(pmLogo);
     bkLbl->setStyleSheet(WIDGET_BKCOLOR);
     titleLbl->setStyleSheet(TITLE_STYLE);
     verLbl->setStyleSheet(VER_STYLE);
     timeLbl->setStyleSheet(VER_STYLE);
-    timeLbl->resize(200, 30);
 }
 
 void MainWindow::initMenu()
@@ -157,40 +144,62 @@ void MainWindow::initMenu()
     DevCfgItem *pItem = devCfg.getHead();
     int idx = 0;
     while (nullptr != pItem) {
-        CKeyLabel* pBtn = new CKeyLabel(this);
-        pBtn->setText(pItem->getName());
-        pBtn->setFocusPolicy(Qt::StrongFocus);
+        CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+        pBtn->setTitle(pItem->getName());
+        pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
         QVariant var;
         var.setValue<void*>(pItem);
         pBtn->setProperty(PROPERTY_DEVICE, var);
         pBtn->setProperty(PROPERTY_INDEX, idx++);
+        connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_deviceClicked(QWidget*)));
+        devList.push_back(pBtn);
+        pItem = devCfg.getNext();
+        break;
+    }
+
+    CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+    pBtn->setTitle("通讯");
+    pBtn->setImagePath(":/images/comm.png");
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
+    devList.push_back(pBtn);
+    pBtn = new CDeviceIconWidget(this);
+    pBtn->setTitle("参数表备份与恢复");
+    pBtn->setImagePath(":/images/help.png");
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
+    devList.push_back(pBtn);
+    pBtn = new CDeviceIconWidget(this);
+    pBtn->setTitle("参数变更上传与查询");
+    pBtn->setImagePath(":/images/help.png");
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
+    devList.push_back(pBtn);
+    pBtn = new CDeviceIconWidget(this);
+    pBtn->setTitle("帮助");
+    pBtn->setImagePath(":/images/help.png");
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
+    devList.push_back(pBtn);
+
+    while (nullptr != pItem) {
+        CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+        pBtn->setTitle(pItem->getName());
         if (pItem->getName() == "破碎机")
             pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
         else
             pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
-        connect(pBtn, SIGNAL(clicked(QLabel*)), this, SLOT(slot_deviceClicked(QLabel*)));
+        QVariant var;
+        var.setValue<void*>(pItem);
+        pBtn->setProperty(PROPERTY_DEVICE, var);
+        pBtn->setProperty(PROPERTY_INDEX, idx++);
+        connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_deviceClicked(QWidget*)));
         devList.push_back(pBtn);
         pItem = devCfg.getNext();
     }
-
-    QLabel* pBtn = new CKeyLabel(this);
-    pBtn->setText("通讯");
-    pBtn->setFocusPolicy(Qt::StrongFocus);
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
-    pBtn->setProperty(PROPERTY_IMAGE, ":/images/comm.png");
-    devList.push_back(pBtn);
-    pBtn = new CKeyLabel(this);
-    pBtn->setText("帮助");
-    pBtn->setFocusPolicy(Qt::StrongFocus);
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
-    pBtn->setProperty(PROPERTY_IMAGE, ":/images/help.png");
-    devList.push_back(pBtn);
-    pBtn = new CKeyLabel(this);
-    pBtn->setText("关闭");
-    pBtn->setFocusPolicy(Qt::StrongFocus);
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
-    pBtn->setProperty(PROPERTY_IMAGE, ":/images/close.png");
-    devList.push_back(pBtn);
+    for (; idx < 15; idx++) {
+        CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+        pBtn->setTitle("test");
+        pBtn->setImagePath(":/images/system.png");
+        pBtn->setProperty(PROPERTY_INDEX, idx);
+        devList.push_back(pBtn);
+    }
 
     initPage();
 }
@@ -310,15 +319,21 @@ bool MainWindow::loadParam()
 }
 void MainWindow::onResize(int width, int height)
 {
-    int t0 = 100, t1 = height - 50, t2 = 200;
+    int t1 = height - 50;
     int th = 154, logol = 10, verl = 300;
-    int w0 = ui->pushButton_load->width();
     int w1 = ui->label_copyright->width();
-    int s0 = (0.4 * width - w0 * 5) / 4;
+    int lW = 204, lH = 41;
+    QPixmap pmTop(":/images/top.png");
+    QPixmap pmLogo(":/images/logo.png");
     bkLbl->resize(width, height);
     bkLbl->move(0,0);
+    topLbl->resize(width, th);
+    topLbl->setPixmap(pmTop.scaled(width, th));
     topLbl->move(0,0);
+    logoLbl->resize(lW, lH);
+    logoLbl->setPixmap(pmLogo);
     logoLbl->move(logol, 0);
+    closeLbl->move(width - 50, 10);
     int tWidth = QFontMetrics(titleLbl->font()).width(titleLbl->text());
     int tHeight = QFontMetrics(titleLbl->font()).height();
     titleLbl->resize(tWidth, tHeight);
@@ -327,34 +342,23 @@ void MainWindow::onResize(int width, int height)
     verLbl->resize(tWidth, tHeight);
     titleLbl->move((width - titleLbl->width())/2,20);
     verLbl->move(verl, 30);
+    timeLbl->resize(200, 30);
     timeLbl->move(width - 450, 30);
-    ui->pushButton_load->move(0.3*width, t0);
-    ui->pushButton_send->move(0.3*width + w0 + s0, t0);
-    ui->pushButton_preview->move(0.3*width + 2*(w0 + s0), t0);
-    ui->pushButton_save->move(0.3*width + 3*(w0 + s0), t0);
-    ui->pushButton_queryrecord->move(0.3*width + 4*(w0 + s0), t0);
     ui->label_copyright->move((width - w1)/2, t1);
 
     //layout device
-    int cols = getDeviceCols(), cnt = 0;
-    int rows = (devList.size() + cols - 1) / cols;
-    int w2 = 200;
-    int s2 = (0.4*width - w2 * cols) / (cols - 1);
-    qDebug()<<"s2 "<<s2;
+    int cols = 5, rows = 3, cnt = 0;
+    int m2 = 80, s2 = 20, t2 = th;
+    if (24 < devList.size()){
+        cols = 7;
+        rows = 5;
+    }
+    int w2 = (width - 2*m2 - (cols -1)*s2) / cols;
+    int h2 = (height - t2 - (height - t1) - m2 - (rows - 1)*s2) / rows;
+    qDebug()<<"w2 "<<w2<<"h2"<<h2;
     for (auto it = devList.begin(); it!= devList.end(); it++) {
-        (*it)->resize(w2, w2);
-        QString strImg = (*it)->property(PROPERTY_IMAGE).toString();
-        if (!strImg.isEmpty()){
-            QPixmap pixmap(strImg);
-            (*it)->setPixmap(pixmap.scaled(w2, w2));
-        }
-        if (cnt / cols < rows - 1 || (0 == devList.size()%cols))
-            (*it)->move(0.3*width + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(w2+s2));
-        else {
-            int lost = cols - (devList.size()%cols);
-            int offset = (lost * (w2 + s2)) / 2;
-            (*it)->move(offset + 0.3*width + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(w2+s2));
-        }
+        (*it)->resize(w2, h2);
+        (*it)->move(m2 + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(h2+s2));
         cnt++;
     }
 }
@@ -373,70 +377,35 @@ int MainWindow::getDeviceCols()
 
 QWidget* MainWindow::getCloseWidget(QWidget* wid, bool up)
 {
-    QPushButton* pBtn = dynamic_cast<QPushButton*>(wid);
-    QLabel* pLbl = dynamic_cast<QLabel*>(wid);
-    int x0 = wid->pos().rx();
-    int cols = getDeviceCols();
-    int rows = (devList.size() + cols - 1) / cols + 1;
-    int row = 0;
-    int distMin = 0;
-    QWidget *pTarget = nullptr;
-
+    CDeviceIconWidget* pBtn = dynamic_cast<CDeviceIconWidget*>(wid);
     if (nullptr != pBtn){
-        row = up? (rows -1) : (1);
-    } else if (nullptr != pLbl){
-        int idx = pLbl->property(PROPERTY_INDEX).toInt();
-        row = idx / cols + 1;
-        row = up ? (row -1) : ((row+1)%rows);
-    }
-    if (0 == row){
-        vector<QWidget*> btnList;
-        btnList.push_back(ui->pushButton_load);
-        btnList.push_back(ui->pushButton_send);
-        btnList.push_back(ui->pushButton_preview);
-        btnList.push_back(ui->pushButton_save);
-        btnList.push_back(ui->pushButton_queryrecord);
-        bool init =false;
-        for (int i = 0; i < btnList.size(); i++) {
-            int dist = abs(btnList[i]->pos().rx() - x0);
-            if (!init){
-                distMin = dist;
-                pTarget = btnList[i];
-                init = true;
-            }else if (dist < distMin){
-                distMin = dist;
-                pTarget = btnList[i];
+        int cols = 5;
+        int rows = (devList.size() + cols - 1)/ cols;
+        int idx = pBtn->property(PROPERTY_INDEX).toInt();
+        int col = (idx % cols);
+        int row = idx / cols;
+        if (up){
+            if (0 == row){
+                idx = (rows-1) * cols + col;
+                if (idx >= devList.size()) idx -= cols;
+            }else {
+                idx -= cols;
             }
+        }else {
+            idx += cols;
+            if (idx >= devList.size()) idx = col;
         }
-    }else {
-        row--;
-        bool init =false;
-        for (int i = row*cols; i < (row+1)*cols && i < devList.size(); i++) {
-            int dist = abs(devList[i]->pos().rx() - x0);
-            if (!init){
-                distMin = dist;
-                pTarget = devList[i];
-                init = true;
-            } else if (dist < distMin){
-                distMin = dist;
-                pTarget = devList[i];
-            }
-        }
+        if (0 <= idx)
+            return devList[idx];
     }
-    return pTarget;
+
+    return wid;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    QLabel* pLbl = dynamic_cast<QLabel*>(focusWidget());
     qDebug()<<"MainWindow "<<__FUNCTION__;
     switch (event->key()) {
-        case Qt::Key_Return:
-            if (nullptr != pLbl){
-                qDebug()<<__FUNCTION__<<" lbl "<<pLbl;
-                slot_deviceClicked(pLbl);
-            }
-            return ;
         case Qt::Key_Up:
             getCloseWidget(focusWidget(), true)->setFocus();
             return ;
@@ -449,16 +418,24 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Right:
             focusNextPrevChild(true);
             return ;
+        case Qt::Key_Escape:
+            if (!closeLbl->hasFocus())
+                closeLbl->setFocus();
+            else
+                devList[0]->setFocus();
+            return ;
     }
 }
-void MainWindow::slot_deviceClicked(QLabel* lbl)
+void MainWindow::slot_deviceClicked(QWidget* w)
 {
-    QVariant var = lbl->property(PROPERTY_DEVICE);
-    DevCfgList* list = static_cast<DevCfgList*>(var.value<void*>());
-    qDebug()<<"label "<<lbl<<" device "<<list;
+    QVariant var = w->property(PROPERTY_DEVICE);
+    if (var.isValid()){
+        DevCfgList* list = static_cast<DevCfgList*>(var.value<void*>());
+        qDebug()<<" device "<<list;
 
-    deviceUi->updateUi(list, &devUiCfgList);
-    deviceUi->showUi(1);
+        deviceUi->updateUi(list, &devUiCfgList);
+        deviceUi->showUi(1);
+    }
 }
 
 void MainWindow::slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList)
@@ -624,4 +601,16 @@ void MainWindow::slot_emitTimer()
                  timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
         timeLbl->setText(strTime);
     emitTimer->start(timerInterval);
+}
+
+void MainWindow::slot_closeClicked(QLabel* lbl)
+{
+    qDebug()<<__FUNCTION__;
+    //if modified, tip ""
+    if (0){
+        ;
+        return ;
+    }
+
+    close();
 }

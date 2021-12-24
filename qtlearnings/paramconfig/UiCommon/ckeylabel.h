@@ -10,7 +10,8 @@ public:
     explicit CKeyLabel(QWidget *parent=nullptr, Qt::WindowFlags f=Qt::WindowFlags());
 
 protected:
-    virtual void mouseReleaseEvent(QMouseEvent * ev);
+    virtual void mousePressEvent(QMouseEvent * ev);
+    virtual void keyPressEvent(QKeyEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
 

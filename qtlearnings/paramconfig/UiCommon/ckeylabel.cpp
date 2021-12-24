@@ -1,4 +1,5 @@
 #include "ckeylabel.h"
+#include <QKeyEvent>
 #include <QDebug>
 
 CKeyLabel::CKeyLabel(QWidget *parent, Qt::WindowFlags f):QLabel(parent,f)
@@ -6,10 +7,19 @@ CKeyLabel::CKeyLabel(QWidget *parent, Qt::WindowFlags f):QLabel(parent,f)
 
 }
 
-void CKeyLabel::mouseReleaseEvent(QMouseEvent *ev)
+void CKeyLabel::mousePressEvent(QMouseEvent *ev)
 {
     Q_UNUSED(ev)
     emit clicked(this);
+}
+void CKeyLabel::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+        case Qt::Key_Return:
+            emit clicked(this);
+            return ;
+    }
+    QLabel::keyPressEvent(event);
 }
 
 void CKeyLabel::focusInEvent(QFocusEvent *ev)

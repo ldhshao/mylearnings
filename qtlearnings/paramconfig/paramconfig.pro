@@ -13,6 +13,7 @@ CONFIG += c++11
 
 SOURCES += \
     cdeviceconfig.cpp \
+    cdeviceiconwidget.cpp \
     cdevicepreview.cpp \
     cdevpointedit.cpp \
     cdevposctl2.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     cdeviceconfig.h \
+    cdeviceiconwidget.h \
     cdevicepreview.h \
     cdevpointedit.h \
     cdevposctl2.h \
@@ -40,6 +42,7 @@ HEADERS += \
 
 FORMS += \
     cdeviceconfig.ui \
+    cdeviceiconwidget.ui \
     cdevicepreview.ui \
     cdevposctl2.ui \
     cmodparampreview.ui \

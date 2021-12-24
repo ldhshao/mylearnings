@@ -207,7 +207,7 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
                 qDebug()<<"1 index "<<idx;
                 idx = (idx - 1 + menu2Cnt + 1) % (menu2Cnt + 1);
                 qDebug()<<"2 index "<<idx;
-                if (idx == menu2List.size())
+                if (idx == menu2Cnt)
                     menu2Mgr.selectButton(menuExit);
                 else
                     menu2Mgr.selectButton(menu2List[idx]);
