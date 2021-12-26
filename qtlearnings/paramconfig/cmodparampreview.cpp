@@ -5,6 +5,7 @@
 #include <QResizeEvent>
 #include <QApplication>
 #include <QDesktopWidget>
+#include <math.h>
 #include <QDebug>
 
 #define PROPERTY_INDEX "index"

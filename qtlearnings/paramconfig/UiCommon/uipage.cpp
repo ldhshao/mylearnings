@@ -6,6 +6,7 @@
 #include <QResizeEvent>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QToolTip>
 #include <QDebug>
 
 UiPage::UiPage(QWidget *parent) :
@@ -113,10 +114,12 @@ void UiPage::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Down:
         focusNextPrevChild(true);
         event->setAccepted(true);
+        showTipInfo(focusWidget()->mapToGlobal(QPoint(0, focusWidget()->height())), "key donw");
         break;
     case Qt::Key_Up:
         focusNextPrevChild(false);
         event->setAccepted(true);
+        showTipInfo(focusWidget()->mapToGlobal(QPoint(0, focusWidget()->height())), "key up");
         break;
     case Qt::Key_Escape:
         if (0 < mparamAddrList.size()){
@@ -192,3 +195,7 @@ void UiPage::slot_valueChanged(uint16_t* pVal, uint32_t newVal)
     }
 }
 
+void UiPage::showTipInfo(QPoint pt, const QString& strTip)
+{
+    QToolTip::showText(pt, strTip);
+}

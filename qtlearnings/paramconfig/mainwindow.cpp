@@ -181,9 +181,9 @@ void MainWindow::initMenu()
     while (nullptr != pItem) {
         CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
         pBtn->setTitle(pItem->getName());
-        if (pItem->getName() == "破碎机")
-            pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
-        else
+        //if (pItem->getName() == "破碎机")
+        //    pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
+        //else
             pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
         QVariant var;
         var.setValue<void*>(pItem);
@@ -248,10 +248,16 @@ void MainWindow::initPage()
     }
 
     //check data count
-    loadParam();
+    bool loaded = loadParam();
 
     devUiCfgList.setParamTbl(paramLocalAddr);
-    devUiCfgList.initData(0, false);//
+    qWarning()<<"param address "<<paramLocalAddr<<" param count "<<paramCount;
+    if (loaded)
+        devUiCfgList.initData(0, false);//
+    else {
+        devUiCfgList.initData(0, true);//
+        memcpy(paramServerAddr, paramLocalAddr, paramCount*sizeof(uint16_t));
+    }
     devUiCfgList.createAllPage(pageList);
 
     connectPages();
@@ -301,8 +307,8 @@ bool MainWindow::loadParam()
         QString strParam = workDir + "/" + PARAMS_FILEPATH;
         inFile.open(strParam.toStdString(), ios_base::in | ios_base::binary);
         inFile.seekg(0, inFile.end);
-        paramCount = inFile.tellg() / sizeof(uint16_t);
-        int params = devUiCfgList.getDataCount();
+        int params = inFile.tellg() / sizeof(uint16_t);
+        paramCount = devUiCfgList.getDataCount();
         if (paramCount == params){//check param count or config md5
             inFile.seekg(0, inFile.beg);
             paramLocalAddr = new uint16_t[paramCount];
@@ -310,6 +316,8 @@ bool MainWindow::loadParam()
             inFile.read(reinterpret_cast<char*>(paramLocalAddr), paramCount*sizeof(uint16_t));
             ret = true;
         }else {//get params from remote
+            paramLocalAddr = new uint16_t[paramCount];
+            paramServerAddr = new uint16_t[paramCount];
         }
         inFile.close();
         memcpy(static_cast<void*>(paramServerAddr),static_cast<void*>(paramLocalAddr),paramCount*sizeof(uint16_t));

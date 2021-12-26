@@ -15,6 +15,7 @@
 #include "../cdevpointedit.h"
 #include "../cdevposmgr.h"
 #include "Util/PageCfg.h"
+#include <math.h>
 using namespace std;
 
 QString UiCfgItem::strTypeEdit = "editbox";
@@ -156,9 +157,10 @@ bool UiCfgItem::initData(int idx, bool useDef)
         uint16_t usDef = static_cast<unsigned short>(m_defaultVal.toInt());
         uint16_t *pAddr = paramAddress();
         if (nullptr != pAddr){
-            *pAddr = usDef;
+            for (int i = 0; i < m_datacnt; i++)
+                *(pAddr+i) = usDef;
         }
-        qDebug()<<"name "<<m_name<<" address "<<pAddr<<" default "<<usDef;
+        qWarning()<<"name "<<m_name<<" address "<<pAddr<<" default "<<usDef;
     }
     return true;
 }
