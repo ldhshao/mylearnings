@@ -17,8 +17,8 @@ public:
     }
 
     virtual void updateText() {	showText();	}
-    void showText();
-    bool setEditText(const QString& strText);
+    virtual void showText();
+    virtual bool setEditText(const QString& strText);
     void setAccessibleName(QString str)
     {
         m_accessiblename = str;
@@ -49,4 +49,35 @@ private:
     bool    m_editing;
 };
 
+class CKeyDnSetIndexEdit : public CKeyDnEdit
+{
+    Q_OBJECT
+
+public:
+    CKeyDnSetIndexEdit(QWidget *parent = 0);
+    ~CKeyDnSetIndexEdit(){
+    }
+
+    void initIndexRange(uint16_t *min, uint16_t* max) { pMin = min; pMax = max; }
+    void initData(uint16_t* pAddr, uint16_t setSize, uint16_t setCnt) {
+        pData = pAddr;
+        this->setSize = setSize;
+        this->setCnt = setCnt;
+    }
+    virtual void showText();
+    virtual bool setEditText(const QString& strText);
+
+protected:
+    void keyPressEvent(QKeyEvent* ev);
+    signals:
+    void sig_dataSetChanged(uint16_t* pAddr, uint16_t setSize);
+
+protected slots:
+
+protected:
+    uint16_t *pMin, *pMax;//index limit
+    uint16_t *pData;//data info
+    uint16_t  setCnt;
+    uint16_t  setSize;
+};
 #endif // CKEYDNEDIT_H

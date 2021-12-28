@@ -2,9 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#define  TEST_DATA_SETSIZE  5
+#define  TEST_DATA_SETCOUNT 5
+#define  TEST_DATA_COUNT    (TEST_DATA_SETSIZE * TEST_DATA_SETCOUNT)
 
 class QLabel;
 class CKeyDnComboBoxSet;
+class CKeyDnComboBoxEx;
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -24,7 +28,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QLabel         *nameLbl;
-    CKeyDnComboBoxSet *cmbSet;
-    uint16_t           data[5];
+    CKeyDnComboBoxEx *cmbSet;
+    uint16_t           data[TEST_DATA_COUNT];
 };
 #endif // MAINWINDOW_H

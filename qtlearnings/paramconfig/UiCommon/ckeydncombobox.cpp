@@ -79,3 +79,102 @@ void CKeyDnComboBox::slot_currentIndexChanged(int index)
         }
     }
 }
+
+/////CKeyDnComboBoxSet//////////////////////////////
+CKeyDnComboBoxSet::CKeyDnComboBoxSet(QWidget *parent) :
+    CKeyDnComboBox(parent)
+{
+    dataCnt = 0;
+    dataIdx = 0;
+    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_currentIndexChanged(int)));
+}
+
+CKeyDnComboBoxSet::~CKeyDnComboBoxSet()
+{
+}
+
+void CKeyDnComboBoxSet::initData(uint16_t* pAddr, uint16_t cnt)
+{
+    if (nullptr != pAddr && 0 < cnt){
+        pVal = pAddr;
+        dataCnt = cnt;
+        dataIdx = 0;
+        setDataIndex(dataIdx);
+        emit sig_dataIndexChanged(dataIdx);
+    }
+}
+
+void CKeyDnComboBoxSet::setDataIndex(int idx)
+{
+    if (-1 < idx && idx < dataCnt){
+        setCurrentIndex(pVal[idx]);
+        dataIdx = idx;
+    }
+}
+
+void CKeyDnComboBoxSet::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_T:
+        onPrevData();
+        break;
+    case Qt::Key_K:
+        onNextData();
+        break;
+    default:
+        CKeyDnComboBox::keyPressEvent(event);
+        break;
+    }
+}
+
+void CKeyDnComboBoxSet::focusInEvent(QFocusEvent *event)
+{
+    CKeyDnComboBox::focusInEvent(event);
+}
+
+void CKeyDnComboBoxSet::slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize)
+{
+    initData(pAddr, setSize);
+}
+
+void CKeyDnComboBoxSet::slot_currentIndexChanged(int index)
+{
+    if (nullptr != pVal && dataIdx < dataCnt){
+        if (pVal[dataIdx] != index){
+            pVal[dataIdx] = index;
+            if (!updating)
+                emit sig_valueChanged(pVal, *pVal);
+        }
+    }
+}
+
+void CKeyDnComboBoxSet::onPrevData()
+{
+    if (0 < dataCnt){
+        dataIdx = (dataIdx - 1 + dataCnt) % dataCnt;
+        setDataIndex(dataIdx);
+        emit sig_dataIndexChanged(dataIdx);
+    }
+}
+
+void CKeyDnComboBoxSet::onNextData()
+{
+    if (0 < dataCnt){
+        dataIdx = (dataIdx + 1) % dataCnt;
+        setDataIndex(dataIdx);
+        emit sig_dataIndexChanged(dataIdx);
+    }
+}
+
+////CIndexLabel
+CIndexLabel::CIndexLabel(QWidget *parent): QLabel(parent)
+{
+
+}
+void CIndexLabel::slot_dataIndexChanged(int dataIdx)
+{
+    QString name(strDataName);
+    setText(name.append(QString::number(dataIdx+1)));
+    int width = QFontMetrics(font()).width(text());
+    resize(width, height());
+}

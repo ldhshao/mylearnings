@@ -10,5 +10,6 @@
         <file>images/comm.png</file>
         <file>images/mainback.png</file>
         <file>images/close2.png</file>
+        <file>images/crusher.png</file>
     </qresource>
 </RCC>

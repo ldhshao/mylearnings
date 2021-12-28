@@ -97,11 +97,18 @@ void UiPage::initTabOrder()
 
 void UiPage::showPage()
 {
-    for (auto it = colList[0].begin(); it != colList[0].end(); it++) {
-        if (nullptr != dynamic_cast<QLineEdit*>(*it) ||
-                        nullptr != dynamic_cast<QComboBox*>(*it)){
-            (*it)->setFocus();
-            break;
+    bool bFocus = false;
+    for(int i = 0; i < UIPAGE_COL_NUM; i++){
+        for (auto it = colList[i].begin(); it != colList[i].end(); it++) {
+            if (!bFocus && (nullptr != dynamic_cast<QLineEdit*>(*it) ||
+                    nullptr != dynamic_cast<QComboBox*>(*it))){
+                (*it)->setFocus();
+                bFocus = true;
+            }
+            CKeyDnSetIndexEdit *pEdit = dynamic_cast<CKeyDnSetIndexEdit*>(*it);
+            if (nullptr != pEdit){
+                pEdit->setEditText("1");
+            }
         }
     }
     show();

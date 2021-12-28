@@ -16,7 +16,9 @@ public:
 
     static QString strTypeEdit;
     static QString strTypeDevPointEdit;
+    static QString strTypeSetIndexEdit;
     static QString strTypeCombobox;
+    static QString strTypeComboboxSet;
     static QString strTypeCheckBox;
     static QString strTypeLabel;
     static QString strTypeGroup;
@@ -47,6 +49,7 @@ public:
     virtual void dump();
 
     virtual UiCfgItem* createMyself();
+    virtual void copyTo(UiCfgItem* destItem);
 
     virtual void create(QWidget* parent);
     virtual bool initData(int idx, bool useDef);
@@ -56,7 +59,7 @@ public:
 
     virtual QString previewInfo();
     virtual QString strDataValue();
-    void setDefaultVal();
+    virtual void setDefaultVal();
 
 protected:
     int m_col, m_row;
@@ -92,6 +95,24 @@ protected:
     float   m_precision;
     uint16_t m_decimalPlaces;
 };
+class SetIndexCfgItem : public UiCfgItem
+{
+public:
+    HNDZ_DECLARE_DYNCREATE(SetIndexCfgItem)
+    SetIndexCfgItem() :m_setSize(0), m_setCnt(0){ 	}
+    virtual ~SetIndexCfgItem() {}
+
+    virtual bool initFromDomElement(QDomElement element);
+    virtual UiCfgItem* createMyself();
+    virtual bool initUi(unsigned short* pStAddr);//init data
+
+    virtual QString previewInfo();
+    virtual void setDefaultVal();
+protected:
+    uint16_t m_setSize;
+    uint16_t m_setCnt;
+    QString  m_previewCfg;
+};
 class ComboboxCfgItem : public UiCfgItem
 {
 public:
@@ -101,6 +122,7 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual UiCfgItem* createMyself();
+    virtual void copyTo(UiCfgItem* destItem);
 
     //virtual QWidget* create();
     //virtual bool init();
@@ -108,6 +130,23 @@ public:
 
 protected:
     QStringList m_params;
+};
+class ComboboxSetCfgItem : public ComboboxCfgItem
+{
+public:
+    HNDZ_DECLARE_DYNCREATE(ComboboxSetCfgItem)
+    ComboboxSetCfgItem() { m_type = UiCfgItem::strTypeComboboxSet; pSetIndexSource = nullptr;	}
+    virtual ~ComboboxSetCfgItem() {}
+
+    virtual bool initFromDomElement(QDomElement element);
+    virtual UiCfgItem* createMyself();
+
+    virtual void create(QWidget* parent);
+    virtual bool initUi(unsigned short* pStAddr);//init data
+
+protected:
+    QString    m_setIndexSource;
+    UiCfgItem *pSetIndexSource;
 };
 #endif
 

@@ -134,3 +134,66 @@ bool CKeyDnEdit::setEditText(const QString &strText)
 
     return bRet;
 }
+
+//CKeyDnSetIndexEdit
+CKeyDnSetIndexEdit::CKeyDnSetIndexEdit(QWidget *parent) :
+    CKeyDnEdit(parent)
+{
+    pMin = nullptr;
+    pMax = nullptr;
+    pData = nullptr;
+    setSize = 0;
+    setCnt = 0;
+}
+
+void CKeyDnSetIndexEdit::keyPressEvent(QKeyEvent *ev)
+{
+    switch (ev->key()) {
+        case Qt::Key_Left:
+            if (nullptr !=pData) {
+                uint16_t index = text().toUShort();//from 1
+                index--;
+                if (*pMin <= index && index <= *pMax && index <= setCnt){
+                    setText(QString::number(index));
+                    emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
+                }
+            }
+            break;
+        case Qt::Key_Right:
+            if (nullptr !=pData) {
+                uint16_t index = text().toUShort();//from 1
+                index++;
+                if (*pMin <= index && index <= *pMax && index <= setCnt){
+                    setText(QString::number(index));
+                    emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
+                }
+            }
+            break;
+        default:
+            CKeyDnEdit::keyPressEvent(ev);
+            break;
+    }
+}
+
+void CKeyDnSetIndexEdit::showText()
+{
+}
+
+bool CKeyDnSetIndexEdit::setEditText(const QString &strText)
+{
+    QString currText = text();
+    bool bRet = true;
+    if (nullptr != pData && 0 < setSize && 0 < setCnt){
+        uint16_t index = strText.toUShort();//from 1
+        if ("1" == strText || (*pMin <= index && index <= *pMax && index <= setCnt)){
+            setText(strText);
+            emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
+        }else {
+            setText(currText);
+        }
+    }else {
+        setText(strText);
+    }
+
+    return bRet;
+}

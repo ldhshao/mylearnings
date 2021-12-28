@@ -181,9 +181,9 @@ void MainWindow::initMenu()
     while (nullptr != pItem) {
         CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
         pBtn->setTitle(pItem->getName());
-        //if (pItem->getName() == "破碎机")
-        //    pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
-        //else
+        if (pItem->getName() == "破碎机")
+            pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
+        else
             pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
         QVariant var;
         var.setValue<void*>(pItem);
