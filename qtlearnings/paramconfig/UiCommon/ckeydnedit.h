@@ -34,7 +34,7 @@ public:
     int XOffset;
     int YOffset;
 protected:
-    void keyPressEvent(QKeyEvent* ev);
+    virtual void keyPressEvent(QKeyEvent* ev);
     virtual void focusInEvent(QFocusEvent *ev);
     virtual void focusOutEvent(QFocusEvent *ev);
  signals:
@@ -68,7 +68,9 @@ public:
     virtual bool setEditText(const QString& strText);
 
 protected:
-    void keyPressEvent(QKeyEvent* ev);
+    bool isValid(uint16_t val);
+    uint16_t closeValue(uint16_t val);
+    virtual void keyPressEvent(QKeyEvent* ev);
     signals:
     void sig_dataSetChanged(uint16_t* pAddr, uint16_t setSize);
 

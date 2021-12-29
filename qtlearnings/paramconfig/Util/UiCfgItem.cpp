@@ -102,6 +102,10 @@ QString UiCfgItem::getFullName()
 
     return fullName;
 }
+QString UiCfgItem::getFullName(int idx)
+{
+    return getFullName();
+}
 void UiCfgItem::dump()
 {
     qDebug()<<"name "<<m_name<<" dataidx "<<m_dataidx<<" count "<<m_datacnt<<" addr "<<paramAddress();
@@ -332,7 +336,12 @@ QString UiCfgItem::strDataValue()
     }
     return strValue;
 }
-
+//return data value in string; and data count, u16
+QString UiCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
+{
+    *dataCnt = m_datacnt;
+    return strDataValue();
+}
 QString UiCfgItem::enableReason()
 {
     QString strReason;
@@ -480,6 +489,7 @@ bool SetIndexCfgItem::initFromDomElement(QDomElement element)
     }
     m_datacnt = m_setCnt * m_setSize;
     setStrValue(m_previewCfg, element, "previewconfig");
+    setStrValue(m_dataNameCfg, element, "datanameconfig");
 
     return true;
 }
@@ -490,6 +500,7 @@ UiCfgItem* SetIndexCfgItem::createMyself()
     pItem->m_setSize = this->m_setSize;
     pItem->m_setCnt = this->m_setCnt;
     pItem->m_previewCfg = this->m_previewCfg;
+    pItem->m_dataNameCfg = this->m_dataNameCfg;
 
     return pItem;
 }
@@ -550,6 +561,33 @@ void SetIndexCfgItem::setDefaultVal()
             edit->setEditText("1");
         }
     }
+}
+QString SetIndexCfgItem::getFullName(int idx)
+{
+    QString fullName = UiCfgItem::getFullName();
+    if (m_dataidx <= idx && idx < m_dataidx + m_datacnt){
+        int pos = fullName.lastIndexOf(QChar('-'));
+        if (-1 < pos) fullName = fullName.left(pos+1);
+        QStringList nameList = m_dataNameCfg.split('/');
+        int s = (idx - m_dataidx) / m_setSize;
+        int p = (idx - m_dataidx) % m_setSize;
+        if (3 != nameList.count()) qDebug()<<"error: wrong data name "<<m_dataNameCfg;
+        fullName.append(nameList[0] + nameList[1] + QString::number(s+1) + nameList[2] + QString::number(p+1));
+    }
+
+    return fullName;
+}
+QString SetIndexCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
+{
+    *dataCnt = 1;
+    QStringList pvCfgList = m_previewCfg.split('/');
+    if (3 != pvCfgList.count()) qDebug()<<"error: wrong previewconfig "<<m_previewCfg;
+    QStringList valList = pvCfgList[2].split(';');
+    if (0 == valList.count())  qDebug()<<"error: wrong previewconfig value "<<pvCfgList[2];
+    if (*pVal < valList.count())
+        return valList[*pVal];
+    qDebug()<<"error: wrong value "<<*pVal;
+    return "";
 }
 
 //ComboboxItem

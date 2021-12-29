@@ -25,11 +25,13 @@ public:
     void updateUi(DevCfgList* dev, PageCfgList* uiCfg);
     void showUi(int reason);
     CDevicePreview* getPreview() {	return preview; }
+    void setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr) { paramSrvAddr = srvAddr; paramLclAddr = lclAddr; }
 
 protected:
     void initMenu2(GroupCfgItem* grpCfg);
     void showPreview(CStateButton* menu);
     void showPreview(GroupCfgItem* grpCfg);
+    bool onExit();//true when accept
     void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
@@ -42,8 +44,7 @@ protected slots:
 
 private:
     Ui::CDeviceConfig *ui;
-    DevCfgList*     devCfg;
-    PageCfgList*    devUiCfgList;
+    GroupCfgItem*   deviceUiCfg;
     vector<CStateButton*> menu2List;
     vector<CStateButton*> menu3List;
     vector<CStateButton*> menu4List;
@@ -58,6 +59,8 @@ private:
     QLabel             *bkLbl;
     int                 menuWidth;
     int                 menuHeight;
+    uint16_t           *paramSrvAddr;
+    uint16_t           *paramLclAddr;
 
 };
 

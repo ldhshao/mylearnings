@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDeviceModPreview</class>
+ <widget class="QDialog" name="CDeviceModPreview">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="CKeyButton" name="pushButton_cancel">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>259</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>取消</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_lineno">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>259</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="CKeyButton" name="pushButton_ok">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>259</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>确定</string>
+   </property>
+  </widget>
+  <widget class="CKeyTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>361</width>
+     <height>251</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CKeyButton</class>
+   <extends>QPushButton</extends>
+   <header>UiCommon/ckeybutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>CKeyTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>UiCommon/ckeytablewidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

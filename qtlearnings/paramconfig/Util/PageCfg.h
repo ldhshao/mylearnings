@@ -46,6 +46,7 @@ public:
     virtual UiCfgItem* findItemByDataIdx(int dataidx);
 
     virtual uint16_t *paramAddress() { return nullptr; }
+    uint16_t *firstParamAddress();
 
     virtual QString previewInfo();
     QString previewInfo(int col);

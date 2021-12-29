@@ -261,6 +261,7 @@ void MainWindow::initPage()
     devUiCfgList.createAllPage(pageList);
 
     connectPages();
+    deviceUi->setParamAddr(paramServerAddr, paramLocalAddr);
 }
 
 void MainWindow::connectPages()

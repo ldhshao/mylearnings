@@ -38,19 +38,34 @@ void CKeyButton::keyPressEvent(QKeyEvent *event)
 
 void CKeyButton::focusInEvent(QFocusEvent *event)
 {
+    QPushButton::focusInEvent(event);
+}
+void CKeyButton::focusOutEvent(QFocusEvent *event)
+{
+    QPushButton::focusOutEvent(event);
+}
+
+//////////////////////CKeyButtonEx//////////////////////
+CKeyButtonEx::CKeyButtonEx(QWidget *parent)
+    :CKeyButton(parent)
+{
+
+}
+void CKeyButtonEx::focusInEvent(QFocusEvent *event)
+{
     m_preStyle = styleSheet();
     QString strStyle = removeStyle(styleSheet(), "background-color");
     strStyle.append("background-color: rgba(200, 60, 60, 100%)");
     setStyleSheet(strStyle);
     qDebug()<<styleSheet();
 }
-void CKeyButton::focusOutEvent(QFocusEvent *event)
+void CKeyButtonEx::focusOutEvent(QFocusEvent *event)
 {
     setStyleSheet(m_preStyle);
     qDebug()<<styleSheet();
 }
 
-QString CKeyButton::removeStyle(const QString& strStyle, QString strAttr)
+QString CKeyButtonEx::removeStyle(const QString& strStyle, QString strAttr)
 {
     QStringList dstList;
     QStringList styleList = strStyle.split(';');

@@ -1,6 +1,7 @@
 #include "cdeviceconfig.h"
 #include "ui_cdeviceconfig.h"
 #include "cdevicepreview.h"
+#include "cdevicemodpreview.h"
 #include "Util/PageCfg.h"
 #include "Util/devcfg.h"
 #include <QResizeEvent>
@@ -22,8 +23,9 @@ CDeviceConfig::CDeviceConfig(QWidget *parent) :
     ui->setupUi(this);
     ui->label_title->setStyleSheet(TITLE_STYLE);
     ui->label_copyright->setStyleSheet(COPYRIGHT_STYLE);
-    devCfg = nullptr;
-    devUiCfgList = nullptr;
+    deviceUiCfg = nullptr;
+    paramSrvAddr = nullptr;
+    paramLclAddr = nullptr;
     menu2Cnt = 0;
     menu3Cnt = 0;
     menu4Cnt = 0;
@@ -32,6 +34,7 @@ CDeviceConfig::CDeviceConfig(QWidget *parent) :
     menuExit = new CKeyStateButton(this);
     menuExit->setText("返回");
     menuExit->resize(menuWidth, menuHeight);
+    menuExit->setProperty(PROPERTY_INDEX, -1);
     menu2Mgr.registerButton(menuExit);
     preview = new CDevicePreview(this);
 
@@ -51,13 +54,13 @@ CDeviceConfig::~CDeviceConfig()
 
 void CDeviceConfig::updateUi(DevCfgList* dev, PageCfgList* uiCfg)
 {
-    devCfg = dev;
-    devUiCfgList = uiCfg;
-    ui->label_title->setText(devCfg->getName() + "参数配置");
-    if (nullptr != devCfg && nullptr != devUiCfgList){
-        GroupCfgItem* grpItem = devUiCfgList->findGroupByName(devCfg->getName());
-        if (nullptr != grpItem)
+    ui->label_title->setText(dev->getName() + "参数配置");
+    if (nullptr != dev && nullptr != uiCfg){
+        GroupCfgItem* grpItem = uiCfg->findGroupByName(dev->getName());
+        if (nullptr != grpItem){
+            deviceUiCfg = grpItem;
             initMenu2(grpItem);
+        }
     }
 }
 
@@ -196,7 +199,13 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
         case Qt::Key_Return:
             if (!bMenu4Show){//menu3 show
-                slot_menu3_clicked(menu3Mgr.currentButton());
+                if (menu2Mgr.currentButton() == menuExit){
+                    if (onExit()){
+                        hide();
+                    }
+                }else {
+                    slot_menu3_clicked(menu3Mgr.currentButton());
+                }
             }else {//menu4 show
                 slot_menu4_clicked(menu4Mgr.currentButton());
             }
@@ -260,9 +269,48 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
             return ;
     }
 }
+bool CDeviceConfig::onExit()
+{
+    //show modified info
+    list<SDeviceInfoItem> itemList;
+    if (nullptr != paramSrvAddr && nullptr != paramLclAddr){
+        int idx = deviceUiCfg->dataidx();
+        int idx_end = idx + deviceUiCfg->datacount();
+        while (idx < idx_end){
+            UiCfgItem* pItem = deviceUiCfg->findItemByDataIdx(idx);
+            QString name, value;
+            int dataCnt = 0;
+            if (nullptr != pItem){
+                value = pItem->getDataValue(paramLclAddr+idx, &dataCnt);
+                if (0 != memcmp(paramLclAddr+idx, paramSrvAddr + idx, dataCnt*sizeof(uint16_t))){
+                    SDeviceInfoItem item;
+                    item.name = pItem->getFullName(idx);
+                    item.currVal = value;
+                    item.currAddr = paramLclAddr + idx;
+                    item.dataCnt = dataCnt;
+                    itemList.push_back(item);
+                }
+                idx += dataCnt;
+            }else {
+                idx++;
+            }
+            qDebug()<<name<<value<<dataCnt;
+        }
+    }
+    if (!itemList.empty()){
+        CDeviceModPreview dlg(&itemList);
+        dlg.setWindowTitle(deviceUiCfg->getName()+"修改参数预览");
+        return QDialog::Accepted == dlg.exec();
+    }
+
+    return true;
+}
+
 void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
 {
     if (pBtn == menuExit){
+        if (!onExit()) return;
+
         hide();
         return;
     }

@@ -26,6 +26,7 @@ public:
 
     QString getNamePath(int ancestorDepth);
     QString getFullName();
+    virtual QString getFullName(int idx);
     void setSize(int width, int height) { m_width =width; m_height = height; }
     virtual void setDataidx(int idx) { m_dataidx = idx; }
     void setParent(UiCfgItem* parent) { m_parent = parent; }
@@ -59,6 +60,7 @@ public:
 
     virtual QString previewInfo();
     virtual QString strDataValue();
+    virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
     virtual void setDefaultVal();
 
 protected:
@@ -108,10 +110,13 @@ public:
 
     virtual QString previewInfo();
     virtual void setDefaultVal();
+    virtual QString getFullName(int idx);
+    virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
 protected:
     uint16_t m_setSize;
     uint16_t m_setCnt;
     QString  m_previewCfg;
+    QString  m_dataNameCfg;
 };
 class ComboboxCfgItem : public UiCfgItem
 {

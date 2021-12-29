@@ -41,7 +41,7 @@ int GroupCfgItem::getDataCount()
     for (; it != m_children.end(); it++){
         GroupCfgItem* pGroup = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr == pGroup)
-            iCnt++;
+            iCnt += (*it)->datacount();
         else
             iCnt += pGroup->getDataCount();
     }
@@ -418,12 +418,29 @@ UiCfgItem* GroupCfgItem::findItemByDataIdx(int dataidx)
     UiCfgItem *pFind = nullptr;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for (; it != m_children.end(); it++){
-        if (dataidx == m_dataidx + (*it)->dataidx()){
+        //if (dataidx == m_dataidx + (*it)->dataidx()){
+        if (m_dataidx + (*it)->dataidx() <= dataidx && dataidx < m_dataidx + (*it)->dataidx() + (*it)->datacount()){
             pFind = (*it);
             break;
         }
     }
     return pFind;
+}
+
+uint16_t* GroupCfgItem::firstParamAddress()
+{
+    uint16_t *pAddr = nullptr;
+    GroupCfgItem* parent = this;
+    while(nullptr != parent){
+        if (nullptr != (pAddr = parent->paramAddress())){
+            break;
+        }
+        parent = dynamic_cast<GroupCfgItem*>(parent->parent());
+    }
+    if (nullptr == parent)
+        return nullptr;
+
+    return pAddr + m_dataidx;
 }
 
 void GroupCfgItem::createPage(list<UiPage*> &pageList)

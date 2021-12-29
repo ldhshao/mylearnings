@@ -153,20 +153,20 @@ void CKeyDnSetIndexEdit::keyPressEvent(QKeyEvent *ev)
             if (nullptr !=pData) {
                 uint16_t index = text().toUShort();//from 1
                 index--;
-                if (*pMin <= index && index <= *pMax && index <= setCnt){
-                    setText(QString::number(index));
-                    emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
-                }
+                if (!isValid(index))
+                    index = closeValue(index);
+                setText(QString::number(index));
+                emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
             }
             break;
         case Qt::Key_Right:
             if (nullptr !=pData) {
                 uint16_t index = text().toUShort();//from 1
                 index++;
-                if (*pMin <= index && index <= *pMax && index <= setCnt){
-                    setText(QString::number(index));
-                    emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
-                }
+                if (!isValid(index))
+                    index = closeValue(index);
+                setText(QString::number(index));
+                emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
             }
             break;
         default:
@@ -179,18 +179,34 @@ void CKeyDnSetIndexEdit::showText()
 {
 }
 
+bool CKeyDnSetIndexEdit::isValid(uint16_t val)
+{
+    if (*pMin <= val && val <= *pMax)
+        return true;
+    return false;
+}
+uint16_t CKeyDnSetIndexEdit::closeValue(uint16_t val)
+{
+    if (val < *pMin)
+        val = *pMin;
+    else if (val > *pMax)
+        val = *pMax;
+    if (1 > val)
+        val = 1;
+
+    return val;
+}
+
 bool CKeyDnSetIndexEdit::setEditText(const QString &strText)
 {
     QString currText = text();
     bool bRet = true;
     if (nullptr != pData && 0 < setSize && 0 < setCnt){
         uint16_t index = strText.toUShort();//from 1
-        if ("1" == strText || (*pMin <= index && index <= *pMax && index <= setCnt)){
-            setText(strText);
-            emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
-        }else {
-            setText(currText);
-        }
+        if (!isValid(index))
+            index = closeValue(index);
+        setText(QString::number(index));
+        emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
     }else {
         setText(strText);
     }
