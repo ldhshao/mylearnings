@@ -1,10 +1,10 @@
 <PageCfg>
-    <GroupCfgItem name="systemconfig">
+    <GroupCfgItem id="1" name="systemconfig">
         <UiCfgItem id="1" name="本机地址" type="editbox"  col="1" row="1" width="100" height="26" range="(1-247 )" defaultvalue="1" dataidx="0">
         </UiCfgItem>
         <ComboboxCfgItem id="2" name="程序用途"              col="2" row="1" width="100" height="28" params="工作面;皮带" defaultvalue="工作面" dataidx="1">
         </ComboboxCfgItem>
-        <ComboboxCfgItem id="3" name="CS1是否有效" col="1" row="2" width="100" height="28"params="有效" defaultvalue="有效" dataidx="2">
+        <ComboboxCfgItem id="3" name="CS1是否有效" col="1" row="2" width="100" height="28" params="有效" defaultvalue="有效" dataidx="2">
         </ComboboxCfgItem>
         <ComboboxCfgItem id="5" name="CS1是否与其他控制器联系" col="1" row="3" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="4">
         </ComboboxCfgItem>
@@ -32,22 +32,40 @@
         </ComboboxCfgItem>
         <ComboboxCfgItem id="17" name="母版类型"            col="1" row="9" width="100" height="28" params="有SP型;无SP型" dataidx="16">
         </ComboboxCfgItem>
-        <UiCfgItem id="18" name="DIO下位机数量" type="editbox"  col="2" row="9" width="100" height="26" range="(1-10)" dataidx="17">
+        <UiCfgItem id="18" name="DIO下位机数量" type="editbox"  col="2" row="9" width="100" height="26" range="(0-10)" enablesource="16:0" defaultvalue="0" dataidx="17">
         </UiCfgItem>
         <ComboboxCfgItem id="19" name="SP语音是否有效" col="1" row="10" width="100" height="28" params="有效;无效" defaultvalue="无效" dataidx="18">
         </ComboboxCfgItem>
-        <ComboboxCfgItem id="20" name="DIO下位机与实际不符"            col="2" row="10" width="100" height="28" params="复位;不复位" dataidx="19">
+        <ComboboxCfgItem id="20" name="DIO下位机与实际不符"            col="2" row="10" width="100" height="28" params="复位;不复位" enablesource="16:0" defaultvalue="复位" dataidx="19">
         </ComboboxCfgItem>
         <ComboboxCfgItem id="21" name="SP模块类型"            col="1" row="11" width="100" height="28" params="语音芯片SP模块;优盘式SP模块" dataidx="20">
         </ComboboxCfgItem>
-        <UiCfgItem id="22" name="DIO硬连锁下位机号" type="editbox"  col="2" row="11" width="100" height="26" range="(1-#18)" dataidx="21">
+        <SetIndexCfgItem id="22" name="DIO硬连锁下位机号" type="setindexeditbox"  col="2" row="11" width="100" height="26" range="(1-#18)" enablesource="16:0" defaultvalue="0" dataidx="22" setsize="12" setcount="10" previewconfig="DIO硬连锁设置/号下位机/有;无" datanameconfig="DIO/号下位机/硬连锁输出点">
+        </SetIndexCfgItem>
+        <UiCfgItem id="23" name="本地语音音量" type="editbox"  col="1" row="12" width="100" height="26" range="(80-100)" dataidx="21">
         </UiCfgItem>
-        <UiCfgItem id="23" name="本地语音音量" type="editbox"  col="1" row="12" width="100" height="26" range="(80-100)" dataidx="22">
+        <ComboboxSetCfgItem id="24" name="DIO硬连锁输出点"     col="2" row="12" width="100" height="28" params="硬连锁;不连锁" enablesource="16:0" defaultvalue="硬连锁" dataidx="23" datacnt="0" setindexsource="22">
+        </ComboboxSetCfgItem>
+        <ComboboxCfgItem id="25" name="CS1是否为长沿线" col="1" row="13" width="100" height="28" params="是;否" defaultvalue="否" dataidx="3">
+        </ComboboxCfgItem>
+    </GroupCfgItem>
+    <GroupCfgItem id="2" name="systembsdevicetype">
+        <UiCfgItem id="1" name="CS1_BS闭锁数量" type="editbox"  col="1" row="1" width="100" height="26" range="(0-120)" enablesource="1/3:0" defaultvalue="0" dataidx="0">
         </UiCfgItem>
-        <ComboboxCfgItem id="24" name="DIO硬连锁输出点1"            col="2" row="12" width="100" height="28" params="硬连锁;不连锁" dataidx="23">
-        </ComboboxCfgItem>
-        <ComboboxCfgItem id="25" name="CS1是否为长沿线" col="1" row="13" width="100" height="28" params="是;否" defaultvalue="否" dataidx="24">
-        </ComboboxCfgItem>
+        <ComboboxSetCfgItem id="2" name="CS1_BS闭锁设备"     col="1" row="2" width="100" height="28" params="不带IO;带IO" enablesource="1/3:0" defaultvalue="不带IO" dataidx="1" datacnt="120" setsize="#1" previewconfig="CS1_BS闭锁设备是否带IO//10/否;是">
+        </ComboboxSetCfgItem>
+        <UiCfgItem id="3" name="CS2_BS闭锁数量" type="editbox"  col="1" row="3" width="100" height="26" range="(0-120)" enablesource="../1/9:0" defaultvalue="0" dataidx="121">
+        </UiCfgItem>
+        <ComboboxSetCfgItem id="4" name="CS2_BS闭锁设备"     col="1" row="4" width="100" height="28" params="不带IO;带IO" enablesource="../1/9:0" defaultvalue="不带IO" dataidx="122" datacnt="120" setsize="#3" previewconfig="CS2_BS闭锁设备是否带IO//10/否;是">
+        </ComboboxSetCfgItem>
+        <UiCfgItem id="5" name="CS3_BS闭锁数量" type="editbox"  col="2" row="1" width="100" height="26" range="(0-120)" enablesource="1/3:0" defaultvalue="0" dataidx="242">
+        </UiCfgItem>
+        <ComboboxSetCfgItem id="6" name="CS3_BS闭锁设备"     col="2" row="2" width="100" height="28" params="不带IO;带IO" enablesource="1/3:0" defaultvalue="不带IO" dataidx="243" datacnt="120" setsize="#5" previewconfig="CS3_BS闭锁设备是否带IO//10/否;是">
+        </ComboboxSetCfgItem>
+        <UiCfgItem id="7" name="CS4_BS闭锁数量" type="editbox"  col="2" row="3" width="100" height="26" range="(0-120)" enablesource="1/9:0" defaultvalue="0" dataidx="343">
+        </UiCfgItem>
+        <ComboboxSetCfgItem id="8" name="CS4_BS闭锁设备"     col="2" row="4" width="100" height="28" params="不带IO;带IO" enablesource="1/9:0" defaultvalue="不带IO" dataidx="344" datacnt="120" setsize="#7" previewconfig="CS4_BS闭锁设备是否带IO//10/否;是">
+        </ComboboxSetCfgItem>
     </GroupCfgItem>
     <GroupCfgItem name="systemwatereleclinkage">
         <ComboboxCfgItem id="1" name="水电联动选择" col="1" row="1" width="100" height="28" params="有效;无效" dataidx="0">
@@ -71,35 +89,35 @@
     </GroupCfgItem>
     <GroupCfgList name="workfacebaseinfo">
         <GroupCfgItem id="1" name="基本信息" col="1" row="1">
-            <ComboboxCfgItem id="1" name="设备有效性" col="1" row="1" width="100" height="28" params="有效;无效">
+            <ComboboxCfgItem id="1" name="设备有效性" col="1" row="1" width="100" height="28" params="有效;无效" defaultvalue="有效" dataidx="0">
             </ComboboxCfgItem>
-            <UiCfgItem id="2" name="CS1远停台号" type="editbox"  col="1" row="2" width="100" height="26" range="(1-136)">
+            <UiCfgItem id="2" name="CS1远停台号" type="editbox"  col="1" row="2" width="100" height="26" range="(1-136)" defaultvalue="1" dataidx="1">
             </UiCfgItem>
-            <UiCfgItem id="3" name="CS2远停台号" type="editbox"  col="2" row="2" width="100" height="26" range="(1-136)">
+            <UiCfgItem id="3" name="CS2远停台号" type="editbox"  col="2" row="2" width="100" height="26" range="(1-136)" defaultvalue="1" dataidx="2">
             </UiCfgItem>
-            <UiCfgItem id="4" name="CS3远停台号" type="editbox"  col="1" row="3" width="100" height="26" range="(1-136)">
+            <UiCfgItem id="4" name="CS3远停台号" type="editbox"  col="1" row="3" width="100" height="26" range="(1-136)" defaultvalue="1" dataidx="3">
             </UiCfgItem>
-            <UiCfgItem id="5" name="CS4远停台号" type="editbox"  col="2" row="3" width="100" height="26" range="(1-136)">
+            <UiCfgItem id="5" name="CS4远停台号" type="editbox"  col="2" row="3" width="100" height="26" range="(1-136)" defaultvalue="1" dataidx="4">
             </UiCfgItem>
-            <ComboboxCfgItem id="6" name="备妥输出点与准备就绪点连锁关系" col="1" row="4" width="100" height="28" params="联系;不联系" defaultvalue="联系">
+            <ComboboxCfgItem id="6" name="备妥输出点与准备就绪点连锁关系" col="1" row="4" width="100" height="28" params="联系;不联系" defaultvalue="联系" dataidx="5">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="7" name="与CS1停闭锁关系，与CS1第N段闭锁连锁" col="2" row="4" width="100" height="28" params="联系;不联系" defaultvalue="不联系">
+            <ComboboxCfgItem id="7" name="与CS1停闭锁关系，与CS1第N段闭锁连锁" col="2" row="4" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="6">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="8" name="与CS3停闭锁关系" col="1" row="5" width="100" height="28" params="联系;不联系" defaultvalue="不联系">
+            <ComboboxCfgItem id="8" name="与CS3停闭锁关系" col="1" row="5" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="7">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="9" name="与CS4停闭锁关系" col="2" row="5" width="100" height="28" params="联系;不联系" defaultvalue="不联系">
+            <ComboboxCfgItem id="9" name="与CS4停闭锁关系" col="2" row="5" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="8">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="10" name="与DIO1停闭锁关系" col="1" row="6" width="100" height="28" params="联系;不联系" defaultvalue="不联系">
+            <ComboboxCfgItem id="10" name="与DIO1停闭锁关系" col="1" row="6" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="9">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="11" name="与DIO2停闭锁关系" col="2" row="6" width="100" height="28" params="联系;不联系" defaultvalue="不联系">
+            <ComboboxCfgItem id="11" name="与DIO2停闭锁关系" col="2" row="6" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="10">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="12" name="与DIO3停闭锁关系" col="1" row="7" width="100" height="28" params="联系;不联系" defaultvalue="不联系">
+            <ComboboxCfgItem id="12" name="与DIO3停闭锁关系" col="1" row="7" width="100" height="28" params="联系;不联系" defaultvalue="不联系" dataidx="11">
             </ComboboxCfgItem>
-            <UiCfgItemFloat id="13" name="两次启车间隔时间" type="editbox"  col="2" row="7" width="100" height="26" range="(0-1200)" precision="0.1" unit="秒"  defaultvalue="0">
+            <UiCfgItemFloat id="13" name="两次启车间隔时间" type="editbox"  col="2" row="7" width="100" height="26" range="(0-1200)" precision="0.1" unit="秒"  defaultvalue="0" dataidx="12">
             </UiCfgItemFloat>
-            <ComboboxCfgItem id="14" name="连锁下设备" col="1" row="8" width="100" height="28" params="无效;1#-4#皮带;破碎机;转载机;前部运输机;后部运输机;下控制器;设备连锁输入点" defaultvalue="">
+            <ComboboxCfgItem id="14" name="连锁下设备" col="1" row="8" width="100" height="28" params="无效;1#-4#皮带;破碎机;转载机;前部运输机;后部运输机;下控制器;设备连锁输入点" defaultvalue="无效" dataidx="13">
             </ComboboxCfgItem>
-            <ComboboxCfgItem id="15" name="在就地/检修方式下，就地按钮有效时是否取消键盘启停功能" col="2" row="8" width="100" height="28" params="是;否" defaultvalue="否">
+            <ComboboxCfgItem id="15" name="在就地/检修方式下，就地按钮有效时是否取消键盘启停功能" col="2" row="8" width="100" height="28" params="是;否" defaultvalue="否" dataidx="14">
             </ComboboxCfgItem>
         </GroupCfgItem>
         <GroupCfgItem id="2" name="输入点信息" col="1" row="2">
@@ -139,29 +157,29 @@
             </UiCfgItemFloat>
         </GroupCfgItem>
         <GroupCfgItem id="3" name="输出点信息" col="2" row="2">
-            <UiCfgItem id="1" name="备妥输出点1-10" type="devpointedit"  col="1" row="1" width="100" height="26" dataidx="0" datacnt="2">
+            <UiCfgItem id="1" name="备妥输出点1-10" type="devpointedit"  col="1" row="1" width="100" height="26" defaultvalue="0" dataidx="0" datacnt="2">
             </UiCfgItem>
-            <UiCfgItem id="2" name="远停输出点1-8" type="devpointedit"  col="1" row="2" width="100" height="26" dataidx="2" datacnt="2">
+            <UiCfgItem id="2" name="远停输出点1-8" type="devpointedit"  col="1" row="2" width="100" height="26" defaultvalue="0" dataidx="2" datacnt="2">
             </UiCfgItem>
-            <UiCfgItem id="3" name="设备连锁输出点1-10" type="editbox"  col="1" row="3" width="100" height="26" dataidx="4" datacnt="2">
+            <UiCfgItem id="3" name="设备连锁输出点1-10" type="editbox"  col="1" row="3" width="100" height="26" defaultvalue="0" dataidx="4" datacnt="2">
             </UiCfgItem>
-            <UiCfgItem id="4" name="启动完成输出点" type="editbox"  col="1" row="4" width="100" height="26" dataidx="6" datacnt="2">
+            <UiCfgItem id="4" name="启动完成输出点" type="editbox"  col="1" row="4" width="100" height="26" defaultvalue="0" dataidx="6" datacnt="2">
             </UiCfgItem>
-            <UiCfgItem id="5" name="急停输出点" type="editbox"  col="1" row="5" width="100" height="26">
+            <UiCfgItem id="5" name="急停输出点" type="editbox"  col="1" row="5" width="100" height="26" defaultvalue="0">
             </UiCfgItem>
-            <UiCfgItem id="6" name="过载输出点" type="editbox"  col="1" row="6" width="100" height="26">
+            <UiCfgItem id="6" name="过载输出点" type="editbox"  col="1" row="6" width="100" height="26" defaultvalue="0">
             </UiCfgItem>
         </GroupCfgItem>
         <GroupCfgItem id="4" name="输出部件" col="1" row="3">
-            <UiCfgItem id="1" name="开停洒水输出点" type="editbox"  col="1" row="1" width="100" height="26">
+            <UiCfgItem id="1" name="开停洒水输出点" type="editbox"  col="1" row="1" width="100" height="26" defaultvalue="0">
             </UiCfgItem>
-            <UiCfgItem id="2" name="开停洒水输入点" type="editbox"  col="1" row="2" width="100" height="26">
+            <UiCfgItem id="2" name="开停洒水输入点" type="editbox"  col="1" row="2" width="100" height="26" defaultvalue="0">
             </UiCfgItem>
             <ComboboxCfgItem id="3" name="输入点故障停机选择" col="2" row="2" width="100" height="28" params="停车;不停车" defaultvalue="不停车">
             </ComboboxCfgItem>
             <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  col="2" row="3" width="100" height="26" range="(0-100)" precision="0.1" unit="秒" defaultvalue="10">
             </UiCfgItemFloat>
-            <UiCfgItem id="5" name="洒水电磁阀输出点1-48" type="editbox"  col="1" row="4" width="100" height="26">
+            <UiCfgItem id="5" name="洒水电磁阀输出点1-48" type="editbox"  col="1" row="4" width="100" height="26" defaultvalue="0">
             </UiCfgItem>
         </GroupCfgItem>
     </GroupCfgList>

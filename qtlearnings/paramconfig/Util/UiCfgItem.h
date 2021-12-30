@@ -63,6 +63,8 @@ public:
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
     virtual void setDefaultVal();
 
+    virtual bool onMaxValChanged(uint32_t max);
+
 protected:
     int m_col, m_row;
     int m_width, m_height;
@@ -149,8 +151,14 @@ public:
     virtual void create(QWidget* parent);
     virtual bool initUi(unsigned short* pStAddr);//init data
 
+    virtual QString previewInfo();
+    virtual void setDefaultVal();
+
+    virtual bool onMaxValChanged(uint32_t max);
 protected:
     QString    m_setIndexSource;
+    QString    m_previewCfg;
+    QString    m_setSize;
     UiCfgItem *pSetIndexSource;
 };
 #endif

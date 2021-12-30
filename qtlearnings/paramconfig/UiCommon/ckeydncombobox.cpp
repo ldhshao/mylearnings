@@ -104,6 +104,11 @@ void CKeyDnComboBoxSet::initData(uint16_t* pAddr, uint16_t cnt)
     }
 }
 
+void CKeyDnComboBoxSet::initUi()
+{
+    initData(pVal, dataCnt);
+}
+
 void CKeyDnComboBoxSet::setDataIndex(int idx)
 {
     if (-1 < idx && idx < dataCnt){
@@ -165,6 +170,15 @@ void CKeyDnComboBoxSet::onNextData()
         emit sig_dataIndexChanged(dataIdx);
     }
 }
+void CKeyDnComboBoxSet::onDataCountChanged(uint16_t dataCount)
+{
+    dataCnt = dataCount;
+    if (dataIdx >= dataCount){
+        dataIdx = 0;
+        setDataIndex(dataIdx);
+        emit sig_dataIndexChanged(dataIdx);
+    }
+}
 
 ////CIndexLabel
 CIndexLabel::CIndexLabel(QWidget *parent): QLabel(parent)
@@ -175,6 +189,6 @@ void CIndexLabel::slot_dataIndexChanged(int dataIdx)
 {
     QString name(strDataName);
     setText(name.append(QString::number(dataIdx+1)));
-    int width = QFontMetrics(font()).width(text());
-    resize(width, height());
+    //int width = QFontMetrics(font()).width(text()); //has set a fit size
+    //resize(width, height());
 }

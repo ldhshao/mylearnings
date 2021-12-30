@@ -44,6 +44,10 @@ public:
     ~CKeyDnComboBoxSet();
 
     void initData(uint16_t* pAddr, uint16_t cnt);
+    void initUi();
+    uint16_t dataCount() { return dataCnt; }
+
+    void onDataCountChanged(uint16_t dataCount);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event);

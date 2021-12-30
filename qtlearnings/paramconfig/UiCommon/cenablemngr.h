@@ -5,6 +5,7 @@
 using namespace std;
 
 class CKeyDnComboBox;
+class CKeyDnEdit;
 class QWidget;
 class UiCfgItem;
 struct SEnablePair{
@@ -38,4 +39,23 @@ private:
     map<QWidget*, bool> sourceMap;
 };
 
+class CMaxValMngr : public QObject
+{
+    Q_OBJECT
+
+public:
+    static CMaxValMngr* instance();
+    void registerMaxValUi(CKeyDnEdit* pEdit, uint16_t* pVal, UiCfgItem* item);
+
+protected:
+    CMaxValMngr(QObject *parent = 0):QObject(parent){}
+    virtual ~CMaxValMngr(){
+    }
+
+protected slots:
+    void slot_valueChanged(uint16_t* pVal, uint32_t valNew);
+
+private:
+    map<uint16_t*, list<UiCfgItem*>>      valListMap;
+};
 #endif // CKEYDNEDIT_H

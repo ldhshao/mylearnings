@@ -262,6 +262,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr)
             if (w0->size().height() > h) h = w0->size().height();
         }
         if (nullptr != w1){
+        qDebug()<<w1<<w1->width()<<w1->size().width();
             wName += w1->size().width();
             if (w1->size().height() > h) h = w1->size().height();
         }

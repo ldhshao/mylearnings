@@ -123,8 +123,11 @@ bool CKeyDnEdit::setEditText(const QString &strText)
         setText(pBind->showSet());
         if (pBind->isModified()){
             BindUint16 *pBindU16 = dynamic_cast<BindUint16*>(pBind);
+            BindUint16Ptr *pBindU16Ptr = dynamic_cast<BindUint16Ptr*>(pBind);
             if (nullptr != pBindU16){
                 emit sig_valueChanged(pBindU16->valPtr(), *(pBindU16->valPtr()));
+            }else if (nullptr != pBindU16Ptr){
+                emit sig_valueChanged(pBindU16Ptr->valPtr(), *(pBindU16Ptr->valPtr()));
             }
             pBind->clearState();
         }

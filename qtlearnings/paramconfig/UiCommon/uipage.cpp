@@ -109,6 +109,10 @@ void UiPage::showPage()
             if (nullptr != pEdit){
                 pEdit->setEditText("1");
             }
+            CKeyDnComboBoxSet *pCmb = dynamic_cast<CKeyDnComboBoxSet*>(*it);
+            if (nullptr != pCmb){
+                pCmb->initUi();
+            }
         }
     }
     show();

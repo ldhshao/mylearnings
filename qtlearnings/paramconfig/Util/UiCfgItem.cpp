@@ -380,6 +380,11 @@ void UiCfgItem::setDefaultVal()
         }
     }
 }
+bool UiCfgItem::onMaxValChanged(uint32_t max)
+{
+    return true;
+}
+
 
 //ComboboxItem
 HNDZ_IMPLEMENT_DYNCREATE(UiCfgItemFloat, UiCfgItem)
@@ -652,6 +657,8 @@ bool ComboboxSetCfgItem::initFromDomElement(QDomElement element)
     ComboboxCfgItem::initFromDomElement(element);
     m_type = UiCfgItem::strTypeComboboxSet;
     setStrValue(m_setIndexSource, element, "setindexsource");
+    setStrValue(m_previewCfg, element, "previewconfig");
+    setStrValue(m_setSize, element, "setsize");
 
     return true;
 }
@@ -660,6 +667,8 @@ UiCfgItem* ComboboxSetCfgItem::createMyself()
     ComboboxSetCfgItem* pItem = new ComboboxSetCfgItem();
     ComboboxCfgItem::copyTo(pItem);
     pItem->m_setIndexSource = this->m_setIndexSource;
+    pItem->m_previewCfg = this->m_previewCfg;
+    pItem->m_setSize = this->m_setSize;
 
     return pItem;
 }
@@ -697,6 +706,10 @@ void ComboboxSetCfgItem::create(QWidget* parent)
 bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr)
 {
     UiCfgItem::initUi(pStAddr);
+    QString strMaxLenName = m_name + QString::number(m_datacnt);
+    int width = QFontMetrics(m_pWidName->font()).width(strMaxLenName);
+    m_pWidName->resize(width, height());
+    qDebug()<<m_pWidName<<m_pWidName->width()<<m_pWidName->size().width();
 
     CKeyDnComboBoxSet* pBox = dynamic_cast<CKeyDnComboBoxSet*>(m_pWidget);
     if (nullptr != pBox){
@@ -709,9 +722,115 @@ bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr)
             if (nullptr != (pSetSource = pGroup->findItemById(m_setIndexSource))){
                 CKeyDnSetIndexEdit* pEdit = dynamic_cast<CKeyDnSetIndexEdit*>(pSetSource->getWidget());
                 QObject::connect(pEdit, SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pBox, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
-                //pEdit->setEditText("1");//set init value
                 pSetIndexSource = pSetSource;
+            }else if (-1 < m_dataidx){
+                pBox->initData(pAddr + m_dataidx, m_datacnt);
+            }
+        }
+        //connect set size
+        if (!m_setSize.isEmpty()){
+            bool bOK = false;
+            int pos = -1;
+            uint16_t setsize = m_setSize.toUShort(&bOK);
+            if (bOK && setsize <= m_datacnt){
+                pBox->initData(pAddr + m_dataidx, setsize);
+            }else if(-1 < (pos = m_setSize.indexOf("#"))){
+                QString maxID = m_setSize.right(m_setSize.length() - pos -1);
+                UiCfgItem *pMaxItem = pGroup->findItemById(maxID);
+                if (nullptr != pMaxItem){
+                    CMaxValMngr::instance()->registerMaxValUi(dynamic_cast<CKeyDnEdit*>(pMaxItem->getWidget()), pMaxItem->paramAddress(), this);
+                    pBox->initData(pAddr + m_dataidx, *(pMaxItem->paramAddress()));
+                }
             }
         }
     }
+}
+
+QString ComboboxSetCfgItem::previewInfo()
+{
+    QString strInfo;
+    QStringList pvCfgList = m_previewCfg.split('/');//section name/port name/ port view group/values
+
+    if (0 < datacount() && 4 == pvCfgList.count()){
+        QStringList valList = pvCfgList[3].split(';');
+        int grpSize = pvCfgList[2].toInt();
+        uint16_t* param = paramAddress();
+        int n = 1;
+        if (999 < m_datacnt) n = 4;
+        else if (99 < m_datacnt) n = 3;
+        else if (9 < m_datacnt) n = 2;
+        if (0 == valList.count()) qDebug()<<"error: wrong previewconfig "<<m_previewCfg;
+        strInfo.append(pvCfgList[0] + ":\n");
+        for (int p = 0; p < m_datacnt; p+= grpSize){
+            for (int i = 0; i < grpSize; i++){
+                int k = p+i+1;
+                if (k > m_datacnt) break;
+                if (k == 10 || k == 100 || k == 1000 ) n--;
+                //for (int j = 0; j < (n-1); j++) strInfo.append("   ");//1*'0' == 2*' '
+                //strInfo.append(QString::number(k) + "#" + pvCfgList[1] + "\t");
+                strInfo.append(QString::number(k) + "#" + pvCfgList[1] + " ");
+                for (int j = 0; j < (n-1); j++) strInfo.append("  ");//1*'0' == 2*' '
+                if (*param < valList.count())
+                    strInfo.append(valList[*param] + "\t");
+                else
+                    strInfo.append(valList[0] + "\t");
+                param++;
+            }
+            strInfo.append("\n");
+        }
+    }
+    qDebug()<<strInfo;
+    return strInfo;
+}
+
+void ComboboxSetCfgItem::setDefaultVal()
+{
+    if(0 < datacount() && !m_defaultVal.isEmpty()){
+        //set data to default value
+        uint16_t defVal = m_params.count();
+        for (int i = 0; i < m_params.count(); i++){
+            if (m_defaultVal == m_params[i]){
+                defVal = i;
+                break;
+            }
+        }
+        if (defVal >= m_params.count())
+            defVal = 0;
+
+        uint16_t *pAddr = paramAddress();
+        for (int i = 0; i < m_datacnt; i++){
+            *pAddr++ = defVal;
+        }
+        CKeyDnComboBoxSet* edit = dynamic_cast<CKeyDnComboBoxSet*>(m_pWidget);
+        if (nullptr != edit){
+            edit->initUi();
+        }
+    }
+}
+
+bool ComboboxSetCfgItem::onMaxValChanged(uint32_t max)
+{
+    CKeyDnComboBoxSet *pCmb = dynamic_cast<CKeyDnComboBoxSet*>(m_pWidget);
+    if (nullptr != pCmb){
+        uint16_t oldDataCnt = pCmb->dataCount();
+        if (oldDataCnt > max){
+            //restor default value for some data
+            uint16_t defVal = m_params.count();
+            for (int i = 0; i < m_params.count(); i++){
+                if (m_defaultVal == m_params[i]){
+                    defVal = i;
+                    break;
+                }
+            }
+            if (defVal >= m_params.count())
+                defVal = 0;
+
+            uint16_t *pAddr = paramAddress();
+            for (int i = max; i < oldDataCnt; i++){
+                pAddr[i] = defVal;
+            }
+        }
+        pCmb->onDataCountChanged(max);
+    }
+    return true;
 }
