@@ -414,6 +414,24 @@ UiCfgItem* GroupCfgItem::findItemById(const QString& strId)
     return pFind;
 }
 
+UiCfgItem* GroupCfgItem::findItemByName(const QString& strName)
+{
+    UiCfgItem* pFind = nullptr;
+    if (m_name == strName) return this;
+    for(auto it = m_children.begin(); it != m_children.end(); it++){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            pFind = grp->findItemByName(strName);
+        }else if ((*it)->getName() == strName){
+            pFind = *it;
+        }
+        if (nullptr != pFind)
+            break;
+    }
+
+    return pFind;
+}
+
 UiCfgItem* GroupCfgItem::findItemByDataIdx(int dataidx)
 {
     UiCfgItem *pFind = nullptr;

@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     initWorkDir();
     initMenu();
     //QkeyTools::getInstance();
+    CDevPosMgr::instance()->initDevPosMgr(&devUiCfgList);
     emitTimer->start(timerInterval);
 }
 

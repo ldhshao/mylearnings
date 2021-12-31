@@ -19,7 +19,8 @@ public:
     void showText();
     void setPortType(int type) { portType = type; }
     uint8_t getPortType() { return portType; }
-    void endEdit() { if (DPES_EDITING == state) state = DPES_CONFIRM; }
+    void endEdit();
+    QString tipInfo();
 
     enum {
       DPES_IDLE = 0,
@@ -38,6 +39,7 @@ protected:
     uint16_t *pVal;
     uint8_t   portType;
     uint8_t   state;
+    uint8_t   step;
 };
 
 #endif // CDEVPOINTEDIT_H

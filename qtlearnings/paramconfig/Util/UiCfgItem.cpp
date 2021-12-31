@@ -807,6 +807,29 @@ void ComboboxSetCfgItem::setDefaultVal()
         }
     }
 }
+QString ComboboxSetCfgItem::getFullName(int idx)
+{
+    QString fullName = UiCfgItem::getFullName();
+    int baseIdx = parent()->dataidx() + m_dataidx;
+    if (baseIdx <= idx && idx < baseIdx + m_datacnt){
+        int pos = fullName.lastIndexOf(QChar('-'));
+        if (-1 < pos) fullName = fullName.left(pos+1);
+        fullName.append(m_name + QString::number(idx - baseIdx + 1));
+    }
+
+    return fullName;
+}
+QString ComboboxSetCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
+{
+    *dataCnt = 1;
+    if (0 < m_params.count()){
+        if (*pVal < m_params.count())
+            return m_params[*pVal];
+        else
+            qDebug()<<"error: wrong value"<<m_name<<*pVal;
+    }
+    return "";
+}
 
 bool ComboboxSetCfgItem::onMaxValChanged(uint32_t max)
 {

@@ -43,6 +43,7 @@ public:
     bool readXmlFile(QString strFile);
     UiCfgItem* findItemById(int id);
     UiCfgItem* findItemById(const QString& strId);
+    UiCfgItem* findItemByName(const QString& strName);
     virtual UiCfgItem* findItemByDataIdx(int dataidx);
 
     virtual uint16_t *paramAddress() { return nullptr; }

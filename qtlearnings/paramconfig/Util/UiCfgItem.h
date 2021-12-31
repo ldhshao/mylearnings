@@ -134,6 +134,7 @@ public:
     //virtual QWidget* create();
     //virtual bool init();
     virtual bool initUi(unsigned short* pStAddr);//init data
+    QStringList params() { return m_params; }
 
 protected:
     QStringList m_params;
@@ -153,6 +154,8 @@ public:
 
     virtual QString previewInfo();
     virtual void setDefaultVal();
+    virtual QString getFullName(int idx);
+    virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
 
     virtual bool onMaxValChanged(uint32_t max);
 protected:

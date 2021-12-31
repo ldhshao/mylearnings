@@ -42,7 +42,7 @@ void CButtonSelector::adjustPosition(int x, int y, int w, int h)
         }else if (width() < x + w){//align with right
             move(x + w - width(), y-height());
         }else{//align with center
-            move(0, y-height());
+            move((sw - width())/2, y-height());
         }
     }else {
         if (x + width() <= sw){//align with left
@@ -50,7 +50,7 @@ void CButtonSelector::adjustPosition(int x, int y, int w, int h)
         }else if (width() < x + w){//align with right
             move(x + w - width(), y+h);
         }else{//align with center
-            move(0, y+h);
+            move((sw - width())/2, y+h);
         }
     }
     qDebug()<<"new pos "<<pos();
@@ -62,7 +62,13 @@ void CButtonSelector::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
         if (nullptr != btnMgr.currentButton()){
             int idx = btnMgr.currentButton()->property(PROPERTY_INDEX).toInt();
-            btnMgr.selectButton(btnList[(idx-1+btnVisibleCnt)%btnVisibleCnt]);
+            for (int i = 1; i < btnList.size(); i++){
+                int k = (idx - i + btnList.size()) % btnList.size();
+                if (btnList[k]->isVisible()){
+                    btnMgr.selectButton(btnList[k]);
+                    break;
+                }
+            }
         }else{
             selectButtonByIndex(0);
         }
@@ -71,7 +77,13 @@ void CButtonSelector::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
         if (nullptr != btnMgr.currentButton()){
             int idx = btnMgr.currentButton()->property(PROPERTY_INDEX).toInt();
-            btnMgr.selectButton(btnList[(idx+1)%btnVisibleCnt]);
+            for (int i = 1; i < btnList.size(); i++){
+                int k = (idx + i) % btnList.size();
+                if (btnList[k]->isVisible()){
+                    btnMgr.selectButton(btnList[k]);
+                    break;
+                }
+            }
         }else{
             selectButtonByIndex(0);
         }
@@ -87,7 +99,7 @@ void CButtonSelector::keyPressEvent(QKeyEvent *event)
         qDebug()<<"keyPressEvent KEY_DOWN";
         break;
     case Qt::Key_Escape:
-        hide();
+        prevSelector();
         break;
     case Qt::Key_0:
     case Qt::Key_1:
@@ -168,9 +180,7 @@ void CLineSelector::nextSelector()
 }
 void CLineSelector::prevSelector()
 {
-    hideSelector();
-    CMachineSelector::instance()->hideSelector();
-    CPortSelector::instance()->hide();
+    CPortSelector::instance()->exitSelector();
 }
 
 CMachineSelector::CMachineSelector(QWidget *parent) : CButtonSelector(parent),currLine(-1)
@@ -198,19 +208,27 @@ CMachineSelector* CMachineSelector::instance()
 void CMachineSelector::showMachines(int line)
 {
     int w = 60, h = 40, lineBtnCnt = 20;
-    int cnt = CDevPosMgr::instance()->getMachineCount(line);
-    int i = 0;
-    for (; i < cnt; i++) {
-        btnList[i]->setVisible(true);
-    }
-    btnVisibleCnt = cnt;
+    //int cnt = CDevPosMgr::instance()->getMachineCount(line);
+    int i = 0, r = 0;
     for (; i < MACHINE_MAX; i++) {
         btnList[i]->setVisible(false);
     }
-    if (cnt <= lineBtnCnt)
-        resize(cnt*w, h);
+    //for (; i < cnt; i++) {
+    //    btnList[i]->setVisible(true);
+    //}
+    list<int> mList = CDevPosMgr::instance()->getMachines(line);
+    i = 0;
+    for (auto it = mList.begin(); it != mList.end(); it++) {
+        btnList[*it]->setVisible(true);
+        btnList[*it]->move((i%lineBtnCnt)*w, r*h);
+        if (0 == (i+1)%lineBtnCnt) r++;
+        i++;
+    }
+    btnVisibleCnt = mList.size();
+    if (btnVisibleCnt <= lineBtnCnt)
+        resize(btnVisibleCnt*w, h);
     else {
-        resize(lineBtnCnt*w, (cnt + lineBtnCnt - 1)/lineBtnCnt * h);
+        resize(lineBtnCnt*w, (btnVisibleCnt + lineBtnCnt - 1)/lineBtnCnt * h);
     }
     currLine = line;
     btnMgr.selectButton(nullptr);
@@ -277,7 +295,7 @@ void CPortSelector::showPorts(int line, int machine)
     bool devPtValid = false;
     if (nullptr != pEdit){
         devPt = pEdit->getValue();
-        if (CDevPosMgr::instance()->isDevPointValid(devPt)){
+        if (CDevPosMgr::instance()->isDevPointValid(devPt, portType)){
             devPtValid = true;
         }
     }
@@ -337,6 +355,16 @@ void CPortSelector::adjustPosition(int x, int y, int w, int h)
     qDebug()<<"new pos "<<pos();
 }
 
+void CPortSelector::exitSelector()
+{
+    hide();
+    CMachineSelector::instance()->hideSelector();
+    CLineSelector::instance()->hideSelector();
+    if (nullptr != pEdit){
+        pEdit->endEdit();
+    }
+}
+
 void CPortSelector::on_checkbox_stateChanged(int newState)
 {
     if (!chkLoading){
@@ -347,12 +375,8 @@ void CPortSelector::on_checkbox_stateChanged(int newState)
             if (nullptr != pEdit){
                 uint32_t devPt = make_dev_point(currLine+1, currMachine, p);
                 pEdit->setValue(devPt);
-                pEdit->endEdit();
-                pEdit->setFocus();
             }
-            hide();
-            CLineSelector::instance()->hide();
-            CMachineSelector::instance()->hide();
+            exitSelector();
         }else {
             if (nullptr != pEdit){
                 pEdit->setValue(0);
@@ -373,20 +397,10 @@ void CPortSelector::keyPressEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_Up:
-        if (nullptr != pEdit) {
-            pEdit->endEdit();
-            pEdit->setFocus();
-        }
         hide();
         break;
     case Qt::Key_Escape:
-        if (nullptr != pEdit){
-            pEdit->endEdit();
-            pEdit->setFocus();
-        }
-        hide();
-        CMachineSelector::instance()->hideSelector();
-        CLineSelector::instance()->hideSelector();
+        exitSelector();
         break;
     case Qt::Key_0:
     case Qt::Key_1:

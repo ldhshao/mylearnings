@@ -4,7 +4,7 @@
 #include <QString>
 using namespace std;
 
-#define LINE_MAX    10
+#define LINE_MAX    11
 #define MACHINE_MAX 255
 #define PORT_MAX    12
 #define LINE_BITS_COUNT    8
@@ -19,6 +19,7 @@ using namespace std;
 #define get_machine_from_dev_point(p) (((p)>>PORT_BITS_COUNT) & MACHINE_BITS_MASK)
 #define get_port_from_dev_point(p)    ((p) & PORT_BITS_MASK)
 
+class PageCfgList;
 class CDevPosMgr
 {
 public:
@@ -28,14 +29,18 @@ public:
     list<list<bool>> getLinePorts(int l, int portType);
     list<bool> getMachinePorts(int l, int m, int portType);
     int        getMachineCount(int l);
+    list<int>  getMachines(int l);
+    list<int>  getAvailableMachines(int l);
     void       setPortValue(int l, int m, int portType, int port, bool use);
     void       setDevPoint(uint32_t devPt, int portType, bool use);
     QString    makeStrDevPoint(uint32_t devPoint);
     uint32_t   makeDevPoint(QString strDevPoint);
-    bool       isDevPointValid(uint32_t);
+    bool       isDevPointValid(uint32_t devPoint, int portType);
+    bool       initDevPosMgr(PageCfgList* devCfg);//after load config, call this function
 
     enum {
       LINETYPE_CS = 0,
+      LINETYPE_CSBS,
       LINETYPE_DIO,
       LINETYPE_CNT
     };
@@ -46,6 +51,7 @@ public:
     };
 protected:
     CDevPosMgr();
+    uint8_t getPortCount(int l, int portType);
 
     QString lineNames[LINE_MAX];
     uint8_t lineTypes[LINE_MAX];
@@ -53,6 +59,9 @@ protected:
     bool      portInfos[LINE_MAX][MACHINE_MAX][PORTTYPE_CNT][PORT_MAX];
     uint16_t  lineCount;
     uint8_t   portCount[LINETYPE_CNT];
+    uint16_t *lineMachineTypes[LINE_MAX];
+    uint16_t  bsDevVal;//valid BS type value
+    bool      inited;
 };
 
 #endif // CDEVPOSMGR_H

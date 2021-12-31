@@ -2,18 +2,21 @@
 #include "cdevposmgr.h"
 #include "clineselector.h"
 #include <QKeyEvent>
+#include <QToolTip>
 #include <QDebug>
 
 CDevPointEdit::CDevPointEdit(QWidget *parent):QLineEdit(parent)
 {
     pVal = nullptr;
     state = DPES_IDLE;
+    step = 0;
 }
 
 CDevPointEdit::CDevPointEdit(const QString &text, QWidget *parent):QLineEdit(text, parent)
 {
     pVal = nullptr;
     state = DPES_IDLE;
+    step = 0;
 }
 
 void CDevPointEdit::setValuePtr(uint16_t* val)
@@ -70,7 +73,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Down:
     case Qt::Key_Up:
     case Qt::Key_Escape:
-    case Qt::Key_Backspace:
+    //case Qt::Key_Backspace:
         e->setAccepted(false);
         break;
     case Qt::Key_Return:
@@ -80,8 +83,17 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
             state = DPES_CONFIRM;
         }else if (DPES_CONFIRM == state){
             state = DPES_IDLE;
+            step = 0;
             e->setAccepted(false);
         }
+        break;
+    case Qt::Key_1:
+        if (text().isEmpty()) {
+            setText("CS1");
+        }
+        break;
+    case Qt::Key_A:
+        QToolTip::showText(mapToGlobal(QPoint(0, height()/2)), "Press A");
         break;
     default:
         if ((Qt::Key_0 <= k && k <= Qt::Key_9) || (Qt::Key_A <= k && k <= Qt::Key_Z))
@@ -104,7 +116,7 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
 
     CPortSelector::instance()->setAttachEdit(this);
     CPortSelector::instance()->setPortType(portType);
-    if (CDevPosMgr::instance()->isDevPointValid(val)){
+    if (CDevPosMgr::instance()->isDevPointValid(val, portType)){
         int l = get_line_from_dev_point(val) - 1;
         int m = get_machine_from_dev_point(val);
         int p = get_port_from_dev_point(val);
@@ -130,5 +142,20 @@ void CDevPointEdit::focusOutEvent(QFocusEvent *event)
     if (DPES_EDITING != state){
     QLineEdit::focusOutEvent(event);
     state = DPES_IDLE;
+    step = 0;
     }
+}
+
+void CDevPointEdit::endEdit()
+{
+    if (DPES_EDITING == state) state = DPES_CONFIRM;
+    parentWidget()->activateWindow();
+}
+
+QString CDevPointEdit::tipInfo()
+{
+    if (CDevPosMgr::PORTTYPE_OUT == portType)
+        return "键1=CS1, 2=CS2, 3=CS3, 4=CS4,\n  5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS,\n  A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
+    return "键1=CS1, 2=CS2, 3=CS3, 4=CS4,\n  5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS,\n  A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
+    return "键1=CS1, 2=CS2, 3=CS3, 4=CS4, 5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS, A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
 }

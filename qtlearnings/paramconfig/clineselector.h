@@ -76,6 +76,7 @@ public:
     void   setAttachEdit(CDevPointEdit* edit) {	pEdit = edit; }
     void   setPortType(uint8_t type) { portType = type; }
     void   adjustPosition(int x, int y, int w, int h);
+    void   exitSelector();
 
 protected:
     explicit CPortSelector(QWidget *parent = nullptr);

@@ -1,6 +1,7 @@
 #include "uipage.h"
 #include "ckeydnedit.h"
 #include "ckeydncombobox.h"
+#include "cdevpointedit.h"
 #include <QLabel>
 #include <QKeyEvent>
 #include <QResizeEvent>
@@ -125,12 +126,18 @@ void UiPage::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Down:
         focusNextPrevChild(true);
         event->setAccepted(true);
-        showTipInfo(focusWidget()->mapToGlobal(QPoint(0, focusWidget()->height())), "key donw");
+        if (nullptr != dynamic_cast<CDevPointEdit*>(focusWidget())){
+            CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(focusWidget());
+            showTipInfo(pEdit->mapToGlobal(QPoint(0, pEdit->height()/2)), pEdit->tipInfo());
+        }
         break;
     case Qt::Key_Up:
         focusNextPrevChild(false);
         event->setAccepted(true);
-        showTipInfo(focusWidget()->mapToGlobal(QPoint(0, focusWidget()->height())), "key up");
+        if (nullptr != dynamic_cast<CDevPointEdit*>(focusWidget())){
+            CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(focusWidget());
+            showTipInfo(pEdit->mapToGlobal(QPoint(0, pEdit->height()/2)), pEdit->tipInfo());
+        }
         break;
     case Qt::Key_Escape:
         if (0 < mparamAddrList.size()){
