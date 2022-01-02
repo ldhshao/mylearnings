@@ -107,6 +107,16 @@ QStringList CDevPosMgr::getLineNames()
     return names;
 }
 
+int CDevPosMgr::getLineNo(QString strLineName)
+{
+    for (int i =0; i < lineCount; i++){
+        if (strLineName == gLineNames[i]){
+            return i;
+        }
+    }
+
+    return -1;
+}
 list<list<bool>> CDevPosMgr::getLinePorts(int l, int portType)
 {
     list<list<bool>> resList;
@@ -146,6 +156,25 @@ list<bool> CDevPosMgr::getMachinePorts(int l, int m, int portType)
 
     return portList;
 }
+list<int> CDevPosMgr::getMachineAvailablePortNos(int l, int m, int portType)
+{
+    list<int> portList;
+    if (l >= LINE_MAX || l >= lineCount || 0 > l)
+        return portList;
+    if (portType >= PORTTYPE_CNT || portType < PORTTYPE_IN)
+        return portList;
+
+    if (m >= MACHINE_MAX || m >= *(lineMachineCounts[l]) || 0 > m){
+        return portList;
+    }
+    int ptCnt = getPortCount(l, portType);
+    for (int k = 0; k < PORT_MAX && k < ptCnt; k++){
+        if (!portInfos[l][m][portType][k])
+            portList.push_back(k);
+    }
+
+    return portList;
+}
 
 int CDevPosMgr::getMachineCount(int l)
 {
@@ -180,10 +209,16 @@ list<int> CDevPosMgr::getMachines(int l)
     return macList;
 }
 
-list<int> CDevPosMgr::getAvailableMachines(int l)
+list<int> CDevPosMgr::getAvailableMachines(int l, int portType)
 {
-    list<int> macList;
-    return macList;
+    list<int> macList0 = getMachines(l);
+    list<int> macList1;
+    for (auto it = macList0.begin(); it != macList0.end(); it++){
+        list<int> ports = getMachineAvailablePortNos(l, *it, portType);
+        if (0 < ports.size())
+            macList1.push_back(*it);
+    }
+    return macList1;
 }
 
 uint8_t CDevPosMgr::getPortCount(int l, int portType)
@@ -287,7 +322,7 @@ bool CDevPosMgr::isDevPointValid(uint32_t devPoint, int portType)
     if (0 >= l || l> lineCount){
         return false;
     }
-    if (0 > m || m>= getMachineCount(l)){
+    if (0 > m || m>= getMachineCount(l)){//may wrong sometime
         return false;
     }
     if (0 > p || p >= getPortCount(l, portType)){
@@ -295,4 +330,17 @@ bool CDevPosMgr::isDevPointValid(uint32_t devPoint, int portType)
     }
 
     return true;
+}
+
+bool CDevPosMgr::isDevPointAvailable(uint32_t devPoint, int portType)
+{
+    if (!isDevPointValid(devPoint, portType))
+        return false;
+
+    int l = get_line_from_dev_point(devPoint) - 1;
+    int m = get_machine_from_dev_point(devPoint);
+    int p = get_port_from_dev_point(devPoint);
+    //check machine no
+
+    return !(portInfos[l][m][portType][p]);
 }

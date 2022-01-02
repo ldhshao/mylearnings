@@ -26,16 +26,19 @@ public:
     static CDevPosMgr* instance();
 
     QStringList getLineNames();
+    int         getLineNo(QString strLineName);
     list<list<bool>> getLinePorts(int l, int portType);
-    list<bool> getMachinePorts(int l, int m, int portType);
+    list<bool> getMachinePorts(int l, int m, int portType);//port use val
+    list<int> getMachineAvailablePortNos(int l, int m, int portType);//port index
     int        getMachineCount(int l);
     list<int>  getMachines(int l);
-    list<int>  getAvailableMachines(int l);
+    list<int>  getAvailableMachines(int l, int portType);
     void       setPortValue(int l, int m, int portType, int port, bool use);
     void       setDevPoint(uint32_t devPt, int portType, bool use);
     QString    makeStrDevPoint(uint32_t devPoint);
     uint32_t   makeDevPoint(QString strDevPoint);
     bool       isDevPointValid(uint32_t devPoint, int portType);
+    bool       isDevPointAvailable(uint32_t devPoint, int portType);
     bool       initDevPosMgr(PageCfgList* devCfg);//after load config, call this function
 
     enum {

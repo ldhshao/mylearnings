@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QResizeEvent>
+#include <math.h>
 #include <QDebug>
 
 CDeviceModPreview::CDeviceModPreview(list<struct SDeviceInfoItem>* pItemList, QWidget *parent) :
