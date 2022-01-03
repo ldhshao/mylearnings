@@ -27,13 +27,19 @@ void CDevPointEdit::setValuePtr(uint16_t* val)
 
 void CDevPointEdit::setValue(uint32_t val)
 {
-    *pVal = val;
-    *(pVal + 1) = (val >> 16);
-    qDebug()<<"write addr "<<pVal<<" val "<<val;
+    uint32_t oldVal = (*(pVal + 1) << 16) + *pVal;
+    qDebug()<<"old, new "<<oldVal<<val;
+    if (val != oldVal){
+        CDevPosMgr::instance()->setDevPoint(oldVal, portType, false);
+        CDevPosMgr::instance()->setDevPoint(val, portType, true);
+        *pVal = val;
+        *(pVal + 1) = (val >> 16);
+        qDebug()<<"write addr "<<pVal<<" val "<<val;
+        emit sig_valueChanged(pVal, val);
+        if (val < 0xFFFF)
+            emit sig_valueChanged(pVal+1, *(pVal + 1));
+    }
     showText();
-    emit sig_valueChanged(pVal, val);
-    if (val < 0xFFFF)
-        emit sig_valueChanged(pVal+1, *(pVal + 1));
 }
 
 bool CDevPointEdit::setEditText(const QString &strText)
@@ -73,7 +79,6 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Down:
     case Qt::Key_Up:
     case Qt::Key_Escape:
-    //case Qt::Key_Backspace:
         e->setAccepted(false);
         break;
     case Qt::Key_Return:
@@ -82,10 +87,10 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
         }else if (DPES_EDITING == state){
             uint32_t devPt = CDevPosMgr::instance()->makeDevPoint(text());//enrich
             if (0 == devPt){
-                setEditText(text());
+                setValue(devPt);
             }else if (CDevPosMgr::instance()->isDevPointValid(devPt, portType)){
                 if (CDevPosMgr::instance()->isDevPointAvailable(devPt, portType)){
-                    setEditText(text());
+                    setValue(devPt);
                     state = DPES_CONFIRM;
                 }else {
                     QToolTip::showText(mapToGlobal(QPoint(0, height()/2)), text() + "已被占用");
@@ -98,6 +103,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
             step = 0;
             e->setAccepted(false);
         }
+    qDebug()<<"CDevPointEdit state"<<state;
         break;
     case Qt::Key_1:
     case Qt::Key_2:
@@ -110,8 +116,8 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
     case Qt::Key_9:
         if (text().isEmpty()) {
             QString lvl1Names[9] = {
-                "CS1", "CS2", "CS2", "CS3",
-                "CS1_BS", "CS2_BS", "CS2_BS", "CS3_BS",
+                "CS1", "CS2", "CS3", "CS4",
+                "CS1_BS", "CS2_BS", "CS3_BS", "CS4_BS",
                 "DIO1"
             };
             setText(lvl1Names[k - Qt::Key_1]);
@@ -132,7 +138,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
         if (-1 == text().indexOf('.')){//second level
             int l = CDevPosMgr::instance()->getLineNo(text());
             if (-1 < l){
-                list<int> mList = CDevPosMgr::instance()->getAvailableMachines(l);
+                list<int> mList = CDevPosMgr::instance()->getAvailableMachines(l, portType);
                 QString strInfo;
                 for (auto it = mList.begin(); it != mList.end(); it++){
                  if (mList.begin() == it)
@@ -158,7 +164,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
                 QToolTip::showText(mapToGlobal(QPoint(0, height()/2)), "下位机设置错误\n");
             }else{
                 bOK = false; m--;
-                list<int> mList = CDevPosMgr::instance()->getAvailableMachines(l);
+                list<int> mList = CDevPosMgr::instance()->getAvailableMachines(l, portType);
                 for (auto it = mList.begin(); it != mList.end(); it++){
                     if (m == *it){ bOK = true; break; }
                 }
@@ -181,6 +187,10 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
         }
         state = DPES_EDITING;
         break;
+    case Qt::Key_Backspace:
+        QLineEdit::keyPressEvent(e);
+        state = DPES_EDITING;
+        break;
     default:
         if ((Qt::Key_0 <= k && k <= Qt::Key_9) || (Qt::Key_A <= k && k <= Qt::Key_Z))
             e->setAccepted(false);
@@ -194,6 +204,7 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
 {
     //CDevPosCtl1::instance()->setAttachEdit(this);
     //CDevPosCtl1::instance()->show();
+    state = DPES_EDITING;
     QPoint pt = mapToGlobal(QPoint(0,0));
     int w = width(), h = height();
     CLineSelector::instance()->adjustPosition(pt.rx(), pt.ry(), w, h);
@@ -215,7 +226,6 @@ void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
         CLineSelector::instance()->selectButtonByIndex(-1);
         CLineSelector::instance()->activateWindow();
     }
-    state = DPES_EDITING;
 }
 
 void CDevPointEdit::focusInEvent(QFocusEvent *event)
@@ -227,17 +237,27 @@ void CDevPointEdit::focusInEvent(QFocusEvent *event)
 void CDevPointEdit::focusOutEvent(QFocusEvent *event)
 {
     qDebug()<<"CDevPointEdit::focusOutEvent";
-    //setStyleSheet("");
-    if (DPES_EDITING != state){
-    QLineEdit::focusOutEvent(event);
-    state = DPES_IDLE;
-    step = 0;
+    qDebug()<<"CDevPointEdit state"<<state;
+    if (DPES_EDITING == state){
+        //setEditText(text());
+            uint32_t devPt = CDevPosMgr::instance()->makeDevPoint(text());//enrich
+            if (0 == devPt){
+                setValue(devPt);
+            }else if (CDevPosMgr::instance()->isDevPointAvailable(devPt, portType)){
+                setValue(devPt);
+            }else{
+                showText();
+            }
     }
+        QLineEdit::focusOutEvent(event);
+        state = DPES_IDLE;
 }
 
 void CDevPointEdit::endEdit()
 {
+    qDebug()<<"CDevPointEdit endEdit state"<<state;
     if (DPES_EDITING == state) state = DPES_CONFIRM;
+    qDebug()<<"CDevPointEdit state"<<state;
     parentWidget()->activateWindow();
 }
 

@@ -6,6 +6,7 @@
 #include "UiCommon/ckeylabel.h"
 #include "cdevicepreview.h"
 #include "cdevposctl2.h"
+#include "cdevpointedit.h"
 #include "clineselector.h"
 #include "cdeviceconfig.h"
 #include "cmodparampreview.h"
@@ -462,8 +463,17 @@ void MainWindow::slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList)
     qDebug()<<__FUNCTION__<<*pMparamAddrList;
     for (auto it = pMparamAddrList->begin(); it != pMparamAddrList->end(); it++) {
         uint32_t idx = (*it) - paramLocalAddr;
+        //deal device point
+        UiCfgItem *pItem = devUiCfgList.findItemByDataIdx(idx);
+        if (nullptr != pItem && pItem->isType(UiCfgItem::strTypeDevPointEdit)){
+            uint32_t devPt = (*(paramServerAddr + idx + 1) << 16) + *(paramServerAddr + idx);
+            CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(pItem->getWidget());
+            pEdit->setValue(devPt);
+            it++;
+        }else {
+            *(*it) = *(paramServerAddr + idx);
+        }
         qDebug()<<"modified "<<*(*it)<<" old "<<*(paramServerAddr+idx);
-        *(*it) = *(paramServerAddr + idx);
     }
 }
 

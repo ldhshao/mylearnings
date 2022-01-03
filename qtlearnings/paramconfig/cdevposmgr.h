@@ -54,6 +54,7 @@ public:
     };
 protected:
     CDevPosMgr();
+    bool    isValidMachine(int l, int m);
     uint8_t getPortCount(int l, int portType);
 
     QString lineNames[LINE_MAX];

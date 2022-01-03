@@ -2,6 +2,7 @@
 #include "ckeydnedit.h"
 #include "ckeydncombobox.h"
 #include "cdevpointedit.h"
+#include "PageCfg.h"
 #include <QLabel>
 #include <QKeyEvent>
 #include <QResizeEvent>
@@ -153,6 +154,8 @@ void UiPage::keyPressEvent(QKeyEvent *event)
             }
         }
     case Qt::Key_Return:
+        //if (!checkRequiredData())
+        //    return ;
         //save modified param address to global modified param address list
         if (!mparamAddrList.empty()){
             emit sig_modifiedParamAddrList(&mparamAddrList);
@@ -216,4 +219,23 @@ void UiPage::slot_valueChanged(uint16_t* pVal, uint32_t newVal)
 void UiPage::showTipInfo(QPoint pt, const QString& strTip)
 {
     QToolTip::showText(pt, strTip);
+}
+
+bool UiPage::checkRequiredData()
+{
+    GroupCfgItem* grp = static_cast<GroupCfgItem*>(property("device").value<void*>());
+    if (nullptr != grp){
+        UiCfgItem *pItem = grp->getHead();
+        while (nullptr != pItem){
+            QWidget *w = pItem->getWidget();
+            if (!pItem->isDataOK() && w->isVisible() && w->isEnabled()){
+            QMessageBox msgBox(QMessageBox::Information, "参数设置", pItem->getName() + "是必设参数，请重新设置!");
+            msgBox.addButton("确定", QMessageBox::YesRole);
+            msgBox.exec();
+            return false;
+            }
+            pItem = grp->getNext();
+        }
+    }
+    return true;
 }

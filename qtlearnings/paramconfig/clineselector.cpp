@@ -370,7 +370,6 @@ void CPortSelector::on_checkbox_stateChanged(int newState)
     if (!chkLoading){
         QCheckBox* chk = dynamic_cast<QCheckBox*>(sender());
         int p = chk->property(PROPERTY_INDEX).toInt();
-        CDevPosMgr::instance()->setPortValue(currLine, currMachine, portType, p, (Qt::Checked == newState)?true:false);
         if (Qt::Checked == newState){
             if (nullptr != pEdit){
                 uint32_t devPt = make_dev_point(currLine+1, currMachine, p);

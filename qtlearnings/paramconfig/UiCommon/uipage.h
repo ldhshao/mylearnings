@@ -42,6 +42,7 @@ private:
     void fillColList(QWidget* w);
     void deleteAll();
     void showTipInfo(QPoint pt, const QString& strTip);
+    bool checkRequiredData();
     QLabel            *title;
     list<QWidget*>::iterator m_it;
     list<QWidget*>     colList[UIPAGE_COL_NUM];

@@ -207,6 +207,9 @@ bool GroupCfgItem::chkDataConflict()
 void GroupCfgItem::create(QWidget *parent)
 {
     UiPage* page = new UiPage(parent);
+    QVariant var;
+    var.setValue<void*>(this);
+    page->setProperty("device", var);
     //page->setTitle(getName());
     m_pWidget = page;
     list<UiCfgItem*>::iterator it = m_children.begin();

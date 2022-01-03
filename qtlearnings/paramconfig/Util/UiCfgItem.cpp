@@ -385,6 +385,18 @@ bool UiCfgItem::onMaxValChanged(uint32_t max)
     return true;
 }
 
+bool UiCfgItem::isDataOK()
+{
+    CDevPointEdit* edit = dynamic_cast<CDevPointEdit*>(m_pWidget);
+    if (nullptr != edit){
+        uint16_t *pAddr = paramAddress();
+        uint32_t  devPt = (*(pAddr + 1) << 16) + (*pAddr);
+        int portType = (-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
+        if (!CDevPosMgr::instance()->isDevPointValid(devPt, portType))
+            return false;
+    }
+    return true;
+}
 
 //ComboboxItem
 HNDZ_IMPLEMENT_DYNCREATE(UiCfgItemFloat, UiCfgItem)

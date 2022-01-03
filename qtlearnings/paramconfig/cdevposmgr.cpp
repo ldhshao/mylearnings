@@ -304,7 +304,22 @@ uint32_t CDevPosMgr::makeDevPoint(QString strDevPoint)
     uint32_t devPt = 0;
     QStringList compList = strDevPoint.split('.');
     if (3 == compList.count()){
-        //
+        int l = -1, m = -1, p = -1;
+        bool bOK = false;
+        for (int i = 0; i < lineCount; i++){
+            if (compList[0] == gLineNames[i]){
+                l = i+1; break;
+            }
+        }
+        if (-1 < l){
+            m = compList[1].toInt(&bOK) - 1;
+        }
+        if (bOK){
+            p = compList[2].toInt(&bOK) - 1;
+        }
+        if (bOK){
+            devPt = make_dev_point(l, m, p);
+        }
     }else {
         bool bOK = false;
         uint32_t tmp = strDevPoint.toUInt(&bOK);
@@ -322,7 +337,7 @@ bool CDevPosMgr::isDevPointValid(uint32_t devPoint, int portType)
     if (0 >= l || l> lineCount){
         return false;
     }
-    if (0 > m || m>= getMachineCount(l)){//may wrong sometime
+    if (!isValidMachine(l-1, m)){
         return false;
     }
     if (0 > p || p >= getPortCount(l, portType)){
@@ -330,6 +345,31 @@ bool CDevPosMgr::isDevPointValid(uint32_t devPoint, int portType)
     }
 
     return true;
+}
+
+bool CDevPosMgr::isValidMachine(int l, int m)
+{
+    switch (lineTypes[l]) {
+    case LINETYPE_CS:
+    case LINETYPE_DIO:
+        if (0 <= m && m < *(lineMachineCounts[l])){
+            return true;
+        }
+        break;
+    case LINETYPE_CSBS:
+        if (nullptr != lineMachineTypes[l]){
+            qDebug()<<"count "<<*lineMachineCounts[l]<<m<<"type"<<*(lineMachineTypes[l] + m);
+            if (0 <= m && m < *(lineMachineCounts[l]) && *(lineMachineTypes[l] + m) == bsDevVal){
+                return true;
+            }
+        }else {
+            if (0 <= m && m < *(lineMachineCounts[l])){
+                return true;
+            }
+        }
+        break;
+    }
+    return false;
 }
 
 bool CDevPosMgr::isDevPointAvailable(uint32_t devPoint, int portType)

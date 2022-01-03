@@ -65,6 +65,8 @@ public:
 
     virtual bool onMaxValChanged(uint32_t max);
 
+    virtual bool isDataOK();
+
 protected:
     int m_col, m_row;
     int m_width, m_height;
