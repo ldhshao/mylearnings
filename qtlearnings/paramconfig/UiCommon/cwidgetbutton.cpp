@@ -1,22 +1,25 @@
 #include "cwidgetbutton.h"
 #include <QKeyEvent>
 
-#define MENU_NORMAL "QPushButton{color:rgba(255,255,255,100%);background-color: rgba(80, 80, 100, 100%);}"
-#define MENU_SELECTED "QPushButton{color:rgba(255,255,255,100%); background-color: rgba(200, 60, 60, 100%);}"
+#define MENU_NORMAL_ORIGIN "color:rgba(255,255,255,100%);background-color: rgba(80, 80, 100, 100%);"
+#define MENU_NORMAL "background-color: rgba(80, 80, 100, 100%)"
+#define MENU_SELECTED "background-color: rgba(200, 60, 60, 100%)"
 
 CStateButton::CStateButton(QWidget *parent):
     QPushButton(parent)
 {
+    setStyleSheet(MENU_NORMAL_ORIGIN);
     setButtonState(BS_NORMAL);
     connect(this, SIGNAL(clicked(bool)), this, SLOT(slot_clicked(bool)));
 }
 void CStateButton::setButtonState(BUTTON_STATE state)
 {
     QString strStyle = styleSheet();
+    strStyle = removeStyle(strStyle, "background-color");
     if (BS_SELECTED == state)
-        strStyle.append(MENU_SELECTED);
+        strStyle.append(";").append(MENU_SELECTED);
     else
-        strStyle.append(MENU_NORMAL);
+        strStyle.append(";").append(MENU_NORMAL);
     setStyleSheet(strStyle);
 }
 void CStateButton::slot_clicked(bool)
@@ -25,10 +28,32 @@ void CStateButton::slot_clicked(bool)
     emit sig_button_clicked(this);
 }
 
+QString CStateButton::removeStyle(const QString& strStyle, QString strAttr)
+{
+    QStringList dstList;
+    QStringList styleList = strStyle.split(';');
+    for (int i = 0; i < styleList.count(); i++) {
+        if (-1 == styleList[i].indexOf(strAttr))
+            dstList.append(styleList[i]);
+    }
+    return dstList.join(';');
+}
+
 CWidgetButton::CWidgetButton(QWidget *w, QWidget *parent)
     :CStateButton(parent), pWidget(w)
 {
 
+}
+
+void CWidgetButton::setButtonState(BUTTON_STATE state)
+{
+    CStateButton::setButtonState(state);
+    if (nullptr != pWidget){
+        if (BS_SELECTED == state)
+            pWidget->show();
+        else
+            pWidget->hide();
+    }
 }
 
 CKeyStateButton::CKeyStateButton(QWidget *parent)
@@ -63,6 +88,22 @@ void CKeyStateButton::keyPressEvent(QKeyEvent *event)
     }
 }
 
+CKeyWidgetButton::CKeyWidgetButton(QWidget *w, QWidget *parent)
+    :CKeyStateButton(parent), pWidget(w)
+{
+
+}
+
+void CKeyWidgetButton::setButtonState(BUTTON_STATE state)
+{
+    CStateButton::setButtonState(state);
+    if (nullptr != pWidget){
+        if (BS_SELECTED == state)
+            pWidget->show();
+        else
+            pWidget->hide();
+    }
+}
 
 CStateButtonMgr::CStateButtonMgr(QObject *parent):
     QObject(parent), pLastBtn(nullptr)

@@ -256,7 +256,8 @@ void CDevPointEdit::focusOutEvent(QFocusEvent *event)
 void CDevPointEdit::endEdit()
 {
     qDebug()<<"CDevPointEdit endEdit state"<<state;
-    if (DPES_EDITING == state) state = DPES_CONFIRM;
+    //if (DPES_EDITING == state) state = DPES_CONFIRM;
+    state = DPES_CONFIRM;
     qDebug()<<"CDevPointEdit state"<<state;
     parentWidget()->activateWindow();
 }

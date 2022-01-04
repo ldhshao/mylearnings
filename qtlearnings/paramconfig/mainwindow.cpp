@@ -12,6 +12,7 @@
 #include "cmodparampreview.h"
 #include "cmodparamquery.h"
 #include "cdeviceiconwidget.h"
+#include "cuploadquerywid.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -50,6 +51,7 @@
 #define PROPERTY_DEVICE "device"
 #define PROPERTY_INDEX "index"
 #define PROPERTY_IMAGE "image"
+#define PROPERTY_WIDGET "widget"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -173,6 +175,7 @@ void MainWindow::initMenu()
     pBtn->setTitle("参数变更上传与查询");
     pBtn->setImagePath(":/images/help.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_uploadQueryClicked(QWidget*)));
     devList.push_back(pBtn);
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("帮助");
@@ -449,6 +452,26 @@ void MainWindow::slot_deviceClicked(QWidget* w)
     }
 }
 
+void MainWindow::slot_uploadQueryClicked(QWidget* w)
+{
+    CUploadQueryWid* pWid = static_cast<CUploadQueryWid*>(w->property(PROPERTY_WIDGET).value<void*>());
+    if (nullptr == pWid){
+        CUploadQueryWid* wid = new CUploadQueryWid();
+        wid->setDeviceUiCfg(&devUiCfgList);
+        wid->setParamAddr(paramServerAddr, paramLocalAddr);
+        QVariant var;
+        var.setValue<void*>(wid);
+        w->setProperty(PROPERTY_WIDGET, var);
+        wid->resize(width(), height());
+        wid->move(0,0);
+        pWid = wid;
+    }
+
+    if (nullptr != pWid){
+        pWid->showUi();
+    }
+}
+
 void MainWindow::slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList)
 {
     qDebug()<<__FUNCTION__<<*pMparamAddrList;
@@ -552,18 +575,18 @@ void MainWindow::on_pushButton_preview_clicked()
 
     qDebug()<<itemList;
     CModParamPreview dlg(&itemList);
-    if (QDialog::Accepted == dlg.exec()){
-        qDebug()<<mparamIdxList;
-        mparamIdxList.clear();
-        for (auto it = itemList.begin(); it != itemList.end(); it++) {
-            uint32_t idx = static_cast<uint32_t>((*it)->dataidx() + (*it)->parent()->dataidx());
-            int cnt = (*it)->datacount();
-            while(cnt-- > 0)
-                mparamIdxList.push_back(idx++);
-        }
+    //if (QDialog::Accepted == dlg.exec()){
+    //    qDebug()<<mparamIdxList;
+    //    mparamIdxList.clear();
+    //    for (auto it = itemList.begin(); it != itemList.end(); it++) {
+    //        uint32_t idx = static_cast<uint32_t>((*it)->dataidx() + (*it)->parent()->dataidx());
+    //        int cnt = (*it)->datacount();
+    //        while(cnt-- > 0)
+    //            mparamIdxList.push_back(idx++);
+    //    }
 
-        qDebug()<<mparamIdxList;
-    }
+    //    qDebug()<<mparamIdxList;
+    //}
 }
 
 void MainWindow::on_pushButton_save_clicked()
@@ -606,7 +629,7 @@ void MainWindow::on_pushButton_queryrecord_clicked()
     qDebug()<<__FUNCTION__;
     CModParamQuery dlg;
     //Dialog dlg;
-    dlg.exec();
+    //dlg.exec();
 }
 
 void MainWindow::slot_emitTimer()

@@ -1,7 +1,7 @@
 #ifndef CMODPARAMPREVIEW_H
 #define CMODPARAMPREVIEW_H
 
-#include <QDialog>
+#include <QWidget>
 #include <list>
 #include <vector>
 using namespace std;
@@ -13,13 +13,15 @@ namespace Ui {
 class CModParamPreview;
 }
 
-class CModParamPreview : public QDialog
+class CModParamPreview : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit CModParamPreview(list<UiCfgItem*>* iLst, QWidget *parent = nullptr);
     ~CModParamPreview();
+
+    void updateItemList(list<UiCfgItem*>* iList);
 
 protected slots:
     void slot_operateParam();
@@ -29,17 +31,14 @@ protected:
     int getCloseCell(int x, int r);
     virtual void resizeEvent(QResizeEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void changeEvent(QEvent *event);
 
 private slots:
-    void on_pushButton_ok_clicked();
-
-    void on_pushButton_cancel_clicked();
-
-    void on_pushButton_sync_clicked();
+    void on_pushButton_send_clicked();
 
 private:
     void initTable();
-    void autoSetSize();
+    void autoAdjustTableColumns();
 
     Ui::CModParamPreview *ui;
     list<UiCfgItem*>     *itemList;

@@ -11,24 +11,32 @@
 #define PROPERTY_INDEX "index"
 #define PROPERTY_VALUE "value"
 #define PROPERTY_ITEM  "item"
+//#define LABEL_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
+#define LABEL_STYLE         "color:rgba(255,255,255,100%);"
 CModParamPreview::CModParamPreview(list<UiCfgItem*>* iLst, QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::CModParamPreview), itemList(iLst)
 {
+    setWindowFlags(/*Qt::Tool | Qt::WindowStaysOnTopHint |*/ Qt::FramelessWindowHint);
     ui->setupUi(this);
-    btnList.push_back(ui->pushButton_sync);
-    btnList.push_back(ui->pushButton_cancel);
-    btnList.push_back(ui->pushButton_ok);
-    for (int i = 0; i < btnList.size(); i++) {
-        btnList[i]->setProperty(PROPERTY_INDEX, i);
-    }
-    initTable();
+    ui->label_tableName->setText("参数变更预览表");
+    ui->label_tableName->setStyleSheet(LABEL_STYLE);
+    ui->label_lineno->setStyleSheet(LABEL_STYLE);
+    //initTable();
     //ui->tableWidget->setFocus();
+    //setAutoFillBackground(true);
 }
 
 CModParamPreview::~CModParamPreview()
 {
     delete ui;
+}
+
+void CModParamPreview::updateItemList(list<UiCfgItem *> *iList)
+{
+    ui->tableWidget->clear();
+    itemList = iList;
+    initTable();
 }
 
 void CModParamPreview::initTable()
@@ -54,7 +62,7 @@ void CModParamPreview::initTable()
             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
             ui->tableWidget->setItem(row, 2, item);
 
-            QPushButton* btn = new QPushButton(ui->tableWidget);
+            CKeyButton* btn = new CKeyButton(ui->tableWidget);
             btn->setText("取消上传");
             btn->setProperty(PROPERTY_INDEX, row);
             btn->setProperty(PROPERTY_VALUE, true);
@@ -66,23 +74,37 @@ void CModParamPreview::initTable()
             row++;
         }
     }
-    ui->tableWidget->resizeColumnsToContents();
-    ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
-    autoSetSize();
+    autoAdjustTableColumns();
+    if (0 < ui->tableWidget->rowCount()){
+        ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
+    }else{
+        ui->label_lineno->setText("无参数变更");
+    }
 }
 
-void CModParamPreview::autoSetSize()
+void CModParamPreview::autoAdjustTableColumns()
 {
-    int m = 16, s = 8;
-    int sbw = 40;
-    QRect deskRect = QApplication::desktop()->availableGeometry();
-    int btnH = ui->pushButton_cancel->height();
-    int tblHMax = deskRect.height() - 2*m - btnH - s, tblH = (ui->tableWidget->rowCount()+1) * ui->tableWidget->rowHeight(0)+sbw;
-    int tblW = ui->tableWidget->columnWidth(0) + ui->tableWidget->columnWidth(1) + ui->tableWidget->columnWidth(2) + ui->tableWidget->columnWidth(3) + sbw;
-    if (tblH > tblHMax) tblH = tblHMax;
-    else if (tblH < height()) tblH = height();
-    ui->tableWidget->resize(tblW, tblH);
-    resize(tblW + 2*m, tblH+2*m+s+btnH);
+    ui->tableWidget->resizeColumnsToContents();
+    list<int> widths;
+    int colWidthTotal = 0;
+    for (int i = 0; i < 4; i++) {
+        colWidthTotal += ui->tableWidget->columnWidth(i);
+        widths.push_back(ui->tableWidget->columnWidth(i));
+    }
+    qDebug()<<"test: "<<ui->tableWidget->width()<<colWidthTotal;
+    if (ui->tableWidget->width() - colWidthTotal > 80){
+        list<float> fList;
+        fList.push_back(0.5);
+        fList.push_back(0.3);
+        fList.push_back(0.1);
+        fList.push_back(0.1);
+        int rest = ui->tableWidget->width() - colWidthTotal - 80;
+        int i = 0;
+        auto itFct = fList.begin();
+        for (auto it = widths.begin(); it != widths.end(); it++, itFct++, i++){
+            ui->tableWidget->setColumnWidth(i, *it + rest * (*itFct));
+        }
+    }
 }
 
 void CModParamPreview::slot_operateParam()
@@ -195,22 +217,27 @@ void CModParamPreview::resizeEvent(QResizeEvent *event)
 {
     int m = 16, s = 8;
     int w = event->size().width(), h = event->size().height();
-    int btnW = ui->pushButton_ok->width();
-    int btnH = ui->pushButton_ok->height();
+    int btnW = ui->pushButton_upload->width();
+    int btnH = ui->pushButton_upload->height();
 
-    ui->tableWidget->resize(w - 2*m, h - 2*m- s - btnH);
-    ui->tableWidget->move(m, m);
+    int tnW = QFontMetrics(font()).width(ui->label_tableName->text());
+    ui->label_tableName->resize(tnW, btnH);
+    ui->label_tableName->move(m, m);
+    ui->pushButton_upload->move(w - m - btnW, m);
+    ui->tableWidget->resize(w - 2*m, h - 2*m- s - 2*btnH);
+    ui->tableWidget->move(m, m + btnH + s);
+    autoAdjustTableColumns();
+    tnW = QFontMetrics(font()).width(ui->label_lineno->text());
+    ui->label_lineno->resize(tnW, btnH);
     ui->label_lineno->move(m, h - m - btnH);
-    ui->pushButton_sync->move(m + ui->label_lineno->width() + s, h - m - btnH);
-    ui->pushButton_cancel->move(w - m - 2*btnW - s, h - m - btnH);
-    ui->pushButton_ok->move(w - m - btnW, h - m - btnH);
+    qDebug()<<"CModParamPreview"<<w<<h<<"table "<<ui->tableWidget->width()<<ui->tableWidget->height();
 }
 
 void CModParamPreview::keyPressEvent(QKeyEvent *event)
 {
     QTableWidget* pTbl = nullptr;
     CKeyButton* pBtn = dynamic_cast<CKeyButton*>(focusWidget());
-    qDebug()<<focusWidget();
+    qDebug()<<"CModParamPreview::keyPressEvent"<<focusWidget();
     if (nullptr == pBtn){
         pTbl = ui->tableWidget;
     }
@@ -223,7 +250,8 @@ void CModParamPreview::keyPressEvent(QKeyEvent *event)
                     QRect rct = pTbl->visualRect(pTbl->currentIndex());
                     int x = pTbl->pos().x();
                     pTbl->setCurrentCell(-1, -1);
-                    getCloseWidget(x + rct.left() + rct.width()/2, rct.top() + rct.height()/2)->setFocus();
+                    //getCloseWidget(x + rct.left() + rct.width()/2, rct.top() + rct.height()/2)->setFocus();
+                    ui->pushButton_upload->setFocus();
                 }
             }else {
                 int row = ui->tableWidget->rowCount() - 1;
@@ -239,7 +267,8 @@ void CModParamPreview::keyPressEvent(QKeyEvent *event)
                     QRect rct = pTbl->visualRect(pTbl->currentIndex());
                     int x = pTbl->pos().x();
                     pTbl->setCurrentCell(-1, -1);
-                    getCloseWidget(x + rct.left() + rct.width()/2, rct.top() + rct.height()/2)->setFocus();
+                    //getCloseWidget(x + rct.left() + rct.width()/2, rct.top() + rct.height()/2)->setFocus();
+                    ui->pushButton_upload->setFocus();
                 }
             }else {
                 int row = 0;
@@ -249,28 +278,53 @@ void CModParamPreview::keyPressEvent(QKeyEvent *event)
                 ui->tableWidget->setFocus();
             }
             return ;
-        case Qt::Key_Left:
-            if (nullptr != pBtn){
-                int idx = pBtn->property(PROPERTY_INDEX).toInt();
-                do{
-                    idx = (idx - 1 + btnList.size()) % btnList.size();
-                }while (!btnList[idx]->isEnabled());
-                btnList[idx]->setFocus();
-            }
+        //case Qt::Key_Left:
+        //    if (nullptr != pBtn){
+        //        int idx = pBtn->property(PROPERTY_INDEX).toInt();
+        //        do{
+        //            idx = (idx - 1 + btnList.size()) % btnList.size();
+        //        }while (!btnList[idx]->isEnabled());
+        //        btnList[idx]->setFocus();
+        //    }
+        //    return ;
+        //case Qt::Key_Right:
+        //    if (nullptr != pBtn){
+        //        int idx = pBtn->property(PROPERTY_INDEX).toInt();
+        //        do {
+        //            idx = (idx + 1) % btnList.size();
+        //        }while (!btnList[idx]->isEnabled());
+        //        qDebug()<<btnList[idx];
+        //        btnList[idx]->setFocus();
+        //    }
+        //    return ;
+        case Qt::Key_Escape:
+            setEnabled(false);
             return ;
-        case Qt::Key_Right:
-            if (nullptr != pBtn){
-                int idx = pBtn->property(PROPERTY_INDEX).toInt();
-                do {
-                    idx = (idx + 1) % btnList.size();
-                }while (!btnList[idx]->isEnabled());
-                qDebug()<<btnList[idx];
-                btnList[idx]->setFocus();
-            }
-            return ;
+        default:
+            QWidget::keyPressEvent(event);
     }
 }
-void CModParamPreview::on_pushButton_ok_clicked()
+void CModParamPreview::changeEvent(QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::EnabledChange:
+        qDebug()<<"CModParamPreview::changeEvent";
+        if (isEnabled()){
+            //if (0 < ui->tableWidget->rowCount()){
+            //    ui->tableWidget->setFocus();
+            //    ui->tableWidget->setCurrentCell(0, 0);
+            //}else{
+            //    ui->pushButton_upload->setFocus();
+            //}
+            ui->pushButton_upload->setFocus();
+        }
+        //break;
+    default:
+        QWidget::changeEvent(event);
+    }
+}
+
+void CModParamPreview::on_pushButton_send_clicked()
 {
     if (nullptr != itemList){
         itemList->clear();
@@ -286,15 +340,5 @@ void CModParamPreview::on_pushButton_ok_clicked()
             }
         }
     }
-    accept();
-}
-
-void CModParamPreview::on_pushButton_cancel_clicked()
-{
-    reject();
-}
-
-void CModParamPreview::on_pushButton_sync_clicked()
-{
-
+    //accept();
 }

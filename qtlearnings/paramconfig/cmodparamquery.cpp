@@ -6,7 +6,7 @@
 #include <QDebug>
 
 CModParamQuery::CModParamQuery(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::CModParamQuery)
 {
     ui->setupUi(this);
@@ -64,7 +64,6 @@ void CModParamQuery::resizeEvent(QResizeEvent *event)
     ui->tableWidget->resize(w - 2*m, h - 2*(m+ s + btnH));
     ui->tableWidget->move(m, m+btnH+s);
     ui->label_lineno->move(m, h - m - btnH);
-    ui->pushButton_close->move(w - m - btnW, h - m - btnH);
 }
 
 void CModParamQuery::keyPressEvent(QKeyEvent *event)
@@ -76,38 +75,38 @@ void CModParamQuery::keyPressEvent(QKeyEvent *event)
     qDebug()<<pBtn;
     switch (event->key()) {
         case Qt::Key_Up:
-            if (ui->pushButton_query == pBtn){
-                ui->pushButton_close->setFocus();
-            }else if(ui->pushButton_close == pBtn){
-                if (0< ui->tableWidget->rowCount()){
-                    ui->tableWidget->setFocus();
-                    ui->tableWidget->setCurrentCell(ui->tableWidget->rowCount()-1, 1);
-                }
-                else
-                    focusNextPrevChild(false);
-            }else if (nullptr != pTbl){
-                if (0 == pTbl->rowCount() || 0 == pTbl->currentRow()){
-                    ui->tableWidget->setCurrentCell(-1, -1);
-                    ui->pushButton_query->setFocus();
-                }
-            }
+            //if (ui->pushButton_query == pBtn){
+            //    ui->pushButton_close->setFocus();
+            //}else if(ui->pushButton_close == pBtn){
+            //    if (0< ui->tableWidget->rowCount()){
+            //        ui->tableWidget->setFocus();
+            //        ui->tableWidget->setCurrentCell(ui->tableWidget->rowCount()-1, 1);
+            //    }
+            //    else
+            //        focusNextPrevChild(false);
+            //}else if (nullptr != pTbl){
+            //    if (0 == pTbl->rowCount() || 0 == pTbl->currentRow()){
+            //        ui->tableWidget->setCurrentCell(-1, -1);
+            //        ui->pushButton_query->setFocus();
+            //    }
+            //}
             return ;
         case Qt::Key_Down:
-            if (ui->pushButton_query == pBtn){
-                if (0< ui->tableWidget->rowCount()){
-                    ui->tableWidget->setFocus();
-                    ui->tableWidget->setCurrentCell(0, 1);
-                }
-                else
-                    focusNextPrevChild(true);
-            }else if(ui->pushButton_close == pBtn){
-                ui->pushButton_query->setFocus();
-            }else if (nullptr != pTbl){
-                if (0 == pTbl->rowCount() || pTbl->rowCount()-1 == pTbl->currentRow()){
-                    ui->tableWidget->setCurrentCell(-1, -1);
-                    ui->pushButton_close->setFocus();
-                }
-            }
+            //if (ui->pushButton_query == pBtn){
+            //    if (0< ui->tableWidget->rowCount()){
+            //        ui->tableWidget->setFocus();
+            //        ui->tableWidget->setCurrentCell(0, 1);
+            //    }
+            //    else
+            //        focusNextPrevChild(true);
+            //}else if(ui->pushButton_close == pBtn){
+            //    ui->pushButton_query->setFocus();
+            //}else if (nullptr != pTbl){
+            //    if (0 == pTbl->rowCount() || pTbl->rowCount()-1 == pTbl->currentRow()){
+            //        ui->tableWidget->setCurrentCell(-1, -1);
+            //        ui->pushButton_close->setFocus();
+            //    }
+            //}
             return ;
         case Qt::Key_Left:
         case Qt::Key_Right:
@@ -116,6 +115,9 @@ void CModParamQuery::keyPressEvent(QKeyEvent *event)
             if (ui->pushButton_query == pBtn){
                 ui->dateEdit->setFocus();
             }
+            return ;
+        case Qt::Key_Escape:
+            setEnabled(false);
             return ;
     }
 }
@@ -142,9 +144,4 @@ void CModParamQuery::on_pushButton_query_clicked()
     ui->tableWidget->resizeColumnsToContents();
     ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
     autoSetSize();
-}
-
-void CModParamQuery::on_pushButton_close_clicked()
-{
-    accept();
 }

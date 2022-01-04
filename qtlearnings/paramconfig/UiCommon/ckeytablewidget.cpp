@@ -5,7 +5,7 @@
 
 CKeyTableWidget::CKeyTableWidget(QWidget *parent):QTableWidget(parent)
 {
-    setSelectionBehavior(QAbstractItemView::SelectRows);
+    //setSelectionBehavior(QAbstractItemView::SelectRows);
     usrKey = 0;
     timerInterval = 300;
     emitTimer = new QTimer(this);

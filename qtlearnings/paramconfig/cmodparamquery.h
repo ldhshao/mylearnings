@@ -1,13 +1,13 @@
 #ifndef CMODPARAMQUERY_H
 #define CMODPARAMQUERY_H
 
-#include <QDialog>
+#include <QWidget>
 
 namespace Ui {
 class CModParamQuery;
 }
 
-class CModParamQuery : public QDialog
+class CModParamQuery : public QWidget
 {
     Q_OBJECT
 
@@ -20,7 +20,6 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
 
 private slots:
-    void on_pushButton_close_clicked();
     void on_pushButton_query_clicked();
 
 private:

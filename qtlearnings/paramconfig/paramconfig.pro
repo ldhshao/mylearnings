@@ -24,6 +24,7 @@ SOURCES += \
     clineselector.cpp \
     cmodparampreview.cpp \
     cmodparamquery.cpp \
+    cuploadquerywid.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -40,6 +41,7 @@ HEADERS += \
     clineselector.h \
     cmodparampreview.h \
     cmodparamquery.h \
+    cuploadquerywid.h \
     mainwindow.h
 
 FORMS += \
@@ -50,6 +52,7 @@ FORMS += \
     cdevposctl2.ui \
     cmodparampreview.ui \
     cmodparamquery.ui \
+    cuploadquerywid.ui \
     mainwindow.ui
 
 DESTDIR = $$PWD/../bin

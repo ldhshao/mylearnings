@@ -19,13 +19,16 @@ public:
         BS_COUNT
     };
 
-    void setButtonState(BUTTON_STATE state);
+    virtual void setButtonState(BUTTON_STATE state);
 
 signals:
     void sig_button_clicked(CStateButton* pBtn);
 
 public slots:
     void slot_clicked(bool);
+
+protected:
+    QString removeStyle(const QString& strStyle, QString strAttr);
 };
 
 class CWidgetButton : public CStateButton
@@ -36,6 +39,7 @@ public:
     explicit CWidgetButton(QWidget *w, QWidget *parent = nullptr);
     QWidget *getWidget(){	return pWidget;	}
 
+    virtual void setButtonState(BUTTON_STATE state);
 protected:
     QWidget *pWidget;
 };
@@ -51,6 +55,18 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
 };
 
+class CKeyWidgetButton : public CKeyStateButton
+{
+    Q_OBJECT
+
+public:
+    explicit CKeyWidgetButton(QWidget *w, QWidget *parent = nullptr);
+    QWidget *getWidget(){	return pWidget;	}
+
+    virtual void setButtonState(BUTTON_STATE state);
+protected:
+    QWidget *pWidget;
+};
 
 class CStateButtonMgr : public QObject
 {

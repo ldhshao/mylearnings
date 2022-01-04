@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CModParamQuery</class>
- <widget class="QDialog" name="CModParamQuery">
+ <widget class="QWidget" name="CModParamQuery">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -24,19 +24,6 @@
    </property>
    <property name="text">
     <string>0</string>
-   </property>
-  </widget>
-  <widget class="CKeyButton" name="pushButton_close">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>270</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>关闭</string>
    </property>
   </widget>
   <widget class="CKeyTableWidget" name="tableWidget">
@@ -116,7 +103,6 @@
   <tabstop>dateEdit</tabstop>
   <tabstop>pushButton_query</tabstop>
   <tabstop>tableWidget</tabstop>
-  <tabstop>pushButton_close</tabstop>
  </tabstops>
  <resources/>
  <connections/>
