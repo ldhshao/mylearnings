@@ -42,6 +42,11 @@ void CKeyTableWidget::keyPressEvent(QKeyEvent *event)
             usrKey = usrKey * 10 + (event->key() - Qt::Key_0);
             emitTimer->start(timerInterval);
             return ;
+    //case Qt::Key_Up:
+    //case Qt::Key_Down:
+    //        qDebug()<<currentIndex();
+    //        QTableWidget::keyPressEvent(event);
+    //        return ;
         default:
             QTableWidget::keyPressEvent(event);
     }

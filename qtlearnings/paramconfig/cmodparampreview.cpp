@@ -6,25 +6,30 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <math.h>
+#include <fstream>
 #include <QDebug>
 
 #define PROPERTY_INDEX "index"
 #define PROPERTY_VALUE "value"
 #define PROPERTY_ITEM  "item"
+#define PROPERTY_DATAIDX  "dataindex"
+#define PROPERTY_DATACNT  "datacount"
+#define WIDGET_BKCOLOR         "background-color:rgba(255,255,255,100%);"
 //#define LABEL_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
 #define LABEL_STYLE         "color:rgba(255,255,255,100%);"
-CModParamPreview::CModParamPreview(list<UiCfgItem*>* iLst, QWidget *parent) :
+CModParamPreview::CModParamPreview(list<SModParamInfoItem>* iLst, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CModParamPreview), itemList(iLst)
 {
-    setWindowFlags(/*Qt::Tool | Qt::WindowStaysOnTopHint |*/ Qt::FramelessWindowHint);
+    setWindowFlags(Qt::FramelessWindowHint);
+    bkLbl = new QLabel(this);
+    bkLbl->setStyleSheet(WIDGET_BKCOLOR);
+    paramSrvAddr = nullptr;
+    paramLclAddr = nullptr;
     ui->setupUi(this);
     ui->label_tableName->setText("参数变更预览表");
-    ui->label_tableName->setStyleSheet(LABEL_STYLE);
-    ui->label_lineno->setStyleSheet(LABEL_STYLE);
-    //initTable();
-    //ui->tableWidget->setFocus();
-    //setAutoFillBackground(true);
+    //ui->label_tableName->setStyleSheet(LABEL_STYLE);
+    //ui->label_lineno->setStyleSheet(LABEL_STYLE);
 }
 
 CModParamPreview::~CModParamPreview()
@@ -32,7 +37,7 @@ CModParamPreview::~CModParamPreview()
     delete ui;
 }
 
-void CModParamPreview::updateItemList(list<UiCfgItem *> *iList)
+void CModParamPreview::updateItemList(list<SModParamInfoItem> *iList)
 {
     ui->tableWidget->clear();
     itemList = iList;
@@ -50,11 +55,14 @@ void CModParamPreview::initTable()
 
         int row = 0;
         for (auto it = itemList->begin(); it != itemList->end(); it++) {
-            QTableWidgetItem *item = new QTableWidgetItem((*it)->getFullName());
+            UiCfgItem* cfgItem = it->item;
+            QTableWidgetItem *item = new QTableWidgetItem(cfgItem->getFullName(it->idx));
             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
             ui->tableWidget->setItem(row, 0, item);
 
-            item = new QTableWidgetItem((*it)->strDataValue());
+            int dCnt = 0;
+            int baseIdx = cfgItem->parent()->dataidx() + cfgItem->dataidx();
+            item = new QTableWidgetItem(cfgItem->getDataValue(cfgItem->paramAddress() + (it->idx - baseIdx), &dCnt));
             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
             ui->tableWidget->setItem(row, 1, item);
 
@@ -67,8 +75,10 @@ void CModParamPreview::initTable()
             btn->setProperty(PROPERTY_INDEX, row);
             btn->setProperty(PROPERTY_VALUE, true);
             QVariant var;
-            var.setValue<void*>(*it);
+            var.setValue<void*>(cfgItem);
             btn->setProperty(PROPERTY_ITEM, var);
+            btn->setProperty(PROPERTY_DATAIDX, it->idx);
+            btn->setProperty(PROPERTY_DATACNT, it->dataCnt);
             connect(btn, SIGNAL(clicked()), this, SLOT(slot_operateParam()));
             ui->tableWidget->setCellWidget(row, 3, btn);
             row++;
@@ -220,6 +230,8 @@ void CModParamPreview::resizeEvent(QResizeEvent *event)
     int btnW = ui->pushButton_upload->width();
     int btnH = ui->pushButton_upload->height();
 
+    bkLbl->resize(w, h);
+    bkLbl->move(0, 0);
     int tnW = QFontMetrics(font()).width(ui->label_tableName->text());
     ui->label_tableName->resize(tnW, btnH);
     ui->label_tableName->move(m, m);
@@ -235,14 +247,18 @@ void CModParamPreview::resizeEvent(QResizeEvent *event)
 
 void CModParamPreview::keyPressEvent(QKeyEvent *event)
 {
-    QTableWidget* pTbl = nullptr;
-    CKeyButton* pBtn = dynamic_cast<CKeyButton*>(focusWidget());
     qDebug()<<"CModParamPreview::keyPressEvent"<<focusWidget();
-    if (nullptr == pBtn){
+    if (focusWidget() == this){
+        autoSetFocus();
+    }
+    QTableWidget* pTbl = nullptr;
+    CKeyButton* pBtn = nullptr;
+    qDebug()<<"CModParamPreview::keyPressEvent"<<focusWidget();
+    if (focusWidget() == ui->pushButton_upload){
+        pBtn = ui->pushButton_upload;
+    }else {
         pTbl = ui->tableWidget;
     }
-    qDebug()<<pBtn;
-    qDebug()<<pTbl;
     switch (event->key()) {
         case Qt::Key_Up:
             if (nullptr != pTbl){
@@ -298,6 +314,7 @@ void CModParamPreview::keyPressEvent(QKeyEvent *event)
         //    }
         //    return ;
         case Qt::Key_Escape:
+            dealUnuploadData();
             setEnabled(false);
             return ;
         default:
@@ -308,27 +325,67 @@ void CModParamPreview::changeEvent(QEvent *event)
 {
     switch (event->type()) {
     case QEvent::EnabledChange:
-        qDebug()<<"CModParamPreview::changeEvent";
-        if (isEnabled()){
-            //if (0 < ui->tableWidget->rowCount()){
-            //    ui->tableWidget->setFocus();
-            //    ui->tableWidget->setCurrentCell(0, 0);
-            //}else{
-            //    ui->pushButton_upload->setFocus();
-            //}
-            ui->pushButton_upload->setFocus();
-        }
-        //break;
+        if (isEnabled() && 0 < ui->tableWidget->rowCount()) ui->tableWidget->setCurrentCell(0, 0);
+        break;
     default:
         QWidget::changeEvent(event);
     }
 }
 
-void CModParamPreview::on_pushButton_send_clicked()
+void CModParamPreview::on_pushButton_upload_clicked()
 {
-    if (nullptr != itemList){
-        itemList->clear();
-        for (int i = 0; i < ui->tableWidget->rowCount(); i++) {
+    dealUnuploadData();
+    //save modified params
+    saveModifiedParams();
+}
+
+void CModParamPreview::autoSetFocus()
+{
+    if (0 < ui->tableWidget->rowCount()){
+        ui->tableWidget->setFocus();
+    }else{
+        ui->pushButton_upload->setFocus();
+    }
+
+}
+
+void CModParamPreview::dealUnuploadData()
+{
+    int rowCnt = ui->tableWidget->rowCount();
+    if (nullptr != paramSrvAddr && 0 < rowCnt){
+        for (int i = 0; i < rowCnt; i++) {
+            QPushButton* btn0 = dynamic_cast<QPushButton*>(ui->tableWidget->cellWidget(i, 3));
+            bool upload = false;
+            if (nullptr != btn0){
+                upload = btn0->property(PROPERTY_VALUE).toBool();
+            }
+            if (!upload){
+                UiCfgItem* item = static_cast<UiCfgItem*>(btn0->property(PROPERTY_ITEM).value<void*>());
+                int idx = btn0->property(PROPERTY_DATAIDX).toInt();
+                int cnt = btn0->property(PROPERTY_DATACNT).toInt();
+                int baseIdx = item->dataidx() + item->parent()->dataidx();
+                uint16_t* paramAddr = item->paramAddress();
+                memcpy(paramAddr + (idx - baseIdx), paramSrvAddr + idx,cnt*sizeof(uint16_t));
+            }
+        }
+    }
+}
+
+void CModParamPreview::saveModifiedParams()
+{
+    int rowCnt = ui->tableWidget->rowCount();
+    if (nullptr != paramSrvAddr && 0 < rowCnt){
+       ofstream outFile;
+       QString strParam("/opt/data/paramconfig/");
+       time_t rawtime;
+       struct tm * timeinfo;
+
+       time (&rawtime);
+       timeinfo = localtime (&rawtime);
+       strParam.append(QString::asprintf("%d%02d%02d%02d%02d%02dmodified.dat",
+                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
+       outFile.open(strParam.toStdString(), ios_base::out);
+        for (int i = 0; i < rowCnt; i++) {
             QPushButton* btn0 = dynamic_cast<QPushButton*>(ui->tableWidget->cellWidget(i, 3));
             bool upload = false;
             if (nullptr != btn0){
@@ -336,9 +393,20 @@ void CModParamPreview::on_pushButton_send_clicked()
             }
             if (upload){
                 UiCfgItem* item = static_cast<UiCfgItem*>(btn0->property(PROPERTY_ITEM).value<void*>());
-                itemList->push_back(item);
+                int idx = btn0->property(PROPERTY_DATAIDX).toInt();
+                int cnt = btn0->property(PROPERTY_DATACNT).toInt();
+                QString strItem(ui->tableWidget->item(i, 0)->text());
+                strItem.append("由").append(item->getDataValue(paramSrvAddr + idx, &cnt))
+                        .append("变为").append(ui->tableWidget->item(i, 1)->text()).append("\n");
+                string strItemWr = strItem.toStdString();
+                qDebug()<<strItemWr.length()<<strItem;
+                outFile.write(strItemWr.c_str(), strItemWr.length());
+                //update server
+                int baseIdx = item->dataidx() + item->parent()->dataidx();
+                uint16_t* paramAddr = item->paramAddress();
+                memcpy(paramSrvAddr + idx, paramAddr + (idx - baseIdx), cnt*sizeof(uint16_t));
             }
         }
+       outFile.close();
     }
-    //accept();
 }

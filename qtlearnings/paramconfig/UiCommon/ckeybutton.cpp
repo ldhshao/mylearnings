@@ -15,7 +15,7 @@ void CKeyButton::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
     case Qt::Key_Up:
     case Qt::Key_Down:
-    //case Qt::Key_Escape:
+    case Qt::Key_Escape:
     //case Qt::Key_0:
     //case Qt::Key_1:
     //case Qt::Key_2:
@@ -32,6 +32,7 @@ void CKeyButton::keyPressEvent(QKeyEvent *event)
         emit clicked();
         break;
     default:
+        QPushButton::keyPressEvent(event);
         break;
     }
 }

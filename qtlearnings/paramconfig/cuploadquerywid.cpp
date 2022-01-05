@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 #include <QDebug>
 
-#define WIDGET_BKCOLOR        "#bkground{border-image: url(:/images/mainback.png);}"
+#define WIDGET_BKCOLOR        "border-image: url(:/images/mainback.png);"
 #define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
 #define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
 #define PROPERTY_INDEX "index"
@@ -16,7 +16,6 @@ CUploadQueryWid::CUploadQueryWid(QWidget *parent) :
     ui(new Ui::CUploadQueryWid)
 {
     bkLbl = new QLabel(this);
-    bkLbl->setObjectName("bkground");
     bkLbl->setStyleSheet(WIDGET_BKCOLOR);
     ui->setupUi(this);
     ui->label_title->setStyleSheet(TITLE_STYLE);
@@ -48,19 +47,21 @@ void CUploadQueryWid::showUi()
             int idx = 0;
             int idx_end = devUiCfgList->datacount();
             while (idx < idx_end){
+                SModParamInfoItem modItem;
                 UiCfgItem* pItem = devUiCfgList->findItemByDataIdx(idx);
-                QString name, value;
                 int dataCnt = 0;
                 if (nullptr != pItem){
-                    value = pItem->getDataValue(paramLclAddr+idx, &dataCnt);
+                    pItem->getDataValue(paramLclAddr+idx, &dataCnt);
                     if (0 != memcmp(paramLclAddr+idx, paramSrvAddr + idx, dataCnt*sizeof(uint16_t))){
-                        itemList.push_back(pItem);
+                        modItem.item = pItem;
+                        modItem.idx = idx;
+                        modItem.dataCnt = dataCnt;
+                        itemList.push_back(modItem);
                     }
                     idx += dataCnt;
                 }else {
                     idx++;
                 }
-                qDebug()<<name<<value<<dataCnt;
             }
             preview->updateItemList(&itemList);
         }
@@ -68,6 +69,18 @@ void CUploadQueryWid::showUi()
 
     menu2Mgr.selectButton(menu2List[0]);
     show();
+}
+
+void CUploadQueryWid::setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr)
+{
+    paramSrvAddr = srvAddr; paramLclAddr = lclAddr;
+    for (auto it = menu2List.begin(); it != menu2List.end(); it++) {
+        CModParamPreview* preview = dynamic_cast<CModParamPreview*>((*it)->getWidget());
+        if (nullptr != preview){
+            preview->setParamAddr(srvAddr, lclAddr);
+            break;
+        }
+    }
 }
 
 void CUploadQueryWid::initMenu()
@@ -129,6 +142,7 @@ void CUploadQueryWid::onResize(int width, int height)
         QWidget *w = (*it)->getWidget();
         if (nullptr != w){
             w->resize(width - l, height -50 - t);
+            //w->move(mapToGlobal(QPoint(l, t)));
             w->move(l, t);
         }
         i++;

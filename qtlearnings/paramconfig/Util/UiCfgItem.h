@@ -59,7 +59,7 @@ public:
     virtual uint16_t *paramAddress();
 
     virtual QString previewInfo();
-    virtual QString strDataValue();
+    virtual QString strDataValue(uint16_t* pAddr = nullptr);
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
     virtual void setDefaultVal();
 
@@ -95,7 +95,7 @@ public:
     virtual void create(QWidget* parent);
     //virtual bool initUi(unsigned short* pStAddr);//init data
 
-    virtual QString strDataValue();
+    virtual QString strDataValue(uint16_t* pAddr = nullptr);
 protected:
     QString m_unit;
     float   m_precision;

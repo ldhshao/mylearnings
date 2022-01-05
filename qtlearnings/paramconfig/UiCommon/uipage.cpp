@@ -100,6 +100,8 @@ void UiPage::initTabOrder()
 void UiPage::showPage()
 {
     bool bFocus = false;
+    updateUi();
+
     for(int i = 0; i < UIPAGE_COL_NUM; i++){
         for (auto it = colList[i].begin(); it != colList[i].end(); it++) {
             if (!bFocus && (nullptr != dynamic_cast<QLineEdit*>(*it) ||

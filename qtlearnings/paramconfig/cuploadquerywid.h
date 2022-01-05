@@ -2,6 +2,7 @@
 #define CUPLOADQUERYWID_H
 
 #include "UiCommon/cwidgetbutton.h"
+#include "cmodparampreview.h"
 #include <QMainWindow>
 #include <vector>
 using namespace std;
@@ -22,7 +23,7 @@ public:
     ~CUploadQueryWid();
 
     void showUi();
-    void setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr) { paramSrvAddr = srvAddr; paramLclAddr = lclAddr; }
+    void setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr);
     void setDeviceUiCfg(PageCfgList* cfgList) { devUiCfgList = cfgList; }
 
 protected:
@@ -44,7 +45,7 @@ private:
     PageCfgList        *devUiCfgList;
     uint16_t           *paramSrvAddr;
     uint16_t           *paramLclAddr;
-    list<UiCfgItem*>    itemList;
+    list<SModParamInfoItem>    itemList;
 };
 
 #endif // CUPLOADQUERYWID_H

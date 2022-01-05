@@ -323,24 +323,33 @@ QString UiCfgItem::previewInfo()
     return "";
 }
 
-QString UiCfgItem::strDataValue()
+QString UiCfgItem::strDataValue(uint16_t *pAddr)
 {
     QString strValue;
-    QLineEdit* pEdit = dynamic_cast<QLineEdit*>(m_pWidget);
-    if (nullptr != pEdit)
-        strValue = pEdit->text();
-    else{
-        QComboBox* pBox = dynamic_cast<QComboBox*>(m_pWidget);
-        if (nullptr != pBox)
-            strValue = pBox->currentText();
+    uint16_t* paramAddr = pAddr;
+    if (nullptr == paramAddr) paramAddr = this->paramAddress();
+    CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(m_pWidget);
+    if (nullptr != pEdit){
+        uint32_t devPt = (*(paramAddr+1) << 16) + *paramAddr;
+        strValue = CDevPosMgr::instance()->makeStrDevPoint(devPt);
+        return strValue;
     }
+    QLineEdit* pEdit1 = dynamic_cast<QLineEdit*>(m_pWidget);
+    if (nullptr != pEdit1){
+        strValue = QString::number(*paramAddr);
+        return strValue;
+    }
+
+    QComboBox* pBox = dynamic_cast<QComboBox*>(m_pWidget);
+    if (nullptr != pBox && *paramAddr < pBox->count())
+        strValue = pBox->itemText(*paramAddr);
     return strValue;
 }
 //return data value in string; and data count, u16
 QString UiCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
 {
     *dataCnt = m_datacnt;
-    return strDataValue();
+    return strDataValue(pVal);
 }
 QString UiCfgItem::enableReason()
 {
@@ -478,9 +487,13 @@ void UiCfgItemFloat::create(QWidget* parent)
 //    UiCfgItem::initUi(pStAddr);
 //
 //}
-QString UiCfgItemFloat::strDataValue()
+QString UiCfgItemFloat::strDataValue(uint16_t *pAddr)
 {
     QString strValue;
+    if (nullptr == pAddr) pAddr = paramAddress();
+    float fVal = *pAddr * m_precision;
+    QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
+    strValue = QString::asprintf(strFormat.toStdString().c_str(), fVal).append(m_unit);
 
     return strValue;
 }

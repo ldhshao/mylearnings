@@ -574,7 +574,7 @@ void MainWindow::on_pushButton_preview_clicked()
     }
 
     qDebug()<<itemList;
-    CModParamPreview dlg(&itemList);
+    //CModParamPreview dlg(&itemList);
     //if (QDialog::Accepted == dlg.exec()){
     //    qDebug()<<mparamIdxList;
     //    mparamIdxList.clear();
