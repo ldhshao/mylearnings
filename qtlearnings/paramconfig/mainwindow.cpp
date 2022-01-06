@@ -13,6 +13,7 @@
 #include "cmodparamquery.h"
 #include "cdeviceiconwidget.h"
 #include "cuploadquerywid.h"
+#include "cbakeuprestorewid.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -52,6 +53,8 @@
 #define PROPERTY_INDEX "index"
 #define PROPERTY_IMAGE "image"
 #define PROPERTY_WIDGET "widget"
+#define PROPERTY_WORKDIR "workdir"
+#define PROPERTY_PARCNT  "paramcount"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -119,6 +122,7 @@ bool MainWindow::initWorkDir()
                 continue;
             workDir.append("/").append(it->fileName());
             qDebug()<<workDir;
+            QCoreApplication::instance()->setProperty(PROPERTY_WORKDIR, workDir);
             return true;;
         }
     }
@@ -171,6 +175,7 @@ void MainWindow::initMenu()
     pBtn->setImagePath(":/images/help.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
     devList.push_back(pBtn);
+    connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_bakeupRestoreClicked(QWidget*)));
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("参数变更上传与查询");
     pBtn->setImagePath(":/images/help.png");
@@ -327,6 +332,7 @@ bool MainWindow::loadParam()
         }
         inFile.close();
         memcpy(static_cast<void*>(paramServerAddr),static_cast<void*>(paramLocalAddr),paramCount*sizeof(uint16_t));
+        QCoreApplication::instance()->setProperty(PROPERTY_PARCNT, paramCount);
     }
     qDebug()<<__FUNCTION__<<" param addr "<<paramLocalAddr<<" param count "<<paramCount<<" result "<<ret;
     return ret;
@@ -457,6 +463,26 @@ void MainWindow::slot_uploadQueryClicked(QWidget* w)
     CUploadQueryWid* pWid = static_cast<CUploadQueryWid*>(w->property(PROPERTY_WIDGET).value<void*>());
     if (nullptr == pWid){
         CUploadQueryWid* wid = new CUploadQueryWid();
+        wid->setDeviceUiCfg(&devUiCfgList);
+        wid->setParamAddr(paramServerAddr, paramLocalAddr);
+        QVariant var;
+        var.setValue<void*>(wid);
+        w->setProperty(PROPERTY_WIDGET, var);
+        wid->resize(width(), height());
+        wid->move(0,0);
+        pWid = wid;
+    }
+
+    if (nullptr != pWid){
+        pWid->showUi();
+    }
+}
+
+void MainWindow::slot_bakeupRestoreClicked(QWidget* w)
+{
+    CBakeupRestoreWid* pWid = static_cast<CBakeupRestoreWid*>(w->property(PROPERTY_WIDGET).value<void*>());
+    if (nullptr == pWid){
+        CBakeupRestoreWid* wid = new CBakeupRestoreWid();
         wid->setDeviceUiCfg(&devUiCfgList);
         wid->setParamAddr(paramServerAddr, paramLocalAddr);
         QVariant var;

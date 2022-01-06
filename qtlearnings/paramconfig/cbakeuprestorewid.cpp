@@ -1,7 +1,6 @@
-#include "cuploadquerywid.h"
-#include "ui_cuploadquerywid.h"
-#include "cmodparampreview.h"
-#include "cmodparamquery.h"
+#include "cbakeuprestorewid.h"
+#include "ui_cbakeuprestorewid.h"
+#include "cparamtablemngrwid.h"
 #include "Util/PageCfg.h"
 #include <QResizeEvent>
 #include <QKeyEvent>
@@ -11,9 +10,9 @@
 #define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
 #define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
 #define PROPERTY_INDEX "index"
-CUploadQueryWid::CUploadQueryWid(QWidget *parent) :
+CBakeupRestoreWid::CBakeupRestoreWid(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::CUploadQueryWid)
+    ui(new Ui::CBakeupRestoreWid)
 {
     bkLbl = new QLabel(this);
     bkLbl->setStyleSheet(WIDGET_BKCOLOR);
@@ -29,51 +28,30 @@ CUploadQueryWid::CUploadQueryWid(QWidget *parent) :
     connect(&menu2Mgr, SIGNAL(sig_button_clicked(CStateButton*)), this, SLOT(slot_menu2_clicked(CStateButton*)));
 }
 
-CUploadQueryWid::~CUploadQueryWid()
+CBakeupRestoreWid::~CBakeupRestoreWid()
 {
     delete ui;
 }
 
-void CUploadQueryWid::showUi()
+void CBakeupRestoreWid::showUi()
 {
     for (auto it = menu2List.begin(); it != menu2List.end(); it++) {
         QWidget *w = (*it)->getWidget();
         if (nullptr != w) w->setEnabled(false);
-        CModParamPreview* preview = dynamic_cast<CModParamPreview*>(w);
-        if (nullptr != preview && nullptr != devUiCfgList && nullptr != paramSrvAddr && nullptr != paramLclAddr){
-            itemList.clear();
-            int idx = 0;
-            int idx_end = devUiCfgList->datacount();
-            while (idx < idx_end){
-                SModParamInfoItem modItem;
-                UiCfgItem* pItem = devUiCfgList->findItemByDataIdx(idx);
-                int dataCnt = 0;
-                if (nullptr != pItem){
-                    pItem->getDataValue(paramLclAddr+idx, &dataCnt);
-                    if (0 != memcmp(paramLclAddr+idx, paramSrvAddr + idx, dataCnt*sizeof(uint16_t))){
-                        modItem.item = pItem;
-                        modItem.idx = idx;
-                        modItem.dataCnt = dataCnt;
-                        itemList.push_back(modItem);
-                    }
-                    idx += dataCnt;
-                }else {
-                    idx++;
-                }
-            }
-            preview->updateItemList(&itemList);
-        }
+        CParamTableMngrWid* preview = dynamic_cast<CParamTableMngrWid*>(w);
+        if (nullptr != preview)
+            preview->showUi();
     }
 
     menu2Mgr.selectButton(menu2List[0]);
     show();
 }
 
-void CUploadQueryWid::setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr)
+void CBakeupRestoreWid::setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr)
 {
     paramSrvAddr = srvAddr; paramLclAddr = lclAddr;
     for (auto it = menu2List.begin(); it != menu2List.end(); it++) {
-        CModParamPreview* preview = dynamic_cast<CModParamPreview*>((*it)->getWidget());
+        CParamTableMngrWid* preview = dynamic_cast<CParamTableMngrWid*>((*it)->getWidget());
         if (nullptr != preview){
             preview->setParamAddr(srvAddr, lclAddr);
             break;
@@ -81,22 +59,13 @@ void CUploadQueryWid::setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr)
     }
 }
 
-void CUploadQueryWid::initMenu()
+void CBakeupRestoreWid::initMenu()
 {
     int i = 0;
-    CModParamPreview* widPreview = new CModParamPreview(nullptr, this);
-    CModParamQuery*   widQuery = new CModParamQuery(this);
-    widPreview->hide();
-    widQuery->hide();
-    CKeyWidgetButton* pBtn = new CKeyWidgetButton(widPreview, this);
-    pBtn->setText("参数变更上传");
-    pBtn->setProperty(PROPERTY_INDEX, i++);
-    pBtn->resize(menuWidth, menuHeight);
-    menu2Mgr.registerButton(pBtn);
-    menu2List.push_back(pBtn);
-
-    pBtn = new CKeyWidgetButton(widQuery, this);
-    pBtn->setText("参数变更查询");
+    CParamTableMngrWid* widPtMngr = new CParamTableMngrWid(this);
+    widPtMngr->hide();
+    CKeyWidgetButton* pBtn = new CKeyWidgetButton(widPtMngr, this);
+    pBtn->setText("参数表管理");
     pBtn->setProperty(PROPERTY_INDEX, i++);
     pBtn->resize(menuWidth, menuHeight);
     menu2Mgr.registerButton(pBtn);
@@ -110,7 +79,7 @@ void CUploadQueryWid::initMenu()
     menu2List.push_back(pBtn);
 }
 
-void CUploadQueryWid::slot_menu2_clicked(CStateButton* pBtn)
+void CBakeupRestoreWid::slot_menu2_clicked(CStateButton* pBtn)
 {
     int idx = pBtn->property(PROPERTY_INDEX).toInt();
     if (idx == menu2List.size() - 1){
@@ -118,7 +87,7 @@ void CUploadQueryWid::slot_menu2_clicked(CStateButton* pBtn)
     }
 }
 
-void CUploadQueryWid::onResize(int width, int height)
+void CBakeupRestoreWid::onResize(int width, int height)
 {
     int l = 120, t = 100, m = 4, s = 10;
     int i = 0;
@@ -151,13 +120,13 @@ void CUploadQueryWid::onResize(int width, int height)
     ui->label_copyright->move((width - ui->label_copyright->width())/2, height - 50);
     update(0, 0, width, height);
 }
-void CUploadQueryWid::resizeEvent(QResizeEvent *event)
+void CBakeupRestoreWid::resizeEvent(QResizeEvent *event)
 {
     onResize(event->size().width(), event->size().height());
     QMainWindow::resizeEvent(event);
 }
 
-void CUploadQueryWid::keyPressEvent(QKeyEvent *event)
+void CBakeupRestoreWid::keyPressEvent(QKeyEvent *event)
 {
     CKeyWidgetButton* pBtn = dynamic_cast<CKeyWidgetButton*>(menu2Mgr.currentButton());
     int idx = pBtn->property(PROPERTY_INDEX).toInt();

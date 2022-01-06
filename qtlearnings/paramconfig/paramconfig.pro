@@ -12,6 +12,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    cbakeuprestorewid.cpp \
     cdeviceconfig.cpp \
     cdeviceiconwidget.cpp \
     cdevicemodpreview.cpp \
@@ -24,11 +25,13 @@ SOURCES += \
     clineselector.cpp \
     cmodparampreview.cpp \
     cmodparamquery.cpp \
+    cparamtablemngrwid.cpp \
     cuploadquerywid.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    cbakeuprestorewid.h \
     cdeviceconfig.h \
     cdeviceiconwidget.h \
     cdevicemodpreview.h \
@@ -41,10 +44,12 @@ HEADERS += \
     clineselector.h \
     cmodparampreview.h \
     cmodparamquery.h \
+    cparamtablemngrwid.h \
     cuploadquerywid.h \
     mainwindow.h
 
 FORMS += \
+    cbakeuprestorewid.ui \
     cdeviceconfig.ui \
     cdeviceiconwidget.ui \
     cdevicemodpreview.ui \
@@ -52,6 +57,7 @@ FORMS += \
     cdevposctl2.ui \
     cmodparampreview.ui \
     cmodparamquery.ui \
+    cparamtablemngrwid.ui \
     cuploadquerywid.ui \
     mainwindow.ui
 
