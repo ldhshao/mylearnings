@@ -19,6 +19,7 @@ public:
     ItemBase () { m_id = 0;}
     virtual ~ItemBase() {}
     int getId() {return m_id;}
+    void setId(int id) { m_id = id; }
     QString getName() {return m_name;}
     void setName(const QString& name) { m_name = name; }
 

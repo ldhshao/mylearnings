@@ -1,0 +1,9 @@
+{
+    "Hparameter": {
+        "HDevice1_0" : {
+            "Name": "1#皮带",
+            "Type": 1,
+            "HDevice2_0":{"Name": "电机组","Type": 2}
+        }
+    }
+}

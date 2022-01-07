@@ -29,7 +29,7 @@
 #include <QPushButton>
 #define WORK_FILEPATH "/opt/data/paramconfig"
 //#define WORK_FILEPATH "/home/hndz-dhliu"
-#define SYSTEM_CFG_FILEPATH "system.xml"
+#define SYSTEM_CFG_FILEPATH "system.json"
 #define UITEMP_CFG_FILEPATH "uitemplate.xml"
 #define PARAMS_FILEPATH     "param.dat"
 #define MENU1_STYLE         "QPushButton {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}"
@@ -118,8 +118,8 @@ bool MainWindow::initWorkDir()
             qDebug()<<strDir;
             if (!temp->exists(strDir + "/" + UITEMP_CFG_FILEPATH))
                 continue;
-            if (!temp->exists(strDir + "/" + PARAMS_FILEPATH))
-                continue;
+            //if (!temp->exists(strDir + "/" + PARAMS_FILEPATH))
+            //    continue;
             workDir.append("/").append(it->fileName());
             qDebug()<<workDir;
             QCoreApplication::instance()->setProperty(PROPERTY_WORKDIR, workDir);
@@ -220,6 +220,7 @@ void MainWindow::initPage()
     QString strTemplate = workDir + "/" + UITEMP_CFG_FILEPATH;
     cfgTemplate.readXmlFile(strTemplate);
     DevCfgItem *pItem = devCfg.getHead();
+#if 0
     while (nullptr != pItem) {
         GroupCfgList *uiList = new GroupCfgList();
         uiList->setName(pItem->getName());
@@ -250,6 +251,38 @@ void MainWindow::initPage()
                         pLel3Item = pLel2Dev->getNext();
                     }
                 }
+                pSubItem = pList->getNext();
+            }
+        }
+        devUiCfgList.addChild(uiList);
+        pItem = devCfg.getNext();
+    }
+#endif
+    while (nullptr != pItem) {
+        GroupCfgList *uiList = new GroupCfgList();
+        uiList->setName(pItem->getName());
+        DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);//1level
+        if (nullptr != pList){
+            GroupCfgItem* grp = nullptr;
+            GroupCfgItem *pGroup = cfgTemplate.findGroupByName(pList->getType());
+            if (nullptr != pGroup){
+                grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
+            }else {
+                grp = new GroupCfgList();
+            }
+            grp->setName("基本信息");
+            uiList->addChild(grp);
+            DevCfgItem* pSubItem = pList->getHead();//2level
+            while(nullptr != pSubItem){
+                pGroup = cfgTemplate.findGroupByName(pSubItem->getType());
+                if (nullptr != pGroup){
+                    grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
+                }else {
+                    grp = new GroupCfgList();
+                }
+                grp->setName(pSubItem->getName());
+                uiList->addChild(grp);
+
                 pSubItem = pList->getNext();
             }
         }

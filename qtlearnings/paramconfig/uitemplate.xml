@@ -87,7 +87,7 @@
         <ComboboxCfgItem id="1" name="水电联动选择" col="1" row="1" width="100" height="28" params="有效;无效">
         </ComboboxCfgItem>
     </GroupCfgItem>
-    <GroupCfgList name="workfacebaseinfo">
+    <GroupCfgList name="workface">
         <GroupCfgItem id="1" name="基本信息" col="1" row="1">
             <ComboboxCfgItem id="1" name="设备有效性" col="1" row="1" width="100" height="28" params="有效;无效" defaultvalue="有效" dataidx="0">
             </ComboboxCfgItem>
@@ -131,7 +131,7 @@
             </UiCfgItemFloat>
             <UiCfgItem id="5" name="机头就地按钮灯输入点" type="editbox"  col="1" row="3" width="100" height="26" dataidx="6" datacnt="2">
             </UiCfgItem>
-            <UiCfgItem id="6" name="机尾就地按钮灯输入点" type="editbox"  col="2" row="3" width="100" height="26" dataidx="8" datacnt="2">
+            <UiCfgItem id="6" name="机尾就地按钮灯输入点" type="devpointedit"  col="2" row="3" width="100" height="26" dataidx="8" datacnt="2">
             </UiCfgItem>
             <UiCfgItem id="7" name="远程启停输入点" type="editbox"  col="1" row="4" width="100" height="26" dataidx="10" datacnt="2">
             </UiCfgItem>
@@ -183,135 +183,263 @@
             </UiCfgItem>
         </GroupCfgItem>
     </GroupCfgList>
-    <GroupCfgItem id="10" name="motorgroupbaseinfo">
+    <GroupCfgList id="10" name="motorgroup">
+        <GroupCfgItem id="1" name="基本信息" type="groupbox"  col="10" row="0" width="294" height="300" titledepth="2">
             <ComboboxCfgItem id="1" name="设备使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
             </ComboboxCfgItem>
-    </GroupCfgItem>
-    <GroupCfgList id= "11" name="motor" enablesource="10/1:0">
-        <GroupCfgItem id="1" name="基本信息" type="groupbox"  col="10" row="0" width="294" height="300" titledepth="2">
-            <ComboboxCfgItem id="1" name="设备使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能" dataidx="1">
-            </ComboboxCfgItem>
-            <UiCfgItem id="2" name="电机控制输出点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItemFloat id="3" name="电机启动时间间隔" type="editbox"  col="2" row="2" width="100" height="26" range="(0-6000)" precision="0.1" unit="秒" defaultvalue="0" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="4" name="英式先导启车输出点" type="editbox"  col="1" row="3" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItemFloat id="5" name="英式点闭合保持时间" type="editbox"  col="2" row="3" width="100" height="26" range="(5-50)" precision="0.1" unit="秒" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="6" name="英式点延时闭合时间" type="editbox"  col="2" row="4" width="100" height="26" range="(5-50)" precision="0.1" unit="秒" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="7" name="电机反馈输入点" type="editbox"  col="1" row="5" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItemFloat id="8" name="电机反馈等待时间" type="editbox"  col="2" row="5" width="100" height="26" range="(0-6000)" precision="0.1" unit="秒" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="9" name="电机反馈输入点去抖时间" type="editbox"  col="2" row="6" width="100" height="26" range="(0-100)" precision="0.1" unit="秒" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="10" name="减速机冷却水阀控制输出点" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
         </GroupCfgItem>
-        <GroupCfgItem id="2" name="电流保护" type="groupbox"  col="20" row="0" width="294" height="300" enablesource="1/1:0" titledepth="2">
-            <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
-            </ComboboxCfgItem>
-            <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
-            </ComboboxCfgItem>
-            <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
-            </ComboboxCfgItem>
-            <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="8" name="电流量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="A" defaultvalue="400" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="9" name="电流量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="A" defaultvalue="0" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="A" defaultvalue="100" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="3" name="轴承温度保护" type="groupbox"  col="10" row="2" width="294" height="300" enablesource="1/1:0" titledepth="2">
-            <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
-            </ComboboxCfgItem>
-            <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
-            </ComboboxCfgItem>
-            <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
-            </ComboboxCfgItem>
-            <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="8" name="温度量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="℃" defaultvalue="400" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="9" name="温度量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="℃" defaultvalue="0" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="℃" defaultvalue="100" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="4" name="绕组温度保护" type="groupbox"  col="20" row="2" width="294" height="300" enablesource="1/1:0" titledepth="2">
-            <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
-            </ComboboxCfgItem>
-            <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
-            </ComboboxCfgItem>
-            <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
-            </ComboboxCfgItem>
-            <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="8" name="温度量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="℃" defaultvalue="400" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="9" name="温度量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-            <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="℃" defaultvalue="0" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="℃" defaultvalue="100" enablesource="1:0">
-            </UiCfgItemFloat>
-            <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
-            </UiCfgItem>
-        </GroupCfgItem>
+        <GroupCfgList id= "2" name="motor" enablesource="10/1:0">
+            <GroupCfgItem id="1" name="基本信息" type="groupbox"  col="10" row="0" width="294" height="300" titledepth="2">
+                <ComboboxCfgItem id="1" name="设备使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能" dataidx="1">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="电机控制输出点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="3" name="电机启动时间间隔" type="editbox"  col="2" row="2" width="100" height="26" range="(0-6000)" precision="0.1" unit="秒" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="4" name="英式先导启车输出点" type="editbox"  col="1" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="5" name="英式点闭合保持时间" type="editbox"  col="2" row="3" width="100" height="26" range="(5-50)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="6" name="英式点延时闭合时间" type="editbox"  col="2" row="4" width="100" height="26" range="(5-50)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="7" name="电机反馈输入点" type="editbox"  col="1" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="8" name="电机反馈等待时间" type="editbox"  col="2" row="5" width="100" height="26" range="(0-6000)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="9" name="电机反馈输入点去抖时间" type="editbox"  col="2" row="6" width="100" height="26" range="(0-100)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="10" name="减速机冷却水阀控制输出点" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="2" name="电流保护" type="groupbox"  col="20" row="0" width="294" height="300" enablesource="1/1:0" titledepth="2">
+                <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="8" name="电流量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="A" defaultvalue="400" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="9" name="电流量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="A" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="A" defaultvalue="100" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="3" name="轴承温度保护" type="groupbox"  col="10" row="2" width="294" height="300" enablesource="1/1:0" titledepth="2">
+                <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="8" name="温度量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="℃" defaultvalue="400" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="9" name="温度量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="℃" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="℃" defaultvalue="100" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="4" name="绕组温度保护" type="groupbox"  col="20" row="2" width="294" height="300" enablesource="1/1:0" titledepth="2">
+                <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="8" name="温度量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="℃" defaultvalue="400" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="9" name="温度量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="℃" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="℃" defaultvalue="100" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+        </GroupCfgList>
+        <GroupCfgList id= "3" name="motor" enablesource="10/1:0">
+            <GroupCfgItem id="1" name="基本信息" type="groupbox"  col="10" row="0" width="294" height="300" titledepth="2">
+                <ComboboxCfgItem id="1" name="设备使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能" dataidx="1">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="电机控制输出点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="3" name="电机启动时间间隔" type="editbox"  col="2" row="2" width="100" height="26" range="(0-6000)" precision="0.1" unit="秒" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="4" name="英式先导启车输出点" type="editbox"  col="1" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="5" name="英式点闭合保持时间" type="editbox"  col="2" row="3" width="100" height="26" range="(5-50)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="6" name="英式点延时闭合时间" type="editbox"  col="2" row="4" width="100" height="26" range="(5-50)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="7" name="电机反馈输入点" type="editbox"  col="1" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="8" name="电机反馈等待时间" type="editbox"  col="2" row="5" width="100" height="26" range="(0-6000)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="9" name="电机反馈输入点去抖时间" type="editbox"  col="2" row="6" width="100" height="26" range="(0-100)" precision="0.1" unit="秒" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="10" name="减速机冷却水阀控制输出点" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="2" name="电流保护" type="groupbox"  col="20" row="0" width="294" height="300" enablesource="1/1:0" titledepth="2">
+                <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="8" name="电流量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="A" defaultvalue="400" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="9" name="电流量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="A" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="A" defaultvalue="100" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="3" name="轴承温度保护" type="groupbox"  col="10" row="2" width="294" height="300" enablesource="1/1:0" titledepth="2">
+                <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="8" name="温度量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="℃" defaultvalue="400" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="9" name="温度量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="℃" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="℃" defaultvalue="100" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+            <GroupCfgItem id="4" name="绕组温度保护" type="groupbox"  col="20" row="2" width="294" height="300" enablesource="1/1:0" titledepth="2">
+                <ComboboxCfgItem id="1" name="保护使能" col="1" row="1" width="100" height="28" params="使能;不使能" defaultvalue="不使能">
+                </ComboboxCfgItem>
+                <UiCfgItem id="2" name="传感器输入点" type="editbox"  col="1" row="2" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="3" name="电机过载输入点类型" col="2" row="2" width="100" height="28" params="模拟量;开关量" defaultvalue="模拟量" enablesource="1:0">
+                </ComboboxCfgItem>
+                <ComboboxCfgItem id="4" name="传感器动作保护类型" col="1" row="3" width="100" height="28" params="停车;不停车" defaultvalue="不停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItem id="5" name="传感器动作保护延时时间" type="editbox"  col="2" row="3" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <ComboboxCfgItem id="6" name="传感器故障保护类型" col="1" row="4" width="100" height="28" params="无;报警;报警正常停车;报警紧急停车" defaultvalue="报警紧急停车" enablesource="1:0">
+                </ComboboxCfgItem>
+                <UiCfgItemFloat id="7" name="传感器故障保护延时时间" type="editbox"  col="2" row="4" width="100" height="26" range="(0-1000)" precision="0.1" unit="秒" defaultvalue="10" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="8" name="温度量程最大值" type="editbox"  col="1" row="5" width="100" height="26" range="(0-1200)" unit="℃" defaultvalue="400" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="9" name="温度量程最小值" type="editbox"  col="2" row="5" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="10" name="高报警值" type="editbox"  col="1" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="11" name="高停车值" type="editbox"  col="2" row="6" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="12" name="低报警值" type="editbox"  col="1" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItem id="13" name="低停车值" type="editbox"  col="2" row="7" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+                <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  col="1" row="8" width="100" height="26" range="(0-400)" unit="℃" defaultvalue="0" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItemFloat id="15" name="传感器单位" type="editbox"  col="2" row="8" width="100" height="26" range="(0-1000)" precision="0.01" unit="℃" defaultvalue="100" enablesource="1:0">
+                </UiCfgItemFloat>
+                <UiCfgItem id="16" name="起车后延时检测时间" type="editbox"  col="2" row="9" width="100" height="26" enablesource="1:0">
+                </UiCfgItem>
+            </GroupCfgItem>
+        </GroupCfgList>
     </GroupCfgList>
     <GroupCfgItem name="analogprotect">
                 <ComboboxCfgItem id="1" name="软启动有效性" col="1" row="1" width="100" height="28" params="有效;无效">

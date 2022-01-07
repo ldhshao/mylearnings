@@ -1,6 +1,7 @@
 #ifndef DEVCFG_H
 #define DEVCFG_H
 #include "ItemBase.h"
+#include <QJsonObject>
 
 class DevCfgItem : public ItemBase
 {
@@ -10,6 +11,8 @@ public:
     virtual ~DevCfgItem() {}
 
     virtual bool initFromDomElement(QDomElement element);
+    virtual bool initFromJsonObject(QJsonObject obj);
+    virtual bool initChildrenFromJsonObject(QJsonObject obj);
     virtual DevCfgItem* createMyself();
 
     virtual void dump();
@@ -27,6 +30,8 @@ static const QString DevTypeWorkVoith;
 static const QString DevTypeAnalogProtect;
 
 protected:
+    static QString translateType(DevCfgItem* item, int iType);
+    static QString translateType2UiCfgType(DevCfgItem* item, int iType);
     QString m_type;
 };
 class DevCfgList : public DevCfgItem
@@ -46,12 +51,14 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
+    virtual bool initChildrenFromJsonObject(QJsonObject obj);
     virtual DevCfgItem* createMyself();
     void    copyChildren(DevCfgList* pDst);
 
     virtual void dump();
 protected:
     void deleteAll();
+    bool readDevCfgJsonFile(QString strFile);
     QList<DevCfgItem*> m_children;
     QList<DevCfgItem*>::iterator m_it;
 };

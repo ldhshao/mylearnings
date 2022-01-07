@@ -1,5 +1,8 @@
 #include "devcfg.h"
 #include <qtextstream.h>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QByteArray>
 #include <QtDebug>
 
 const QString DevCfgItem::DevTypeSystem = "system";
@@ -22,6 +25,35 @@ bool DevCfgItem::initFromDomElement(QDomElement element)
 
     return true;
 }
+bool DevCfgItem::initFromJsonObject(QJsonObject obj)
+{
+    qDebug()<<obj;
+    QJsonValue::Type type = obj.value("Name").type();
+    switch (type){
+    case QJsonValue::String:
+        m_name = obj.value("Name").toString();
+        break;
+    }
+    type = obj.value("Type").type();
+    int iType = 0;
+    switch (type){
+    case QJsonValue::Double:
+        iType = obj.value("Type").toInt();
+        m_type = translateType2UiCfgType(this, iType);
+        break;
+    case QJsonValue::String:
+        m_type = obj.value("Type").toString();
+        break;
+    }
+
+    initChildrenFromJsonObject(obj);
+
+    return true;
+}
+bool DevCfgItem::initChildrenFromJsonObject(QJsonObject obj)
+{
+    return true;
+}
 DevCfgItem* DevCfgItem::createMyself()
 {
     DevCfgItem *pItem = new DevCfgItem();
@@ -33,6 +65,81 @@ DevCfgItem* DevCfgItem::createMyself()
 void DevCfgItem::dump()
 {
     qDebug()<<"ID "<<m_id<<" name "<<m_name <<" type "<<m_type;
+}
+
+QString DevCfgItem::translateType(DevCfgItem* item, int iType)
+{
+    DevCfgList* pList = dynamic_cast<DevCfgList*>(item);
+    QStringList types;
+    if (nullptr != pList){
+        types<<"";
+        types<<"皮带";
+        types<<"破碎机";
+        types<<"转载机";
+        types<<"运输机";
+        types<<"清水泵";
+        types<<"乳化泵";
+        types<<"单点";
+        types<<"煤仓";
+    }else{
+        types<<"";
+        types<<"预警";
+        types<<"电机";
+        types<<"制动闸";
+        types<<"张紧";
+        types<<"皮带VOITH";
+        types<<"自动张紧";
+        types<<"";
+        types<<"";
+        types<<"";
+        types<<"";
+        types<<"";
+        types<<"";
+        types<<"";
+        types<<"";
+        types<<"";
+    }
+
+    if (0 <= iType && iType < types.count())
+        return types[iType];
+    return "";
+}
+QString DevCfgItem::translateType2UiCfgType(DevCfgItem* item, int iType)
+{
+    DevCfgList* pList = dynamic_cast<DevCfgList*>(item);
+    QStringList types;
+    if (nullptr != pList){
+        types<<"";
+        types<<"workface";//"皮带";
+        types<<"workface";//"破碎机";
+        types<<"workface";//"转载机";
+        types<<"";//"运输机";
+        types<<"";//"清水泵";
+        types<<"";//"乳化泵";
+        types<<"";//"单点";
+        types<<"";//"煤仓";
+    }else{
+        types<<"";
+        types<<"";//"预警";
+        types<<"motorgroup";//"电机";
+        types<<"";//"制动闸";
+        types<<"";//"张紧";
+        types<<"";//"皮带VOITH";
+        types<<"";//"自动张紧";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+        types<<"";//"";
+    }
+
+    if (0 <= iType && iType < types.count())
+        return types[iType];
+    return "";
 }
 
 HNDZ_IMPLEMENT_DYNCREATE(DevCfgList, DevCfgItem)
@@ -48,6 +155,9 @@ bool DevCfgList::readDevCfgFile(QString strFile)
     {
         return false;
     }
+    if (-1 < strFile.indexOf(".json"))
+        return readDevCfgJsonFile(strFile);
+
     if(!file.open(QIODevice::ReadOnly))
     {
         return false;
@@ -69,6 +179,33 @@ bool DevCfgList::readDevCfgFile(QString strFile)
 
     return initFromDomElement(doc.documentElement());
 }
+bool DevCfgList::readDevCfgJsonFile(QString strFile)
+{
+    QFile file(strFile);
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
+
+
+    QJsonParseError parseError;
+    QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
+    file.close();
+    if(parseError.error!=QJsonParseError::NoError){
+        return false;
+    }
+    QJsonObject obj=doc.object().begin()->toObject();
+    for (QJsonObject::iterator it = obj.begin(); it != obj.end(); it++){
+        QString strID = it.key();
+        int pos = strID.lastIndexOf('_');
+        if (-1 == pos) qDebug()<<"error device1 name "<<strID;
+        DevCfgList *pList = new DevCfgList();
+        pList->m_id = strID.right(strID.length() - pos - 1).toInt();
+        pList->initFromJsonObject(it->toObject());
+        m_children.push_back(pList);
+    }
+}
+
 void DevCfgList::deleteAll()
 {
     QList<DevCfgItem*>::ConstIterator it = m_children.cbegin();
@@ -150,6 +287,22 @@ bool DevCfgList::initChildrenFromDomElement(QDomNodeList list)
         }
     }
 
+}
+bool DevCfgList::initChildrenFromJsonObject(QJsonObject obj)
+{
+    for (auto it = obj.begin(); it != obj.end(); it++){
+        if (it->isObject()){
+            QString strID = it.key();
+            int pos = strID.lastIndexOf('_');
+            if (-1 == pos) qDebug()<<"error device1 name "<<strID;
+            DevCfgItem *pItem = new DevCfgItem();
+            pItem->setId(strID.right(strID.length() - pos - 1).toInt());
+            pItem->initFromJsonObject(it->toObject());
+            m_children.append(pItem);
+        }
+    }
+
+    return true;
 }
 DevCfgItem* DevCfgList::createMyself()
 {
