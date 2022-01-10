@@ -20,7 +20,7 @@ public:
     void setTitle(QString strTitle);
     void setTitleHeight(int h) { titleHeight = h; }
     void setInitWidthHeight(int w, int h) { initWidth = w; initHeight = h; }
-    void fillColList();
+    void fillColList(int col, QWidget* w);
     void initTabOrder();
     void updateUi();
     void showPage();
@@ -39,7 +39,6 @@ protected slots:
     void slot_valueChanged(uint16_t *pVal, uint32_t valNew);
 
 private:
-    void fillColList(QWidget* w);
     void deleteAll();
     void showTipInfo(QPoint pt, const QString& strTip);
     bool checkRequiredData();

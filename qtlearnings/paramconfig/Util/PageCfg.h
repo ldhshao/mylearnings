@@ -11,7 +11,7 @@ class GroupCfgItem : public UiCfgItem
 {
 public:
     HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
-    GroupCfgItem() :m_titleDepth(1),m_cols(1){
+    GroupCfgItem() :m_titleDepth(1),m_cols(1),m_ctlWidth(100),m_ctlHeight(40),m_colMode(true),m_ctlUnitSize(10){
         m_type = UiCfgItem::strTypeGroup;
     }
     virtual ~GroupCfgItem();
@@ -34,7 +34,7 @@ public:
     //virtual void setDataidx(int idx);
     virtual void create(QWidget* parent);
     virtual bool initData(int idx, bool useDef);
-    virtual bool initUi(unsigned short* pStAddr);//init data
+    virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
     bool         chkDataConflict(); //test function
 
     void createPage(list<UiPage*> &pageList);
@@ -58,7 +58,10 @@ protected:
     list<UiCfgItem*>::iterator m_it;
     uint8_t          m_titleDepth;
     uint8_t          m_cols;
-
+    int              m_ctlWidth;
+    int              m_ctlHeight;
+    bool             m_colMode;
+    int              m_ctlUnitSize;
 };
 
 class GroupCfgList : public GroupCfgItem
@@ -69,7 +72,7 @@ public:
     virtual ~GroupCfgList();
 
     virtual void create(QWidget* parent);
-    virtual bool initUi(unsigned short* pStAddr);//init data
+    virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
     virtual UiCfgItem* createMyself();
     GroupCfgItem* findGroupByName(const QString& strName);
     virtual UiCfgItem* findItemByDataIdx(int dataidx);

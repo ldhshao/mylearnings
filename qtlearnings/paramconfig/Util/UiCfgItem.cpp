@@ -33,10 +33,6 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
 {
     XmlItem::initFromDomElement(element);
 
-    setIntValue(m_col, element, "col");
-    setIntValue(m_row, element, "row");
-    setIntValue(m_width, element, "width");
-    setIntValue(m_height, element, "height");
     setIntValue(m_dataidx, element, "dataidx");
     setIntValue(m_datacnt, element, "datacnt");
     //check value
@@ -153,9 +149,6 @@ void UiCfgItem::create(QWidget* parent)
                 m_pWidDes = pBoxDes;
             }
         }
-        if (nullptr != m_pWidget) m_pWidget->move(m_col, m_row);
-        if (nullptr != m_pWidName) m_pWidName->move(m_col, m_row);
-        if (nullptr != m_pWidDes) m_pWidDes->move(m_col, m_row);
         qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
     }
 }
@@ -172,21 +165,21 @@ bool UiCfgItem::initData(int idx, bool useDef)
     }
     return true;
 }
-bool UiCfgItem::initUi(unsigned short* pStAddr)
+bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
 {
     if (nullptr != m_pWidget){
-        m_pWidget->resize(m_width, m_height);
+        m_pWidget->resize(w, h);
         m_pWidget->show();
     }
     if (nullptr != m_pWidName){
         int width = QFontMetrics(m_pWidName->font()).width(m_name);
-        m_pWidName->resize(width, height());
+        m_pWidName->resize(width, h);
         m_pWidName->show();
     }
     if (nullptr != m_pWidDes){
         QLabel *lbl = dynamic_cast<QLabel*>(m_pWidDes);
         int width = QFontMetrics(m_pWidDes->font()).width(lbl->text());
-        m_pWidDes->resize(width, height());
+        m_pWidDes->resize(width, h);
         m_pWidDes->show();
     }
 
@@ -278,19 +271,7 @@ uint16_t *UiCfgItem::paramAddress()
 UiCfgItem* UiCfgItem::createMyself()
 {
     UiCfgItem* pItem = new UiCfgItem();
-    pItem->m_id = m_id;
-    pItem->m_name = m_name;
-    pItem->m_col = m_col;
-    pItem->m_row = m_row;
-    pItem->m_width = m_width;
-    pItem->m_height = m_height;
-    pItem->m_dataidx = m_dataidx;
-    pItem->m_datacnt = m_datacnt;
-    pItem->m_type = m_type;
-    pItem->m_range = m_range;
-    pItem->m_defaultVal = m_defaultVal;
-    pItem->m_enableSourceId = m_enableSourceId;
-    pItem->m_enableSourceVal = m_enableSourceVal;
+    copyTo(pItem);
 
     return pItem;
 }
@@ -298,10 +279,6 @@ void UiCfgItem::copyTo(UiCfgItem* destItem)
 {
     destItem->m_id = m_id;
     destItem->m_name = m_name;
-    destItem->m_col = m_col;
-    destItem->m_row = m_row;
-    destItem->m_width = m_width;
-    destItem->m_height = m_height;
     destItem->m_dataidx = m_dataidx;
     destItem->m_datacnt = m_datacnt;
     destItem->m_type = m_type;
@@ -431,19 +408,7 @@ bool UiCfgItemFloat::initFromDomElement(QDomElement element)
 UiCfgItem* UiCfgItemFloat::createMyself()
 {
     UiCfgItemFloat* pItem = new UiCfgItemFloat();
-    pItem->m_id = m_id;
-    pItem->m_name = m_name;
-    pItem->m_col = m_col;
-    pItem->m_row = m_row;
-    pItem->m_width = m_width;
-    pItem->m_height = m_height;
-    pItem->m_dataidx = m_dataidx;
-    pItem->m_datacnt = m_datacnt;
-    pItem->m_type = m_type;
-    pItem->m_range = m_range;
-    pItem->m_defaultVal = m_defaultVal;
-    pItem->m_enableSourceId = m_enableSourceId;
-    pItem->m_enableSourceVal = m_enableSourceVal;
+    copyTo(pItem);
     pItem->m_unit = m_unit;
     pItem->m_precision = m_precision;
     pItem->m_decimalPlaces = m_decimalPlaces;
@@ -476,17 +441,9 @@ void UiCfgItemFloat::create(QWidget* parent)
         pBoxDes->setText(strDes);
         m_pWidDes = pBoxDes;
 
-        if (nullptr != m_pWidget) m_pWidget->move(m_col, m_row);
-        if (nullptr != m_pWidName) m_pWidName->move(m_col, m_row);
-        if (nullptr != m_pWidDes) m_pWidDes->move(m_col, m_row);
         qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
     }
 }
-//bool UiCfgItemFloat::initUi(unsigned short *pStAddr)
-//{
-//    UiCfgItem::initUi(pStAddr);
-//
-//}
 QString UiCfgItemFloat::strDataValue(uint16_t *pAddr)
 {
     QString strValue;
@@ -534,9 +491,9 @@ UiCfgItem* SetIndexCfgItem::createMyself()
 
     return pItem;
 }
-bool SetIndexCfgItem::initUi(unsigned short* pStAddr)
+bool SetIndexCfgItem::initUi(unsigned short* pStAddr, int w, int h)
 {
-    UiCfgItem::initUi(pStAddr);
+    UiCfgItem::initUi(pStAddr, w, h);
     CKeyDnSetIndexEdit* pEdit = dynamic_cast<CKeyDnSetIndexEdit*>(m_pWidget);
     if (nullptr != pEdit){
         pEdit->initData(paramAddress(), m_setSize, m_setCnt);
@@ -663,9 +620,9 @@ void ComboboxCfgItem::copyTo(UiCfgItem* destItem)
 //
 //    return true;
 //}
-bool ComboboxCfgItem::initUi(unsigned short *pStAddr)
+bool ComboboxCfgItem::initUi(unsigned short *pStAddr, int w, int h)
 {
-    UiCfgItem::initUi(pStAddr);
+    UiCfgItem::initUi(pStAddr, w, h);
 
     CKeyDnComboBox* pBox = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
     if (nullptr != pBox && -1 < m_dataidx){
@@ -722,18 +679,15 @@ void ComboboxSetCfgItem::create(QWidget* parent)
             pBoxDes->setText(m_range);
             m_pWidDes = pBoxDes;
         }
-        if (nullptr != m_pWidget) m_pWidget->move(m_col, m_row);
-        if (nullptr != m_pWidName) m_pWidName->move(m_col, m_row);
-        if (nullptr != m_pWidDes) m_pWidDes->move(m_col, m_row);
         qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
     }
 }
-bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr)
+bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
 {
-    UiCfgItem::initUi(pStAddr);
+    UiCfgItem::initUi(pStAddr, w, h);
     QString strMaxLenName = m_name + QString::number(m_datacnt);
     int width = QFontMetrics(m_pWidName->font()).width(strMaxLenName);
-    m_pWidName->resize(width, height());
+    m_pWidName->resize(width, h);
     qDebug()<<m_pWidName<<m_pWidName->width()<<m_pWidName->size().width();
 
     CKeyDnComboBoxSet* pBox = dynamic_cast<CKeyDnComboBoxSet*>(m_pWidget);

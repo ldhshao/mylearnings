@@ -32,8 +32,8 @@ void CDevicePreview::updateByDevice(GroupCfgItem* dev)
     qDebug()<<"preview "<<__FUNCTION__;
     if (nullptr != dev){
         ui->label_title->setText(dev->getNamePath(dev->titleDepth() - 1));
-        ui->label_content1->setText(dev->previewInfo(1));
-        ui->label_content2->setText(dev->previewInfo(2));
+        ui->label_content1->setText(dev->previewInfo(0));
+        ui->label_content2->setText(dev->previewInfo(1));
         devUiCfg = dev;
         qDebug()<<"preview update";
         onResize(width(), height());

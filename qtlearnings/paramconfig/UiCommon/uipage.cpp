@@ -39,22 +39,13 @@ void UiPage::setTitle(QString strTitle)
     title->setText(strTitle);
 }
 
-void UiPage::fillColList()
-{
-    QObjectList oList = children();
-    for(auto it = oList.begin(); it != oList.end(); it++){
-        if (title == *it) continue;
-        fillColList(dynamic_cast<QWidget*>(*it));
-    }
-}
-void UiPage::fillColList(QWidget* w)
+void UiPage::fillColList(int col, QWidget* w)
 {
     if (nullptr == w) return ;
 
-    int col = w->pos().x();
-    if (col <=0 || col > UIPAGE_COL_NUM) qDebug()<<"wrong pos "<<w->pos()<<" widget "<<w;
-    if(0 < col && UIPAGE_COL_NUM >= col)
-        colList[col-1].push_back(w);
+    if (col <0 || col >= UIPAGE_COL_NUM) qDebug()<<"wrong pos "<<col;
+    if(0 <= col && UIPAGE_COL_NUM > col)
+        colList[col].push_back(w);
     qDebug()<<"col "<<col<<" wid "<<w;
 }
 
@@ -184,10 +175,17 @@ void UiPage::resizeEvent(QResizeEvent *event)
     QSize s0 = event->oldSize();
     QSize s1 = event->size();
     qDebug()<<__FUNCTION__<<this<<" old "<<s0<<" new "<<s1;
-    int deltX = (s1.width() - initWidth)/(UIPAGE_COL_NUM+1);
+    int cols = 0;
+    for (int i = 0; i < UIPAGE_COL_NUM; i++) {
+        if (0 == colList[i].size()){
+            break;
+        }
+        cols++;
+    }
+    int deltX = (s1.width() - initWidth)/(cols+1);
     title->resize(s1.width(), titleHeight);
     if (s0.width() > 0){
-        deltX = (s1.width() - s0.width())/(UIPAGE_COL_NUM+1);
+        deltX = (s1.width() - s0.width())/(cols+1);
     }
     qDebug()<<"deltX "<<deltX<<" initSize() "<<initWidth<<" "<<initHeight;
     if (s1.width() > initWidth && s1.height() > initHeight){
