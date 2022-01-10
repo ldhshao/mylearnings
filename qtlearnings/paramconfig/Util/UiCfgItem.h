@@ -11,6 +11,7 @@ public:
                   m_pWidget(nullptr), m_pWidName(nullptr), m_pWidDes(nullptr){
         m_enableSourceId = -1; m_enableSourceVal = 0;
         m_parent = parent; m_enableSource = nullptr;
+        m_required = false;
     }
     virtual ~UiCfgItem() {}
 
@@ -37,6 +38,7 @@ public:
     QString    enableReason();
     UiCfgItem* parent() { return m_parent; }
     bool isType(const QString &type) {	return m_type == type; }
+    bool isRequired() { return m_required; }
     QWidget* getWidget() {	return m_pWidget;	}
     QWidget* getWidName() {	return m_pWidName;	}
     QWidget* getWidDes() {	return m_pWidDes;	}
@@ -59,6 +61,7 @@ public:
     virtual void setDefaultVal();
 
     virtual bool onMaxValChanged(uint32_t max);
+    virtual bool onMinValChanged(uint32_t min);
 
     virtual bool isDataOK();
 
@@ -71,6 +74,7 @@ protected:
     uint16_t m_enableSourceVal;
     UiCfgItem  *m_parent;
     UiCfgItem  *m_enableSource;
+    bool     m_required;
     QWidget *m_pWidget;
     QWidget *m_pWidName;
     QWidget *m_pWidDes;//description

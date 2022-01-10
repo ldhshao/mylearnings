@@ -58,4 +58,23 @@ protected slots:
 private:
     map<uint16_t*, list<UiCfgItem*>>      valListMap;
 };
+class CMinValMngr : public QObject
+{
+    Q_OBJECT
+
+public:
+    static CMinValMngr* instance();
+    void registerMinValUi(CKeyDnEdit* pEdit, uint16_t* pVal, UiCfgItem* item);
+
+protected:
+    CMinValMngr(QObject *parent = 0):QObject(parent){}
+    virtual ~CMinValMngr(){
+    }
+
+protected slots:
+    void slot_valueChanged(uint16_t* pVal, uint32_t valNew);
+
+private:
+    map<uint16_t*, list<UiCfgItem*>>      valListMap;
+};
 #endif // CKEYDNEDIT_H

@@ -19,6 +19,7 @@ public:
     virtual void updateText() {	showText();	}
     virtual void showText();
     virtual bool setEditText(const QString& strText);
+    void onRangeChanged();
     void setAccessibleName(QString str)
     {
         m_accessiblename = str;

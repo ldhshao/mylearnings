@@ -138,6 +138,22 @@ bool CKeyDnEdit::setEditText(const QString &strText)
     return bRet;
 }
 
+void CKeyDnEdit::onRangeChanged()
+{
+    if (nullptr != pBind){
+        pBind->onRangeChanged();
+        if (pBind->isModified()){
+            setText(pBind->showSet());
+            pBind->clearState();
+
+            BindUint16Ptr *pBindU16Ptr = dynamic_cast<BindUint16Ptr*>(pBind);
+            if (nullptr != pBindU16Ptr){
+                emit sig_valueChanged(pBindU16Ptr->valPtr(), *(pBindU16Ptr->valPtr()));
+            }
+        }
+    }
+}
+
 //CKeyDnSetIndexEdit
 CKeyDnSetIndexEdit::CKeyDnSetIndexEdit(QWidget *parent) :
     CKeyDnEdit(parent)

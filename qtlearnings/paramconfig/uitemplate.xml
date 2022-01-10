@@ -192,7 +192,7 @@
             <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2">
                 <ComboboxCfgItem id="1" name="设备使能" params="使能;不使能" defaultvalue="不使能" dataidx="0">
                 </ComboboxCfgItem>
-                <UiCfgItem id="2" name="电机控制输出点" type="devpointedit"  enablesource="1:0" dataidx="1" datacnt="2">
+                <UiCfgItem id="2" name="电机控制输出点" type="devpointedit"  enablesource="1:0" dataidx="1" datacnt="2" required="1">
                 </UiCfgItem>
                 <UiCfgItemFloat id="3" name="电机启动时间间隔" type="editbox"  range="(0-6000)" precision="0.1" unit="秒" defaultvalue="0" enablesource="1:0" dataidx="3">
                 </UiCfgItemFloat>
@@ -228,15 +228,15 @@
                 </UiCfgItemFloat>
                 <UiCfgItemFloat id="8" name="电流量程最大值" type="editbox"  range="(0-1200)" unit="A" defaultvalue="400" enablesource="1:0" dataidx="8">
                 </UiCfgItemFloat>
-                <UiCfgItem id="9" name="电流量程最小值" type="editbox"  enablesource="1:0" dataidx="9">
+                <UiCfgItem id="9" name="电流量程最小值" type="editbox"  range="(0-#8)" enablesource="1:0" dataidx="9">
                 </UiCfgItem>
-                <UiCfgItem id="10" name="高报警值" type="editbox"  enablesource="1:0" dataidx="10">
+                <UiCfgItem id="10" name="高报警值" type="editbox"  range="(#12-#11)" enablesource="1:0" dataidx="10">
                 </UiCfgItem>
-                <UiCfgItem id="11" name="高停车值" type="editbox"  enablesource="1:0" dataidx="11">
+                <UiCfgItem id="11" name="高停车值" type="editbox"  range="(#10-#8)" enablesource="1:0" dataidx="11">
                 </UiCfgItem>
-                <UiCfgItem id="12" name="低报警值" type="editbox"  enablesource="1:0" dataidx="12">
+                <UiCfgItem id="12" name="低报警值" type="editbox"  range="(#13-#10)" enablesource="1:0" dataidx="12">
                 </UiCfgItem>
-                <UiCfgItem id="13" name="低停车值" type="editbox"  enablesource="1:0" dataidx="13">
+                <UiCfgItem id="13" name="低停车值" type="editbox"  range="(#9-#12)" enablesource="1:0" dataidx="13">
                 </UiCfgItem>
                 <UiCfgItemFloat id="14" name="传感器额定值" type="editbox"  range="(0-400)" unit="A" defaultvalue="0" enablesource="1:0" dataidx="14">
                 </UiCfgItemFloat>

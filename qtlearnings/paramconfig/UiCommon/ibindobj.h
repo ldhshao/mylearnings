@@ -30,6 +30,7 @@ public:
     virtual QString showSet() = 0;
     virtual void clear() = 0;
     virtual bool setValue(const QString& strVal) { return false; }
+    virtual bool onRangeChanged() { return false; }
 
     uint8_t state() { return _state; }
     bool    isModified() { return (_state & BS_MODIFIED); }

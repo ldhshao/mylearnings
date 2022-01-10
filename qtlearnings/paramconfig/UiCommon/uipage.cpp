@@ -115,6 +115,7 @@ void UiPage::showPage()
 
 void UiPage::keyPressEvent(QKeyEvent *event)
 {
+    bool bEsc = false;
     qDebug()<<focusWidget();
     switch (event->key()) {
     case Qt::Key_Down:
@@ -146,9 +147,10 @@ void UiPage::keyPressEvent(QKeyEvent *event)
                 mparamAddrList.clear();
             }
         }
+        bEsc = true;
     case Qt::Key_Return:
-        //if (!checkRequiredData())
-        //    return ;
+        if (!bEsc && !checkRequiredData())
+            return ;
         //save modified param address to global modified param address list
         if (!mparamAddrList.empty()){
             emit sig_modifiedParamAddrList(&mparamAddrList);

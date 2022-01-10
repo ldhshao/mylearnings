@@ -96,3 +96,34 @@ void CMaxValMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
         }
     }
 }
+
+///CMinValMngr
+CMinValMngr* CMinValMngr::instance()
+{
+    static CMinValMngr _mngr;
+    return &_mngr;
+}
+void CMinValMngr::registerMinValUi(CKeyDnEdit* pEdit, uint16_t* pVal, UiCfgItem* item)
+{
+    if (nullptr == pVal || nullptr == pEdit || nullptr == item) return ;
+
+    auto itFind = valListMap.find(pVal);
+    if (itFind == valListMap.end()){
+        connect(pEdit, SIGNAL(sig_valueChanged(uint16_t*, uint32_t)), this, SLOT(slot_valueChanged(uint16_t*, uint32_t)));
+        list<UiCfgItem*> itemList;
+        itemList.push_back(item);
+        valListMap[pVal] = itemList;
+    }else {
+        itFind->second.push_back(item);
+    }
+}
+void CMinValMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
+{
+    auto it = valListMap.find(pVal);
+    if (valListMap.end() != it){
+        auto itItem = it->second.begin();
+        for (; itItem != it->second.end(); itItem++){
+            (*itItem)->onMinValChanged(valNew);
+        }
+    }
+}

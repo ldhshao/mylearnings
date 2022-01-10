@@ -187,6 +187,7 @@ public:
     virtual QString showSet(){return QString::number(*pVal,10);}
     virtual void clear() {}
     virtual bool setValue(const QString& strVal);
+    virtual bool onRangeChanged();
 
     void SetValPtr(uint16_t * ptr){pVal = ptr;}
     void SetVal(uint16_t val){*pVal = val;}

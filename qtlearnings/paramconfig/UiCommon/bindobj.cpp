@@ -434,6 +434,21 @@ bool BindUint16Ptr::isValid(uint16_t val)
 
     return false;
 }
+bool BindUint16Ptr::onRangeChanged()
+{
+    if (!isValid(*pVal)){
+        if (*m_iminptr > *pVal){
+            *pVal = *m_iminptr;
+            setState(BS_MODIFIED);
+        }else if (*m_imaxptr < *pVal){
+            *pVal = *m_imaxptr;
+            setState(BS_MODIFIED);
+        }
+        return isModified();
+    }
+    return false;
+}
+
 ///*
 // * Selection
 // */

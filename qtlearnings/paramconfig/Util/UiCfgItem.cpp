@@ -51,6 +51,9 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     }else{
         m_enableSourceId = "";
     }
+    int required = 0;
+    setIntValue(required, element, "required");
+    m_required = (0 != required);
 
     //check value
 
@@ -199,6 +202,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
             if (strMin[0] == '#' && nullptr != pGroup){
                 pMinItem = pGroup->findItemById(strMin.right(strMin.length() - 1));
                 pMin = pMinItem->paramAddress();
+                CMinValMngr::instance()->registerMinValUi(dynamic_cast<CKeyDnEdit*>(pMinItem->getWidget()), pMin, this);
             }else {
                 bool bOk = false;
                 usMin = strMin.toUShort(&bOk);
@@ -207,6 +211,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
             if (strMax[0] == '#' && nullptr != pGroup){
                 pMaxItem = pGroup->findItemById(strMax.right(strMax.length() - 1));
                 pMax = pMaxItem->paramAddress();
+                CMinValMngr::instance()->registerMinValUi(dynamic_cast<CKeyDnEdit*>(pMaxItem->getWidget()), pMax, this);
             }else {
                 bool bOk = false;
                 usMax = strMax.toUShort(&bOk);
@@ -286,6 +291,7 @@ void UiCfgItem::copyTo(UiCfgItem* destItem)
     destItem->m_defaultVal = m_defaultVal;
     destItem->m_enableSourceId = m_enableSourceId;
     destItem->m_enableSourceVal = m_enableSourceVal;
+    destItem->m_required = m_required;
 }
 
 QString UiCfgItem::previewInfo()
@@ -368,18 +374,34 @@ void UiCfgItem::setDefaultVal()
 }
 bool UiCfgItem::onMaxValChanged(uint32_t max)
 {
+    CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+    if (nullptr != pEdit){
+        pEdit->onRangeChanged();
+    }
+
+    return true;
+}
+bool UiCfgItem::onMinValChanged(uint32_t min)
+{
+    CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+    if (nullptr != pEdit){
+        pEdit->onRangeChanged();
+    }
+
     return true;
 }
 
 bool UiCfgItem::isDataOK()
 {
-    CDevPointEdit* edit = dynamic_cast<CDevPointEdit*>(m_pWidget);
-    if (nullptr != edit){
-        uint16_t *pAddr = paramAddress();
-        uint32_t  devPt = (*(pAddr + 1) << 16) + (*pAddr);
-        int portType = (-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
-        if (!CDevPosMgr::instance()->isDevPointValid(devPt, portType))
-            return false;
+    if (m_required){
+        CDevPointEdit* edit = dynamic_cast<CDevPointEdit*>(m_pWidget);
+        if (nullptr != edit){
+            uint16_t *pAddr = paramAddress();
+            uint32_t  devPt = (*(pAddr + 1) << 16) + (*pAddr);
+            int portType = (-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
+            if (!CDevPosMgr::instance()->isDevPointValid(devPt, portType))
+                return false;
+        }
     }
     return true;
 }
