@@ -478,10 +478,18 @@ QString GroupCfgItem::previewInfo()
 QString GroupCfgItem::previewInfo(int col)
 {
     QString strInfo;
-    int i = 0;
+    int i = 0, max = 0, tlen = 8;
+    for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++, i++){
+        int len = getQstringShowLen((*it)->getName())+1;
+        qWarning()<<i<<len;
+        if ((i / m_ctlUnitSize) == col && max < len)
+            max = len;
+    }
+    max = (max + tlen -1) / tlen * tlen;
+    i = 0;
     for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++, i++){
         if ((i / m_ctlUnitSize) == col)
-            strInfo.append((*it)->previewInfo() + "\n");
+            strInfo.append((*it)->previewInfoEx(max) + "\n");
     }
     return strInfo;
 }

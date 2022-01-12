@@ -28,6 +28,19 @@ QString UiCfgItem::strTypeLabel    = "label";
 QString UiCfgItem::strTypeGroup    = "groupbox";
 QString UiCfgItem::strTypePage     = "page";
 
+int getQstringShowLen(const QString& str)
+{
+    int len = 0;
+    for (QString::const_iterator it = str.begin(); it != str.end(); it++){
+        if (('0' <= *it && '9' >= *it) || ('a' <= *it && 'z' >= *it) || ('A' <= *it && 'Z' >= *it) || ':' == *it)
+            len++;
+        else
+            len += 2;
+    }
+
+    return len;
+}
+
 HNDZ_IMPLEMENT_DYNCREATE(UiCfgItem, XmlItem)
 bool UiCfgItem::initFromDomElement(QDomElement element)
 {
@@ -305,7 +318,21 @@ QString UiCfgItem::previewInfo()
 
     return "";
 }
+QString UiCfgItem::previewInfoEx(int nameLenMax)
+{
+    if (0 < datacount()){
+        QString strInfo(m_name + ":");
+        int tlen = 8;
+        int len = getQstringShowLen(strInfo);
+        if (len < nameLenMax)
+            strInfo.append(QString((nameLenMax - len + tlen - 1)/tlen, QChar('\t')));
+        strInfo.append(strDataValue());
 
+        return strInfo;
+    }
+
+    return "";
+}
 QString UiCfgItem::strDataValue(uint16_t *pAddr)
 {
     QString strValue;
@@ -556,6 +583,10 @@ QString SetIndexCfgItem::previewInfo()
     qDebug()<<strInfo;
     return strInfo;
 }
+QString SetIndexCfgItem::previewInfoEx(int nameLenMax)
+{
+    return previewInfo();
+}
 void SetIndexCfgItem::setDefaultVal()
 {
     if(!m_defaultVal.isEmpty()){
@@ -783,7 +814,10 @@ QString ComboboxSetCfgItem::previewInfo()
     qDebug()<<strInfo;
     return strInfo;
 }
-
+QString ComboboxSetCfgItem::previewInfoEx(int nameLenMax)
+{
+    return previewInfo();
+}
 void ComboboxSetCfgItem::setDefaultVal()
 {
     if(0 < datacount() && !m_defaultVal.isEmpty()){

@@ -6,13 +6,13 @@ using namespace std;
 
 #define LINE_MAX    11
 #define MACHINE_MAX 255
-#define PORT_MAX    12
+#define PORT_MAX    2048
 #define LINE_BITS_COUNT    8
 #define MACHINE_BITS_COUNT 8
-#define PORT_BITS_COUNT    8
+#define PORT_BITS_COUNT    16
 #define LINE_BITS_MASK     0xFF
 #define MACHINE_BITS_MASK  0xFF
-#define PORT_BITS_MASK     0xFF
+#define PORT_BITS_MASK     0xFFFF
 #define LINE_BITS_SHIFT    (MACHINE_BITS_COUNT + PORT_BITS_COUNT)
 #define make_dev_point(l,m,p)         ((((l)&LINE_BITS_MASK)<<LINE_BITS_SHIFT) + (((m)&MACHINE_BITS_MASK)<<PORT_BITS_COUNT) + ((p)&PORT_BITS_MASK))
 #define get_line_from_dev_point(p)    (((p)>>LINE_BITS_SHIFT) & LINE_BITS_MASK)
@@ -45,6 +45,7 @@ public:
       LINETYPE_CS = 0,
       LINETYPE_CSBS,
       LINETYPE_DIO,
+      LINETYPE_COM,
       LINETYPE_CNT
     };
     enum {
@@ -62,7 +63,7 @@ protected:
     uint16_t* lineMachineCounts[LINE_MAX];
     bool      portInfos[LINE_MAX][MACHINE_MAX][PORTTYPE_CNT][PORT_MAX];
     uint16_t  lineCount;
-    uint8_t   portCount[LINETYPE_CNT];
+    uint16_t   portCount[LINETYPE_CNT];
     uint16_t *lineMachineTypes[LINE_MAX];
     uint16_t  bsDevVal;//valid BS type value
     bool      inited;

@@ -3,6 +3,7 @@
 #include "ItemBase.h"
 
 class QWidget;
+int getQstringShowLen(const QString& str);
 class UiCfgItem : public XmlItem
 {
 public:
@@ -56,6 +57,7 @@ public:
     virtual uint16_t *paramAddress();
 
     virtual QString previewInfo();
+    virtual QString previewInfoEx(int nameLenMax);
     virtual QString strDataValue(uint16_t* pAddr = nullptr);
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
     virtual void setDefaultVal();
@@ -109,6 +111,7 @@ public:
     virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
 
     virtual QString previewInfo();
+    virtual QString previewInfoEx(int nameLenMax);
     virtual void setDefaultVal();
     virtual QString getFullName(int idx);
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
@@ -151,6 +154,7 @@ public:
     virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
 
     virtual QString previewInfo();
+    virtual QString previewInfoEx(int nameLenMax);
     virtual void setDefaultVal();
     virtual QString getFullName(int idx);
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16

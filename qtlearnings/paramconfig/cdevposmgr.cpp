@@ -61,6 +61,8 @@ CDevPosMgr::CDevPosMgr()
                 lineTypes[i] = LINETYPE_DIO;
             else if (-1 < gLineNames[i].indexOf("BS"))
                 lineTypes[i] = LINETYPE_CSBS;
+            else if (-1 < gLineNames[i].indexOf("COM"))
+                lineTypes[i] = LINETYPE_COM;
             else
                 lineTypes[i] = LINETYPE_CS;
         }
@@ -237,6 +239,10 @@ uint8_t CDevPosMgr::getPortCount(int l, int portType)
     case LINETYPE_DIO:
         pCnt = 12;
         break;
+    case LINETYPE_COM:
+        if (PORTTYPE_IN == portType)
+            pCnt = 1120;
+        break;
     default:
         break;
     }
@@ -284,7 +290,7 @@ QString CDevPosMgr::makeStrDevPoint(uint32_t devPoint)
     int m = get_machine_from_dev_point(devPoint);
     int p = get_port_from_dev_point(devPoint);
 
-    if (0 > l || l> lineCount){
+    if (0 > l || l>= lineCount){
         return strDevPoint;
     }
     if (0 > m || m>= getMachineCount(l)){
