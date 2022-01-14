@@ -166,15 +166,27 @@ void CBinder::BindEdit(CDevPointEdit *pEdit, uint16_t *pVal, uint32_t defaultVal
  */
 void CBinder::BindComboBox(CKeyDnComboBox *pObj, uint16_t *pVal, const QStringList &params, const QString &strDefault)
 {
-    pObj->insertItems(0, params);
+    int idx = 0;
+    foreach (QString param, params){
+        QStringList valStrPair = param.split(':');
+        if (2 <= valStrPair.count()){
+            int val = valStrPair[0].toInt();
+            pObj->insertItem(idx, valStrPair[1], val);
+        }else{
+            pObj->insertItem(idx, param, idx);
+        }
+        idx++;
+    }
     pObj->setValuePtr(pVal);
-    if (0 <= *pVal && *pVal < pObj->count()){
-        pObj->setCurrentIndex(*pVal);
+    idx = pObj->findData(*pVal);
+    if (0 <= idx){
+        pObj->setCurrentIndex(idx);
     }else{
-        int iDef = pObj->findText(strDefault);
-        if (iDef < 0)
-            iDef = 0;
-        pObj->setCurrentIndex(iDef);
+        idx = strDefault.toInt();
+        idx = pObj->findData(idx);
+        if (idx < 0)
+            idx = 0;
+        pObj->setCurrentIndex(idx);
     }
 }
 ////20180710合并

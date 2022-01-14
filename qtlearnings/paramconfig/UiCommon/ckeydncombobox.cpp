@@ -71,9 +71,10 @@ void CKeyDnComboBox::keyPressEvent(QKeyEvent *ev)
 
 void CKeyDnComboBox::slot_currentIndexChanged(int index)
 {
-    if (nullptr != pVal){
-        if (index != *pVal){
-            *pVal = index;
+    if (nullptr != pVal && -1 < index){
+        uint16_t val = static_cast<uint16_t>(itemData(index).toInt());
+        if (val != *pVal){
+            *pVal = val;
             if (!updating)
                 emit sig_valueChanged(pVal, *pVal);
         }

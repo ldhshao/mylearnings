@@ -88,100 +88,302 @@
         </ComboboxCfgItem>
     </GroupCfgItem>
     <GroupCfgList name="workface">
-        <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
-            <ComboboxCfgItem id="1" name="设备有效性" params="有效;无效" defaultvalue="有效" dataidx="0">
-            </ComboboxCfgItem>
-            <UiCfgItem id="2" name="CS1远停台号" type="editbox"  range="(1-136)" defaultvalue="1" dataidx="1">
-            </UiCfgItem>
-            <UiCfgItem id="3" name="CS2远停台号" type="editbox"  range="(1-136)" defaultvalue="1" dataidx="2">
-            </UiCfgItem>
-            <UiCfgItem id="4" name="CS3远停台号" type="editbox"  range="(1-136)" defaultvalue="1" dataidx="3">
-            </UiCfgItem>
-            <UiCfgItem id="5" name="CS4远停台号" type="editbox"  range="(1-136)" defaultvalue="1" dataidx="4">
-            </UiCfgItem>
-            <ComboboxCfgItem id="6" name="备妥输出点与准备就绪点连锁关系" params="联系;不联系" defaultvalue="联系" dataidx="5">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="7" name="与CS1停闭锁关系，与CS1第N段闭锁连锁" params="联系;不联系" defaultvalue="不联系" dataidx="6">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="8" name="与CS3停闭锁关系" params="联系;不联系" defaultvalue="不联系" dataidx="7">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="9" name="与CS4停闭锁关系" params="联系;不联系" defaultvalue="不联系" dataidx="8">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="10" name="与DIO1停闭锁关系" params="联系;不联系" defaultvalue="不联系" dataidx="9">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="11" name="与DIO2停闭锁关系" params="联系;不联系" defaultvalue="不联系" dataidx="10">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="12" name="与DIO3停闭锁关系" params="联系;不联系" defaultvalue="不联系" dataidx="11">
-            </ComboboxCfgItem>
-            <UiCfgItemFloat id="13" name="两次启车间隔时间" type="editbox"  range="(0-1200)" precision="0.1" unit="秒"  defaultvalue="0" dataidx="12">
-            </UiCfgItemFloat>
-            <ComboboxCfgItem id="14" name="连锁下设备" params="无效;1#-4#皮带;破碎机;转载机;前部运输机;后部运输机;下控制器;设备连锁输入点" defaultvalue="无效" dataidx="13">
-            </ComboboxCfgItem>
-            <ComboboxCfgItem id="15" name="在就地/检修方式下，就地按钮有效时是否取消键盘启停功能" params="是;否" defaultvalue="否" dataidx="14">
-            </ComboboxCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="2" name="输入点信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
-            <UiCfgItem id="1" name="机头就地按钮输入点" type="devpointedit" dataidx="0" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="2" name="机尾就地按钮输入点" type="devpointedit" dataidx="2" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItemFloat id="3" name="就地按钮脉冲保持最短时间" type="editbox" range="(1-10)" precision="0.1" unit="秒" defaultvalue="5" dataidx="4">
-            </UiCfgItemFloat>
-            <UiCfgItemFloat id="4" name="就地按钮脉冲保持最长时间" type="editbox" range="(5-50)" precision="0.1" unit="秒" defaultvalue="30" dataidx="5">
-            </UiCfgItemFloat>
-            <UiCfgItem id="5" name="机头就地按钮灯输入点" type="editbox"       dataidx="6" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="6" name="机尾就地按钮灯输入点" type="devpointedit"  dataidx="8" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="7" name="远程启停输入点" type="editbox"             dataidx="10" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItemFloat id="8" name="远程起停点去抖时间" type="editbox"    range="(0-100)" precision="0.1" unit="秒" defaultvalue="10" dataidx="12">
-            </UiCfgItemFloat>
-            <UiCfgItem id="9" name="准备就绪输入点1-10" type="editbox"         dataidx="13" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItemFloat id="10" name="准备就绪点去抖时间" type="editbox"   range="(0-100)" precision="0.1" unit="秒" defaultvalue="10" dataidx="15">
-            </UiCfgItemFloat>
-            <ComboboxCfgItem id="11" name="准备就绪点在检修模式"               params="有效;无效" defaultvalue="无效" dataidx="16">
-            </ComboboxCfgItem>
-			<UiCfgItem id="12" name="远停输入点1-8" type="editbox"> 
-            </UiCfgItem>
-            <UiCfgItemFloat id="13" name="远停输入点去抖时间" type="editbox"  range="(0-100)" precision="0.1" unit="秒" defaultvalue="10">
-            </UiCfgItemFloat>
-            <UiCfgItem id="14" name="设备连锁输入点" type="editbox"  >
-            </UiCfgItem>
-            <UiCfgItemFloat id="15" name="设备连锁输入点去抖时间" type="editbox"  range="(0-100)" precision="0.1" unit="秒" defaultvalue="10">
-            </UiCfgItemFloat>
-            <UiCfgItem id="16" name="机头就地按钮锁定输入点" type="editbox"  >
-            </UiCfgItem>
-            <UiCfgItemFloat id="17" name="就地按钮锁定输入点去抖时间" type="editbox"  range="(0-100)" precision="0.1" unit="秒" defaultvalue="10">
-            </UiCfgItemFloat>
-        </GroupCfgItem>
-        <GroupCfgItem id="3" name="输出点信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
-            <UiCfgItem id="1" name="备妥输出点1-10" type="devpointedit"  defaultvalue="0" dataidx="0" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="2" name="远停输出点1-8" type="devpointedit"  defaultvalue="0" dataidx="2" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="3" name="设备连锁输出点1-10" type="editbox"  defaultvalue="0" dataidx="4" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="4" name="启动完成输出点" type="editbox"  defaultvalue="0" dataidx="6" datacnt="2">
-            </UiCfgItem>
-            <UiCfgItem id="5" name="急停输出点" type="editbox"  defaultvalue="0">
-            </UiCfgItem>
-            <UiCfgItem id="6" name="过载输出点" type="editbox"  defaultvalue="0">
-            </UiCfgItem>
-        </GroupCfgItem>
-        <GroupCfgItem id="4" name="输出部件" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
-            <UiCfgItem id="1" name="开停洒水输出点" type="editbox"  defaultvalue="0">
-            </UiCfgItem>
-            <UiCfgItem id="2" name="开停洒水输入点" type="editbox"  defaultvalue="0">
-            </UiCfgItem>
-            <ComboboxCfgItem id="3" name="输入点故障停机选择" params="停车;不停车" defaultvalue="不停车">
-            </ComboboxCfgItem>
-            <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-100)" precision="0.1" unit="秒" defaultvalue="10">
-            </UiCfgItemFloat>
-            <UiCfgItem id="5" name="洒水电磁阀输出点1-48" type="editbox"  defaultvalue="0">
-            </UiCfgItem>
-        </GroupCfgItem>
+        <GroupCfgList id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	<GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="设备使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="2" name="备妥输出点与准备就绪点连锁关系" params="0:不联系;1:联系" defaultvalue="1" dataidx="1">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="3" name="与CS1急停闭锁关系" params="0:不联系;1:联系" defaultvalue="1" dataidx="2">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="4" name="与CS2急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="3">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="5" name="与CS3急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="4">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="6" name="与CS4急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="5">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="7" name="与CS5急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="6">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="8" name="与DIO1急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="7">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="9" name="与DIO2急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="8">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="10" name="与DIO3急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="9">
+        	    </ComboboxCfgItem>
+        	    <ComboboxCfgItem id="11" name="与DIO4急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="10">
+        	    </ComboboxCfgItem>
+        	    <UiCfgItemFloat id="12" name="两次启车间隔时间" type="editbox"  range="(0-1200)" precision="0.1" unit="秒"  defaultvalue="0" dataidx="11">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItem id="13" name="连锁下设备" type="editbox"  range="(0-20)" defaultvalue="0" dataidx="12">
+        	    </UiCfgItem>
+        	    <ComboboxCfgItem id="14" name="就地按钮灯亮方式" params="0:用其启动才亮;1:设备运行亮" defaultvalue="0" dataidx="13">
+        	    </ComboboxCfgItem>
+        	    <UiCfgItemFloat id="15" name="就地按钮脉冲保持最短时间" type="editbox"  range="(0-#16)" precision="0.1" unit="s"  defaultvalue="20" dataidx="14">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="16" name="就地按钮脉冲保持最长时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="30" dataidx="15">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="2" name="洒水电磁阀输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        </GroupCfgList>
+        <GroupCfgList id="2" name="输出信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	<GroupCfgItem id="1" name="机头就地按钮灯输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="2" name="机尾就地按钮输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="3" name="备妥输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="4" name="远停输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="5" name="外部设备连锁输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="6" name="启动完成输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="7" name="过载输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="延时该时间后开始动作" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="动作保持时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        </GroupCfgList>
+        <GroupCfgList id="3" name="输入信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	<GroupCfgItem id="1" name="机头就地按钮输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="2" name="机尾就地按钮输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="3" name="准备就绪输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="4" name="连锁设备输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="5" name="机头就地按钮锁定输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="6" name="机尾就地按钮锁定输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="7" name="远程启停输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        	<GroupCfgItem id="8" name="远停输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    </ComboboxCfgItem>
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" dataidx="1" datacnt="2">
+        		</UiCfgItem>
+        	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" dataidx="3">
+				</ComboboxCfgItem> 
+        	    <UiCfgItemFloat id="4" name="输入点动作去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" dataidx="4">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="5" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="5">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="6" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="i0" dataidx="6">
+        	    </UiCfgItemFloat>
+        	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" dataidx="7">
+        	    </UiCfgItemFloat>
+        	</GroupCfgItem>
+        </GroupCfgList>
     </GroupCfgList>
     <GroupCfgList id="10" name="motorgroup">
         <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">

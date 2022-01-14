@@ -351,8 +351,10 @@ QString UiCfgItem::strDataValue(uint16_t *pAddr)
     }
 
     QComboBox* pBox = dynamic_cast<QComboBox*>(m_pWidget);
-    if (nullptr != pBox && *paramAddr < pBox->count())
-        strValue = pBox->itemText(*paramAddr);
+    if (nullptr != pBox){
+        int idx = pBox->findData(*paramAddr);
+        if (-1 < idx) strValue = pBox->itemText(idx);
+    }
     return strValue;
 }
 //return data value in string; and data count, u16
