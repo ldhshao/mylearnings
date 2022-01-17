@@ -52,6 +52,11 @@ public:
     virtual QString previewInfo();
     QString previewInfo(int col);
 
+    //load/save json file
+    bool readJsonFile(QString strFile);
+    bool saveJsonFile(QString strFile);
+    virtual bool loadFromJsonObject(QJsonObject* obj);
+    virtual bool saveToJsonObject(QJsonObject* obj);
 protected:
     void deleteAll();
     list<UiCfgItem*> m_children;

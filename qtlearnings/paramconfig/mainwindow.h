@@ -45,6 +45,7 @@ protected:
 
 protected slots:
     //void slot_deviceClicked(QLabel* lbl);
+    void slot_systemClicked(QWidget* w);
     void slot_deviceClicked(QWidget* w);
     void slot_uploadQueryClicked(QWidget* w);
     void slot_bakeupRestoreClicked(QWidget* w);

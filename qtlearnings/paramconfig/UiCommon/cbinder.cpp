@@ -131,15 +131,17 @@ CBinder::BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t *min, uint16_t *max
     BindUint16Ptr *pTmpBind = dynamic_cast<BindUint16Ptr *> (pObj->pBind);
     pTmpBind->SetValPtr(pVal);
     pTmpBind->SetMinMax(min,max);
-    if (!pTmpBind->isValid(*pVal)){
-        if(pTmpBind->isValid(defaultVal)){
-            pTmpBind->SetVal(defaultVal);
-        }else{
-            pTmpBind->SetVal(*min);
+    if (nullptr != pVal){
+        if (!pTmpBind->isValid(*pVal)){
+            if(pTmpBind->isValid(defaultVal)){
+                pTmpBind->SetVal(defaultVal);
+            }else{
+                pTmpBind->SetVal(*min);
+            }
         }
+        pObj->showText();
+        qDebug()<<"address "<<pVal<<" value "<<*pVal<<" default "<<defaultVal<<" min "<<*min<<" max "<<*max;
     }
-    pObj->showText();
-    qDebug()<<"address "<<pVal<<" value "<<*pVal<<" default "<<defaultVal<<" min "<<*min<<" max "<<*max;
 }
 void
 CBinder::BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t min, uint16_t *max, uint16_t defaultVal)

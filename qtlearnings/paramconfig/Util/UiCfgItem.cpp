@@ -53,6 +53,7 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     setStrValue(m_type, element, "type");
     setStrValue(m_range, element, "range");
     setStrValue(m_defaultVal, element, "defaultvalue");
+    setStrValue(m_paName, element, "paname");
     QString strEnableSource;
     setStrValue(strEnableSource, element, "enablesource");
     if (!strEnableSource.isEmpty()){
@@ -239,7 +240,8 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
                 if (nullptr != pSetEdit){
                     pSetEdit->initIndexRange(pMin, pMax);
                 }else {
-                    if (-1 < m_dataidx) CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMin, pMax, usDef);
+                    if (0 == m_datacnt) CBinder::BindEdit(pEdit, nullptr, pMin, pMax, usDef);
+                    else if (-1 < m_dataidx) CBinder::BindEdit(pEdit, pAddr+m_dataidx, pMin, pMax, usDef);
                     else qDebug()<<"error addr:"<<pAddr<<dataidx()<<pAddr+m_dataidx;
                 }
             }else {
@@ -251,7 +253,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
         unsigned short* pAddr = pStAddr + parent()->dataidx();
         CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(m_pWidget);
         pEdit->setPortType(-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
-        CBinder::BindEdit(pEdit, pAddr + m_dataidx, 0);
+        if (0 != m_datacnt) CBinder::BindEdit(pEdit, pAddr + m_dataidx, 0);
         if (2 > m_datacnt) qDebug()<<"error: name "<<m_name<<" with datacount "<<m_datacnt;
     }
 
@@ -305,6 +307,7 @@ void UiCfgItem::copyTo(UiCfgItem* destItem)
     destItem->m_enableSourceId = m_enableSourceId;
     destItem->m_enableSourceVal = m_enableSourceVal;
     destItem->m_required = m_required;
+    destItem->m_paName = m_paName;
 }
 
 QString UiCfgItem::previewInfo()
@@ -435,6 +438,25 @@ bool UiCfgItem::isDataOK()
     return true;
 }
 
+bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
+{
+    uint16_t* pAddr = paramAddress();
+    if (!m_paName.isEmpty() && obj->contains(m_paName) && nullptr != pAddr){
+        uint16_t val = static_cast<uint16_t>(obj->value(m_paName).toInt());
+        *pAddr = val;
+        return true;
+    }
+    return false;
+}
+bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
+{
+    uint16_t* pAddr = paramAddress();
+    if (!m_paName.isEmpty() && nullptr != pAddr){
+        obj->insert(m_paName, QJsonValue(*pAddr));
+        return true;
+    }
+    return false;
+}
 //ComboboxItem
 HNDZ_IMPLEMENT_DYNCREATE(UiCfgItemFloat, UiCfgItem)
 bool UiCfgItemFloat::initFromDomElement(QDomElement element)
@@ -892,5 +914,52 @@ bool ComboboxSetCfgItem::onMaxValChanged(uint32_t max)
         }
         pCmb->onDataCountChanged(max);
     }
+    return true;
+}
+
+//SetItemCfgItem
+HNDZ_IMPLEMENT_DYNCREATE(SetItemCfgItem, UiCfgItem)
+bool SetItemCfgItem::initFromDomElement(QDomElement element)
+{
+    UiCfgItem::initFromDomElement(element);
+
+    int dataCnt = m_itemDataCnt;
+    setIntValue(dataCnt, element, "itemdatacnt");
+    m_itemDataCnt = static_cast<uint8_t>(dataCnt);
+    setStrValue(m_setIndexSource, element, "setindexsource");
+
+    return true;
+}
+UiCfgItem* SetItemCfgItem::createMyself()
+{
+    SetItemCfgItem* pItem = new SetItemCfgItem();
+    UiCfgItem::copyTo(pItem);
+    pItem->m_itemDataCnt = m_itemDataCnt;
+    pItem->m_setIndexSource = m_setIndexSource;
+
+    return pItem;
+}
+bool SetItemCfgItem::initUi(unsigned short* pStAddr, int w, int h)
+{
+    UiCfgItem::initUi(pStAddr, w, h);
+    GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
+    if (nullptr!= pGroup){
+        UiCfgItem* pSetSource = nullptr;
+        if (nullptr != (pSetSource = pGroup->findItemById(m_setIndexSource))){
+            CKeyDnSetIndexEdit* pEdit = dynamic_cast<CKeyDnSetIndexEdit*>(pSetSource->getWidget());
+            m_pSetIndexSource = pSetSource;
+        }
+    }
+    if (nullptr != m_pSetIndexSource){
+        //bind data
+        unsigned short* pAddr = pStAddr + m_pSetIndexSource->parent()->dataidx() + m_pSetIndexSource->dataidx();
+        CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+        if (nullptr != pEdit){
+            pEdit->setItemIndex(m_dataidx);
+            pEdit->bindDataPtr(pAddr + m_dataidx);
+            QObject::connect(dynamic_cast<CKeyDnSetIndexEdit*>(m_pSetIndexSource->getWidget()), SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pEdit, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
+        }
+    }
+
     return true;
 }

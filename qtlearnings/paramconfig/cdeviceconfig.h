@@ -22,7 +22,7 @@ class CDeviceConfig : public QMainWindow
 public:
     explicit CDeviceConfig(QWidget *parent = nullptr);
     ~CDeviceConfig();
-    void updateUi(DevCfgList* dev, PageCfgList* uiCfg);
+    void updateUi(QString devName, PageCfgList* uiCfg);
     void showUi(int reason);
     CDevicePreview* getPreview() {	return preview; }
     void setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr) { paramSrvAddr = srvAddr; paramLclAddr = lclAddr; }

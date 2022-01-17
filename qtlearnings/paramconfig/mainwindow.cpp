@@ -32,6 +32,9 @@
 #define SYSTEM_CFG_FILEPATH "system.json"
 #define UITEMP_CFG_FILEPATH "uitemplate.xml"
 #define PARAMS_FILEPATH     "param.dat"
+#define UITEMPLATE_ELECTRIC     "electric"
+#define DEVNAME_ELECTRIC        "电气系统"
+#define PARNAME_DEVICE1        "HDevice1"
 #define MENU1_STYLE         "QPushButton {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}"
 #define MENU1_CMB_STYLE     "QComboBox {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}\
                              QComboBox QAbstractItemView{background-color: #646478;color: #FFFFFF;selection-background-color: #505064;selection-color: #FFFFFF;}"
@@ -55,6 +58,7 @@
 #define PROPERTY_WIDGET "widget"
 #define PROPERTY_WORKDIR "workdir"
 #define PROPERTY_PARCNT  "paramcount"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -151,21 +155,13 @@ void MainWindow::initMenu()
     devCfg.readDevCfgFile(strDevCfg);
     DevCfgItem *pItem = devCfg.getHead();
     int idx = 0;
-    while (nullptr != pItem) {
-        CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
-        pBtn->setTitle(pItem->getName());
-        pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
-        QVariant var;
-        var.setValue<void*>(pItem);
-        pBtn->setProperty(PROPERTY_DEVICE, var);
-        pBtn->setProperty(PROPERTY_INDEX, idx++);
-        connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_deviceClicked(QWidget*)));
-        devList.push_back(pBtn);
-        pItem = devCfg.getNext();
-        break;
-    }
-
     CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+    pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
+    pBtn->setProperty(PROPERTY_INDEX, idx++);
+    connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_systemClicked(QWidget*)));
+    devList.push_back(pBtn);
+
+    pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("通讯");
     pBtn->setImagePath(":/images/comm.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
@@ -219,48 +215,21 @@ void MainWindow::initPage()
     GroupCfgList cfgTemplate;
     QString strTemplate = workDir + "/" + UITEMP_CFG_FILEPATH;
     cfgTemplate.readXmlFile(strTemplate);
-    DevCfgItem *pItem = devCfg.getHead();
-#if 0
-    while (nullptr != pItem) {
-        GroupCfgList *uiList = new GroupCfgList();
-        uiList->setName(pItem->getName());
-        DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);//1level
-        if (nullptr != pList){
-            DevCfgItem* pSubItem = pList->getHead();//2level
-            while(nullptr != pSubItem){
-                GroupCfgItem* grp = nullptr;
-                GroupCfgItem *pGroup = cfgTemplate.findGroupByName(pSubItem->getType());
-                if (nullptr != pGroup){
-                    grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
-                }else {
-                    grp = new GroupCfgList();
-                }
-                grp->setName(pSubItem->getName());
-                uiList->addChild(grp);
-
-                DevCfgList* pLel2Dev = dynamic_cast<DevCfgList*>(pSubItem);
-                if (nullptr != pLel2Dev){
-                    DevCfgItem* pLel3Item = pLel2Dev->getHead();//3level
-                    while(nullptr != pLel3Item){
-                        GroupCfgItem* pGrp3 = cfgTemplate.findGroupByName(pLel3Item->getType());
-                        if (nullptr != pGrp3){
-                            UiCfgItem* item3 = pGrp3->createMyself();
-                            item3->setName(pLel3Item->getName());
-                            grp->addChild(item3);
-                        }
-                        pLel3Item = pLel2Dev->getNext();
-                    }
-                }
-                pSubItem = pList->getNext();
-            }
+    //add electrics
+    {
+        GroupCfgItem *pGroup = cfgTemplate.findGroupByName(UITEMPLATE_ELECTRIC);
+        if (nullptr != pGroup){
+            GroupCfgItem *grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
+            grp->setName(DEVNAME_ELECTRIC);
+            devUiCfgList.addChild(grp);
+            devList[0]->setTitle(DEVNAME_ELECTRIC);
         }
-        devUiCfgList.addChild(uiList);
-        pItem = devCfg.getNext();
     }
-#endif
+    DevCfgItem *pItem = devCfg.getHead();
     while (nullptr != pItem) {
         GroupCfgList *uiList = new GroupCfgList();
         uiList->setName(pItem->getName());
+        uiList->setParamName(PARNAME_DEVICE1);
         DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);//1level
         if (nullptr != pList){
             GroupCfgItem* grp = nullptr;
@@ -290,17 +259,17 @@ void MainWindow::initPage()
         pItem = devCfg.getNext();
     }
 
+    paramCount = devUiCfgList.getDataCount();
+    paramLocalAddr = new uint16_t[paramCount];
+    paramServerAddr = new uint16_t[paramCount];
+    QCoreApplication::instance()->setProperty(PROPERTY_PARCNT, paramCount);
+    devUiCfgList.setParamTbl(paramLocalAddr);
+    devUiCfgList.initData(0, true);//
     //check data count
     bool loaded = loadParam();
 
-    devUiCfgList.setParamTbl(paramLocalAddr);
     qWarning()<<"param address "<<paramLocalAddr<<" param count "<<paramCount;
-    if (loaded)
-        devUiCfgList.initData(0, false);//
-    else {
-        devUiCfgList.initData(0, true);//
-        memcpy(paramServerAddr, paramLocalAddr, paramCount*sizeof(uint16_t));
-    }
+    memcpy(paramServerAddr, paramLocalAddr, paramCount*sizeof(uint16_t));
     devUiCfgList.createAllPage(pageList);
 
     connectPages();
@@ -340,34 +309,39 @@ bool MainWindow::saveParam()
        outFile.open(strParam.toStdString(), ios_base::out|ios_base::binary);
        outFile.write(reinterpret_cast<char*>(paramLocalAddr), paramCount*sizeof (uint16_t));
        outFile.close();
+
+       UiCfgItem* pItem = devUiCfgList.getHead();
+       while (nullptr != pItem){
+           GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+           grp->saveJsonFile(workDir + "/he.json");
+           pItem = devUiCfgList.getNext();
+           break;
+       }
+       int i = 0;
+       while (nullptr != pItem){
+           GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+           grp->saveJsonFile(workDir + QString::asprintf("/hp%d.json", i));
+           pItem = devUiCfgList.getNext();
+       }
     }
     return true;
 }
 bool MainWindow::loadParam()
 {
     bool ret = false;
-    if (nullptr == paramLocalAddr){
-        ifstream inFile;
-        QString strParam = workDir + "/" + PARAMS_FILEPATH;
-        inFile.open(strParam.toStdString(), ios_base::in | ios_base::binary);
-        inFile.seekg(0, inFile.end);
-        int params = inFile.tellg() / sizeof(uint16_t);
-        paramCount = devUiCfgList.getDataCount();
-        if (paramCount == params){//check param count or config md5
-            inFile.seekg(0, inFile.beg);
-            paramLocalAddr = new uint16_t[paramCount];
-            paramServerAddr = new uint16_t[paramCount];
-            inFile.read(reinterpret_cast<char*>(paramLocalAddr), paramCount*sizeof(uint16_t));
-            ret = true;
-        }else {//get params from remote
-            paramLocalAddr = new uint16_t[paramCount];
-            paramServerAddr = new uint16_t[paramCount];
-        }
-        inFile.close();
-        memcpy(static_cast<void*>(paramServerAddr),static_cast<void*>(paramLocalAddr),paramCount*sizeof(uint16_t));
-        QCoreApplication::instance()->setProperty(PROPERTY_PARCNT, paramCount);
+    UiCfgItem* pItem = devUiCfgList.getHead();
+    while (nullptr != pItem){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+        grp->readJsonFile(workDir + "/he.json");
+        pItem = devUiCfgList.getNext();
+        break;
     }
-    qDebug()<<__FUNCTION__<<" param addr "<<paramLocalAddr<<" param count "<<paramCount<<" result "<<ret;
+    int i = 0;
+    while (nullptr != pItem){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+        grp->readJsonFile(workDir + QString::asprintf("/hp%d.json", i));
+        pItem = devUiCfgList.getNext();
+    }
     return ret;
 }
 void MainWindow::onResize(int width, int height)
@@ -479,6 +453,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             return ;
     }
 }
+void MainWindow::slot_systemClicked(QWidget* w)
+{
+        deviceUi->updateUi(devUiCfgList.getHead()->getName(), &devUiCfgList);
+        deviceUi->showUi(1);
+}
 void MainWindow::slot_deviceClicked(QWidget* w)
 {
     QVariant var = w->property(PROPERTY_DEVICE);
@@ -486,7 +465,7 @@ void MainWindow::slot_deviceClicked(QWidget* w)
         DevCfgList* list = static_cast<DevCfgList*>(var.value<void*>());
         qDebug()<<" device "<<list;
 
-        deviceUi->updateUi(list, &devUiCfgList);
+        deviceUi->updateUi(list->getName(), &devUiCfgList);
         deviceUi->showUi(1);
     }
 }

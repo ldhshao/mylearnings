@@ -3,6 +3,9 @@
 #include "UiCommon/ckeydncombobox.h"
 #include "UiCommon/cenablemngr.h"
 #include <QGroupBox>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 #include <set>
 #include <vector>
 #include <QDebug>
@@ -494,6 +497,89 @@ QString GroupCfgItem::previewInfo(int col)
     return strInfo;
 }
 
+bool GroupCfgItem::readJsonFile(QString strFile)
+{
+    QFile file(strFile);
+    if(!file.exists(strFile))
+    {
+        return false;
+    }
+    if(!file.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
+
+    QJsonParseError parseError;
+    QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
+    file.close();
+    if(parseError.error!=QJsonParseError::NoError){
+        return false;
+    }
+
+    QJsonObject obj=doc.object().begin()->toObject();
+    loadFromJsonObject(&obj);
+    qDebug()<<"load successfully 1";
+    qWarning()<<"load successfully 2";
+
+    return true;
+}
+bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj)
+{
+    for(auto it = m_children.begin(); it != m_children.end(); it++){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            QString childName = (*it)->paramName();
+            if (!childName.isEmpty() && obj->contains(childName)){
+                QJsonObject childObj = obj->value(childName).toObject();
+                (*it)->loadFromJsonObject(&childObj);
+            }else {
+                (*it)->loadFromJsonObject(obj);
+            }
+        }else{
+            (*it)->loadFromJsonObject(obj);
+        }
+    }
+    return true;
+}
+bool GroupCfgItem::saveJsonFile(QString strFile)
+{
+    QFile file(strFile);
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        return false;
+    }
+
+    QJsonObject root;
+    QJsonObject obj;
+    saveToJsonObject(&obj);
+    root.insert(m_paName, obj);
+    QJsonDocument doc(root);
+    file.write(doc.toJson());
+    file.close();
+    qDebug()<<"save successfully 1";
+    qWarning()<<"save successfully 2";
+
+    return true;
+}
+bool GroupCfgItem::saveToJsonObject(QJsonObject *obj)
+{
+    for(auto it = m_children.begin(); it != m_children.end(); it++){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            QJsonObject childObj;
+            QString childName = (*it)->paramName();
+            if (!childName.isEmpty()){
+                (*it)->saveToJsonObject(&childObj);
+                obj->insert(childName, childObj);
+            }else {
+                (*it)->saveToJsonObject(obj);
+            }
+        }else{
+            (*it)->saveToJsonObject(obj);
+        }
+    }
+    return true;
+}
 //common function
 static int getValueIndex(vector<int> &vec, int v)
 {
@@ -557,12 +643,7 @@ bool GroupCfgList::initUi(unsigned short* pStAddr, int w, int h)
 UiCfgItem* GroupCfgList::createMyself()
 {
     GroupCfgList* pList = new GroupCfgList();
-    pList->m_id = m_id;
-    pList->m_name = m_name;
-    pList->m_dataidx = m_dataidx;
-    pList->m_type = m_type;
-    pList->m_enableSourceId = m_enableSourceId;
-    pList->m_enableSourceVal = m_enableSourceVal;
+    copyTo(pList);
 
     copyChildren(pList);
 

@@ -184,7 +184,10 @@ public:
     }
     virtual int keyEventFilter(QKeyEvent *ev);
     virtual QString checkSet() {}
-    virtual QString showSet(){return QString::number(*pVal,10);}
+    virtual QString showSet(){
+        if (nullptr != pVal) return QString::number(*pVal,10);
+        else return "";
+    }
     virtual void clear() {}
     virtual bool setValue(const QString& strVal);
     virtual bool onRangeChanged();

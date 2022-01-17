@@ -28,6 +28,9 @@ public:
     {
         return m_accessiblename;
     }
+    //set item init
+    void setItemIndex(uint8_t idx) { m_itemIdx = idx; }
+    void bindDataPtr(u_int16_t* pVal);
 
     IBindObj* pBind;
     // tips框偏移量，默认为0，界面使用容器时需要重新计算
@@ -44,10 +47,12 @@ protected:
 protected slots:
     //void slot_textEdited(const QString& newTxt);
     //void slot_textChanged(const QString& newTxt);
+    void slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize);
 
 private:
     QString m_accessiblename;
     bool    m_editing;
+    uint8_t m_itemIdx;//for set item
 };
 
 class CKeyDnSetIndexEdit : public CKeyDnEdit

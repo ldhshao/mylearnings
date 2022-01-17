@@ -87,40 +87,94 @@
         <ComboboxCfgItem id="1" name="水电联动选择" col="1" row="1" width="100" height="28" params="有效;无效">
         </ComboboxCfgItem>
     </GroupCfgItem>
+    <GroupCfgList name="electric" paname="hElectric">
+    	<GroupCfgList name="主控制器">
+    	    <GroupCfgItem id="1" name="CS1沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS0">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="1"  paname="enable" dataidx="0">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="1" enablesource="1:1" paname="setCount" dataidx="1">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight" dataidx="2">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="4" name="闭锁输入设备台数" type="editbox"  range="(0-255)" defaultvalue="0"  enablesource="1:1" paname="setBSCount" dataidx="3">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost" dataidx="4">
+    	    	</ComboboxCfgItem>
+			</GroupCfgItem>
+    	    <GroupCfgItem id="2" name="CS2沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS1">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="1"  paname="enable" dataidx="0">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="1" enablesource="1:1" paname="setCount" dataidx="1">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight" dataidx="2">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="4" name="闭锁输入设备台数" type="editbox"  range="(0-255)" defaultvalue="0"  enablesource="1:1" paname="setBSCount" dataidx="3">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost" dataidx="4">
+    	    	</ComboboxCfgItem>
+			</GroupCfgItem>
+        	<GroupCfgItem id="6" name="DIO1沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="DIO0">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="1"  paname="enable" dataidx="0">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="1" enablesource="1:1" paname="setCount" dataidx="1">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight" dataidx="2">
+    	    	</ComboboxCfgItem>
+			</GroupCfgItem>
+		</GroupCfgList>
+    	<GroupCfgList name="中继1">
+        	<GroupCfgItem id="3" name="CS3沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS2">
+			</GroupCfgItem>
+        	<GroupCfgItem id="7" name="DIO2沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS3">
+			</GroupCfgItem>
+		</GroupCfgList>
+    	<GroupCfgList name="中继2">
+        	<GroupCfgItem id="4" name="CS4沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+			</GroupCfgItem>
+        	<GroupCfgItem id="8" name="DIO3沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+			</GroupCfgItem>
+		</GroupCfgList>
+    	<GroupCfgList name="中继3">
+        	<GroupCfgItem id="5" name="CS5沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+			</GroupCfgItem>
+        	<GroupCfgItem id="9" name="DIO4沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+			</GroupCfgItem>
+		</GroupCfgList>
+	</GroupCfgList>
     <GroupCfgList name="workface">
         <GroupCfgList id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         	<GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
-        	    <ComboboxCfgItem id="1" name="设备使能" params="0:不使能;1:使能" defaultvalue="0" dataidx="0">
+        	    <ComboboxCfgItem id="1" name="设备使能" params="0:不使能;1:使能" defaultvalue="0" paname="enable" dataidx="0">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="2" name="备妥输出点与准备就绪点连锁关系" params="0:不联系;1:联系" defaultvalue="1" dataidx="1">
+        	    <ComboboxCfgItem id="2" name="备妥输出点与准备就绪点连锁关系" params="0:不联系;1:联系" defaultvalue="1" enablesource="1:1" paname="enableAll" dataidx="1">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="3" name="与CS1急停闭锁关系" params="0:不联系;1:联系" defaultvalue="1" dataidx="2">
+        	    <ComboboxCfgItem id="3" name="与CS1急停闭锁关系" params="0:不联系;1:联系" defaultvalue="1" enablesource="1:1" paname="RelationWithBS_CS1" dataidx="2">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="4" name="与CS2急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="3">
+        	    <ComboboxCfgItem id="4" name="与CS2急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_CS2" dataidx="3">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="5" name="与CS3急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="4">
+        	    <ComboboxCfgItem id="5" name="与CS3急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_CS3" dataidx="4">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="6" name="与CS4急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="5">
+        	    <ComboboxCfgItem id="6" name="与CS4急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_CS4" dataidx="5">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="7" name="与CS5急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="6">
+        	    <ComboboxCfgItem id="7" name="与CS5急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_CS5" dataidx="6">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="8" name="与DIO1急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="7">
+        	    <ComboboxCfgItem id="8" name="与DIO1急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_DIO1" dataidx="7">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="9" name="与DIO2急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="8">
+        	    <ComboboxCfgItem id="9" name="与DIO2急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_DIO2" dataidx="8">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="10" name="与DIO3急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="9">
+        	    <ComboboxCfgItem id="10" name="与DIO3急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" enablesource="1:1" paname="RelationWithBS_DIO3" dataidx="9">
         	    </ComboboxCfgItem>
-        	    <ComboboxCfgItem id="11" name="与DIO4急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" dataidx="10">
+        	    <ComboboxCfgItem id="11" name="与DIO4急停闭锁关系" params="0:不联系;1:联系" defaultvalue="0" paname="RelationWithBS_DIO4" dataidx="10">
         	    </ComboboxCfgItem>
-        	    <UiCfgItemFloat id="12" name="两次启车间隔时间" type="editbox"  range="(0-1200)" precision="0.1" unit="秒"  defaultvalue="0" dataidx="11">
+        	    <UiCfgItemFloat id="12" name="两次启车间隔时间" type="editbox"  range="(0-1200)" precision="0.1" unit="秒"  defaultvalue="0" enablesource="1:1" paname="startIntervalTime" dataidx="11">
         	    </UiCfgItemFloat>
-        	    <UiCfgItem id="13" name="连锁下设备" type="editbox"  range="(0-20)" defaultvalue="0" dataidx="12">
+        	    <UiCfgItem id="13" name="连锁下设备" type="editbox"  range="(0-20)" defaultvalue="0" enablesource="1:1" paname="ChainDevice" dataidx="12">
         	    </UiCfgItem>
-        	    <ComboboxCfgItem id="14" name="就地按钮灯亮方式" params="0:用其启动才亮;1:设备运行亮" defaultvalue="0" dataidx="13">
+        	    <ComboboxCfgItem id="14" name="就地按钮灯亮方式" params="0:用其启动才亮;1:设备运行亮" defaultvalue="0" enablesource="1:1" dataidx="13">
         	    </ComboboxCfgItem>
-        	    <UiCfgItemFloat id="15" name="就地按钮脉冲保持最短时间" type="editbox"  range="(0-#16)" precision="0.1" unit="s"  defaultvalue="20" dataidx="14">
+        	    <UiCfgItemFloat id="15" name="就地按钮脉冲保持最短时间" type="editbox"  range="(0-#16)" precision="0.1" unit="s"  defaultvalue="20" enablesource="1:1" dataidx="14">
         	    </UiCfgItemFloat>
-        	    <UiCfgItemFloat id="16" name="就地按钮脉冲保持最长时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="30" dataidx="15">
+        	    <UiCfgItemFloat id="16" name="就地按钮脉冲保持最长时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="30" enablesource="1:1" dataidx="15">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="2" name="洒水电磁阀输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -136,8 +190,12 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
+        		<SetIndexCfgItem id="22" name="洒水电磁阀输出" type="setindexeditbox" range="(1-48)" defaultvalue="1" dataidx="8" setsize="8" setcount="48" previewconfig="洒水电磁阀输出/号电磁阀/有;无" datanameconfig="DIO/号下位机/硬连锁输出点">
+        		</SetIndexCfgItem>
+        	    <SetItemCfgItem id="8" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="1:2" dataidx="2" datacnt="0" setindexsource="22">
+        	    </SetItemCfgItem>
         	</GroupCfgItem>
         </GroupCfgList>
         <GroupCfgList id="2" name="输出信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -154,7 +212,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="2" name="机尾就地按钮输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -170,7 +228,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="3" name="备妥输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -186,7 +244,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="4" name="远停输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -202,7 +260,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="5" name="外部设备连锁输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -218,7 +276,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="6" name="启动完成输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -234,7 +292,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="7" name="过载输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
@@ -250,7 +308,7 @@
         	    </UiCfgItemFloat>
         	    <ComboboxCfgItem id="6" name="是否硬连锁" params="0:硬连锁;1:不连锁" defaultvalue="0" dataidx="6">
 				</ComboboxCfgItem> 
-        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="0"  enablesource="3:2" dataidx="7">
+        	    <UiCfgItemFloat id="7" name="输出频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="5"  enablesource="3:2" dataidx="7">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         </GroupCfgList>
@@ -385,9 +443,9 @@
         	</GroupCfgItem>
         </GroupCfgList>
     </GroupCfgList>
-    <GroupCfgList id="10" name="motorgroup">
+    <GroupCfgList id="10" name="motorgroup" paname="HDevice2">
         <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
-            <ComboboxCfgItem id="1" name="设备使能" params="使能;不使能" defaultvalue="不使能">
+            <ComboboxCfgItem id="1" name="设备使能" params="使能;不使能" defaultvalue="不使能" paname="enable">
             </ComboboxCfgItem>
         </GroupCfgItem>
         <GroupCfgList id= "2" name="电机" enablesource="10/1:0">

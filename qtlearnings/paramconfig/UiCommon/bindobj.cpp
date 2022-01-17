@@ -410,7 +410,7 @@ int BindUint16Ptr::keyEventFilter(QKeyEvent *ev)
 bool BindUint16Ptr::setValue(const QString &strVal)
 {
     bool ret = true;
-    if (strVal != showSet()){
+    if (nullptr != pVal && strVal != showSet()){
         uint16_t newVal = strVal.toUShort();
         if (newVal != *pVal){
             if (isValid(newVal)){
@@ -436,7 +436,7 @@ bool BindUint16Ptr::isValid(uint16_t val)
 }
 bool BindUint16Ptr::onRangeChanged()
 {
-    if (!isValid(*pVal)){
+    if (nullptr != pVal && !isValid(*pVal)){
         if (*m_iminptr > *pVal){
             *pVal = *m_iminptr;
             setState(BS_MODIFIED);

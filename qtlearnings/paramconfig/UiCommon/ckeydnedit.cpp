@@ -13,6 +13,7 @@ CKeyDnEdit::CKeyDnEdit(QWidget *parent) :
     XOffset = 0;
     YOffset = 0;
     m_editing = false;
+    m_itemIdx = 0;
     //connect(this, SIGNAL(textEdited(const QString &)), this, SLOT(slot_textEdited(const QString&)));
     //connect(this, SIGNAL(textChanged(const QString &)), this, SLOT(slot_textChanged(const QString&)));
 }
@@ -152,6 +153,25 @@ void CKeyDnEdit::onRangeChanged()
             }
         }
     }
+}
+
+void CKeyDnEdit::bindDataPtr(u_int16_t* pVal)
+{
+    if (nullptr != pVal && nullptr != pBind){
+        BindUint16Ptr *pBindU16Ptr = dynamic_cast<BindUint16Ptr*>(pBind);
+        if (nullptr != pBindU16Ptr){
+            pBindU16Ptr->SetValPtr(pVal);
+        }
+        qWarning()<<pVal<<*pVal;
+
+        setText(pBind->showSet());
+    }
+}
+
+void CKeyDnEdit::slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize)
+{
+    if (m_itemIdx < setSize)
+        bindDataPtr(pAddr + m_itemIdx);
 }
 
 //CKeyDnSetIndexEdit

@@ -52,11 +52,11 @@ CDeviceConfig::~CDeviceConfig()
     delete bkLbl;
 }
 
-void CDeviceConfig::updateUi(DevCfgList* dev, PageCfgList* uiCfg)
+void CDeviceConfig::updateUi(QString devName, PageCfgList* uiCfg)
 {
-    ui->label_title->setText(dev->getName() + "参数配置");
-    if (nullptr != dev && nullptr != uiCfg){
-        GroupCfgItem* grpItem = uiCfg->findGroupByName(dev->getName());
+    ui->label_title->setText(devName + "参数配置");
+    if (nullptr != uiCfg){
+        GroupCfgItem* grpItem = uiCfg->findGroupByName(devName);
         if (nullptr != grpItem){
             deviceUiCfg = grpItem;
             initMenu2(grpItem);

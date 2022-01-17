@@ -1,6 +1,7 @@
 #ifndef UIITEM_H
 #define UIITEM_H
 #include "ItemBase.h"
+#include <QJsonObject>
 
 class QWidget;
 int getQstringShowLen(const QString& str);
@@ -67,12 +68,17 @@ public:
 
     virtual bool isDataOK();
 
+    QString paramName() { return m_paName; }
+    void setParamName(QString strPaName) { m_paName = strPaName; }
+    virtual bool loadFromJsonObject(QJsonObject* obj);
+    virtual bool saveToJsonObject(QJsonObject* obj);
 protected:
     int m_dataidx, m_datacnt;
     QString m_type;
     QString m_range;
     QString m_defaultVal;
     QString m_enableSourceId;//ID path; example: 1)5 2)../5/7
+    QString m_paName;//for load and save for other
     uint16_t m_enableSourceVal;
     UiCfgItem  *m_parent;
     UiCfgItem  *m_enableSource;
@@ -115,6 +121,8 @@ public:
     virtual void setDefaultVal();
     virtual QString getFullName(int idx);
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
+
+    uint16_t setSize() { return m_setSize; }
 protected:
     uint16_t m_setSize;
     uint16_t m_setCnt;
@@ -165,6 +173,23 @@ protected:
     QString    m_previewCfg;
     QString    m_setSize;
     UiCfgItem *pSetIndexSource;
+};
+class SetItemCfgItem : public UiCfgItem
+{
+public:
+    HNDZ_DECLARE_DYNCREATE(SetItemCfgItem)
+    SetItemCfgItem() :m_itemDataCnt(1){ 	}
+    virtual ~SetItemCfgItem() {}
+
+    virtual bool initFromDomElement(QDomElement element);
+    virtual UiCfgItem* createMyself();
+    virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
+
+protected:
+    //use dataidx as internal index;
+    QString    m_setIndexSource;
+    UiCfgItem *m_pSetIndexSource;
+    uint8_t    m_itemDataCnt;
 };
 #endif
 
