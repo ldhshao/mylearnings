@@ -8,6 +8,7 @@
 #include <QJsonValue>
 #include <set>
 #include <vector>
+#include <utility>
 #include <QDebug>
 
 //GroupCfgItem
@@ -141,14 +142,27 @@ bool GroupCfgItem::initData(int idx, bool useDef)
 {
     m_dataidx = idx;
 
+    list<pair<int,SetIndexCfgItem*>> setIndexList;
     int cnt = 0;
+    int grpIdx = 0;
     list<UiCfgItem*>::iterator it = m_children.begin();
     for(; it != m_children.end(); it++){
-        (*it)->initData(idx, useDef);
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            grp->initData(idx, useDef);
+        }else{
+            SetIndexCfgItem* pSetIdx = dynamic_cast<SetIndexCfgItem*>(*it);
+            if (nullptr != pSetIdx) setIndexList.push_back(make_pair(grpIdx, pSetIdx));
+            else (*it)->initData(grpIdx, useDef);
+        }
         cnt += (*it)->datacount();
         idx += (*it)->datacount();
+        grpIdx += (*it)->datacount();
     }
     m_datacnt = cnt;
+    for (auto it = setIndexList.begin(); it != setIndexList.end(); it++){
+        it->second->initData(it->first, useDef);
+    }
     //check data conflict
     //chkDataConflict();
 

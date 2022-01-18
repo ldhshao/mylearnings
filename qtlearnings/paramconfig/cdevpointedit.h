@@ -21,6 +21,8 @@ public:
     uint8_t getPortType() { return portType; }
     void endEdit();
     QString tipInfo();
+    //set item init
+    void setItemIndex(uint8_t idx) { m_itemIdx = idx; }
 
     enum {
       DPES_IDLE = 0,
@@ -31,6 +33,9 @@ public:
 signals:
     void sig_valueChanged(uint16_t *pVal, uint32_t valNew);
 
+protected slots:
+    void slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize);
+
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
     virtual void mouseReleaseEvent(QMouseEvent *e);
@@ -40,6 +45,7 @@ protected:
     uint8_t   portType;
     uint8_t   state;
     uint8_t   step;
+    uint8_t m_itemIdx;//for set item
 };
 
 #endif // CDEVPOINTEDIT_H

@@ -114,6 +114,7 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual UiCfgItem* createMyself();
+    virtual bool initData(int idx, bool useDef);
     virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
 
     virtual QString previewInfo();
@@ -123,11 +124,16 @@ public:
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
 
     uint16_t setSize() { return m_setSize; }
+    void addItem(UiCfgItem* item);
+
+    virtual bool loadFromJsonObject(QJsonObject* obj);
+    virtual bool saveToJsonObject(QJsonObject* obj);
 protected:
     uint16_t m_setSize;
     uint16_t m_setCnt;
     QString  m_previewCfg;
     QString  m_dataNameCfg;
+    list<UiCfgItem*> m_itemList;
 };
 class ComboboxCfgItem : public UiCfgItem
 {
@@ -183,13 +189,51 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual UiCfgItem* createMyself();
+    virtual void copyTo(UiCfgItem* destItem);
+    virtual bool initData(int idx, bool useDef);//attach to set index item
+    virtual bool initDataWithDefault(uint16_t* pAddr);
     virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
 
+    uint8_t itemDataCnt() { return m_itemDataCnt; }
 protected:
     //use dataidx as internal index;
     QString    m_setIndexSource;
     UiCfgItem *m_pSetIndexSource;
     uint8_t    m_itemDataCnt;
+};
+class SetItemCfgItemFloat : public SetItemCfgItem
+{
+public:
+    HNDZ_DECLARE_DYNCREATE(SetItemCfgItemFloat)
+    SetItemCfgItemFloat() :m_precision(1), m_decimalPlaces(0){ 	}
+    virtual ~SetItemCfgItemFloat() {}
+
+    virtual bool initFromDomElement(QDomElement element);
+    virtual UiCfgItem* createMyself();
+
+    virtual void create(QWidget* parent);
+
+    virtual QString strDataValue(uint16_t* pAddr = nullptr);
+protected:
+    QString m_unit;
+    float   m_precision;
+    uint16_t m_decimalPlaces;
+};
+class ComboboxSetItemCfgItem : public SetItemCfgItem
+{
+public:
+    HNDZ_DECLARE_DYNCREATE(ComboboxSetItemCfgItem)
+    ComboboxSetItemCfgItem() { m_type = UiCfgItem::strTypeCombobox;	}
+    virtual ~ComboboxSetItemCfgItem() {}
+
+    virtual bool initFromDomElement(QDomElement element);
+    virtual UiCfgItem* createMyself();
+
+    virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
+    QStringList params() { return m_params; }
+
+protected:
+    QStringList m_params;
 };
 #endif
 

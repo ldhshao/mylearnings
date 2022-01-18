@@ -17,7 +17,9 @@ public:
 
     bool setEditText(const QString& strText);
     uint16_t* valuePtr() { return pVal; }
-    void setValuePtr(uint16_t* val) { pVal = val; }
+    void setValuePtr(uint16_t* val);
+    //set item init
+    void setItemIndex(uint8_t idx) { m_itemIdx = idx; }
 
 signals:
     void sig_valueChanged(uint16_t *pVal, uint32_t valNew);
@@ -29,10 +31,12 @@ protected:
 
 protected slots:
     void slot_currentIndexChanged(int index);
+    void slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize);
 
 protected:
     uint16_t *pVal;
     bool      updating;
+    uint8_t m_itemIdx;//for set item
 };
 
 class CKeyDnComboBoxSet : public CKeyDnComboBox

@@ -10,6 +10,7 @@ CDevPointEdit::CDevPointEdit(QWidget *parent):QLineEdit(parent)
     pVal = nullptr;
     state = DPES_IDLE;
     step = 0;
+    m_itemIdx = 0;
 }
 
 CDevPointEdit::CDevPointEdit(const QString &text, QWidget *parent):QLineEdit(text, parent)
@@ -192,7 +193,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
         state = DPES_EDITING;
         break;
     default:
-        if ((Qt::Key_0 <= k && k <= Qt::Key_9) || (Qt::Key_A <= k && k <= Qt::Key_Z))
+        if ((Qt::Key_A <= k && k <= Qt::Key_Z))
             e->setAccepted(false);
         else{
             qDebug()<<k;
@@ -268,4 +269,9 @@ QString CDevPointEdit::tipInfo()
         return "键1=CS1, 2=CS2, 3=CS3, 4=CS4,\n  5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS,\n  A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
     return "键1=CS1, 2=CS2, 3=CS3, 4=CS4,\n  5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS,\n  A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
     return "键1=CS1, 2=CS2, 3=CS3, 4=CS4, 5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS, A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
+}
+void CDevPointEdit::slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize)
+{
+    if (m_itemIdx < setSize)
+        setValuePtr(pAddr + m_itemIdx);
 }

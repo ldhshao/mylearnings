@@ -32,7 +32,8 @@ int getQstringShowLen(const QString& str)
 {
     int len = 0;
     for (QString::const_iterator it = str.begin(); it != str.end(); it++){
-        if (('0' <= *it && '9' >= *it) || ('a' <= *it && 'z' >= *it) || ('A' <= *it && 'Z' >= *it) || ':' == *it)
+        if (('0' <= *it && '9' >= *it) || ('a' <= *it && 'z' >= *it) || ('A' <= *it && 'Z' >= *it)
+                || ':' == *it || '.' == *it)
             len++;
         else
             len += 2;
@@ -46,7 +47,7 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
 {
     XmlItem::initFromDomElement(element);
 
-    setIntValue(m_dataidx, element, "dataidx");
+    //setIntValue(m_dataidx, element, "dataidx");
     setIntValue(m_datacnt, element, "datacnt");
     //check value
 
@@ -171,7 +172,8 @@ void UiCfgItem::create(QWidget* parent)
 }
 bool UiCfgItem::initData(int idx, bool useDef)
 {
-    if (!m_defaultVal.isEmpty() && -1 < m_dataidx && useDef){
+    m_dataidx = idx;
+    if (!m_defaultVal.isEmpty() && useDef){
         uint16_t usDef = static_cast<unsigned short>(m_defaultVal.toInt());
         uint16_t *pAddr = paramAddress();
         if (nullptr != pAddr){
@@ -179,6 +181,7 @@ bool UiCfgItem::initData(int idx, bool useDef)
                 *(pAddr+i) = usDef;
         }
         qWarning()<<"name "<<m_name<<" address "<<pAddr<<" default "<<usDef;
+        qWarning()<<"initData name "<<m_name<<" index count "<<m_dataidx<<datacount();
     }
     return true;
 }
@@ -451,7 +454,7 @@ bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
 bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
 {
     uint16_t* pAddr = paramAddress();
-    if (!m_paName.isEmpty() && nullptr != pAddr){
+    if (!m_paName.isEmpty() && 0 < m_datacnt && nullptr != pAddr){
         obj->insert(m_paName, QJsonValue(*pAddr));
         return true;
     }
@@ -564,6 +567,36 @@ UiCfgItem* SetIndexCfgItem::createMyself()
 
     return pItem;
 }
+void SetIndexCfgItem::addItem(UiCfgItem* item)
+{
+    int idx = 0;
+    for(auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+        SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+        if (nullptr != pSetItem){
+            idx += pSetItem->itemDataCnt();
+        }
+    }
+    item->setDataidx(idx);
+    m_itemList.push_back(item);
+}
+bool SetIndexCfgItem::initData(int idx, bool useDef)
+{
+    m_dataidx = idx;
+    uint16_t *pBaseAddr = paramAddress();
+    if (useDef){
+        for(auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+            if (nullptr != pSetItem && nullptr != pBaseAddr){
+                for(int i = 0; i < m_setCnt; i++){
+                    uint16_t *pAddr = pBaseAddr + i * m_setSize + pSetItem->dataidx();
+                    pSetItem->initDataWithDefault(pAddr);
+                }
+                qWarning()<<"SetIndexCfg: item index count"<<pSetItem->dataidx()<<pSetItem->itemDataCnt();
+            }
+        }
+    }
+    return true;
+}
 bool SetIndexCfgItem::initUi(unsigned short* pStAddr, int w, int h)
 {
     UiCfgItem::initUi(pStAddr, w, h);
@@ -579,7 +612,7 @@ QString SetIndexCfgItem::previewInfo()
 {
     QString strInfo;
     QStringList pvCfgList = m_previewCfg.split('/');
-
+#if 0
     if (0 < datacount() && 3 == pvCfgList.count()){
         QStringList valList = pvCfgList[2].split(';');
         uint16_t* param = paramAddress();
@@ -604,6 +637,44 @@ QString SetIndexCfgItem::previewInfo()
             strInfo.append("\n");
         }
     }
+#endif
+    if (0 < datacount() && 2 == pvCfgList.count()){
+        uint16_t* param = paramAddress();
+        int tlen = 8, tCntMin = 2;;
+        vector<int> tCntList;
+        QString strTemp = QString::number(m_setCnt)+ pvCfgList[1];
+        int iTemp = getQstringShowLen(strTemp);
+        iTemp = (iTemp + tlen - 1) / tlen;
+        strInfo.append(QString(iTemp, '\t'));
+        tCntList.push_back(iTemp);
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            strTemp = (*it)->getName();
+            int tCnt = getQstringShowLen(strTemp);
+            if (0 == (tCnt % tlen)) tCnt = tCnt / tlen + 1;
+            else tCnt = (tCnt + tlen - 1) / tlen;
+            if (tCnt < tCntMin) tCnt = tCntMin;
+            tCntList.push_back(tCnt);
+            strInfo.append(strTemp);
+            strInfo.append(QString(tCnt - getQstringShowLen(strTemp)/tlen, '\t'));
+        }
+        strInfo.append("\n");
+        qWarning()<<tCntList;
+        for (int s = 0; s < m_setCnt; s++){
+            strTemp = QString::number(s+1) + pvCfgList[1] + ": ";
+            strInfo.append(strTemp);
+            strInfo.append(QString(tCntList[0] - getQstringShowLen(strTemp)/tlen, '\t'));
+            int i = 1;
+            for (auto it = m_itemList.begin(); it != m_itemList.end(); it++, i++){
+                uint16_t* pAddr = param + s * m_setSize + (*it)->dataidx();
+                strTemp = (*it)->strDataValue(pAddr);
+                strInfo.append(strTemp);
+                strInfo.append(QString(tCntList[i] - getQstringShowLen(strTemp)/tlen, '\t'));
+                qWarning()<<getQstringShowLen(strTemp)<<tCntList[i] - getQstringShowLen(strTemp)/tlen;
+            }
+            strInfo.append("\n");
+        }
+    }
+
     qDebug()<<strInfo;
     return strInfo;
 }
@@ -629,14 +700,20 @@ void SetIndexCfgItem::setDefaultVal()
 QString SetIndexCfgItem::getFullName(int idx)
 {
     QString fullName = UiCfgItem::getFullName();
+    idx -= parent()->dataidx();
     if (m_dataidx <= idx && idx < m_dataidx + m_datacnt){
         int pos = fullName.lastIndexOf(QChar('-'));
         if (-1 < pos) fullName = fullName.left(pos+1);
         QStringList nameList = m_dataNameCfg.split('/');
         int s = (idx - m_dataidx) / m_setSize;
         int p = (idx - m_dataidx) % m_setSize;
-        if (3 != nameList.count()) qDebug()<<"error: wrong data name "<<m_dataNameCfg;
-        fullName.append(nameList[0] + nameList[1] + QString::number(s+1) + nameList[2] + QString::number(p+1));
+        if (2 != nameList.count()) qDebug()<<"error: wrong data name "<<m_dataNameCfg;
+        fullName.append(nameList[0] + QString::number(s+1) + nameList[1]);
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            if (p == (*it)->dataidx()){
+                fullName.append((*it)->getName());
+            }
+        }
     }
 
     return fullName;
@@ -645,13 +722,62 @@ QString SetIndexCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
 {
     *dataCnt = 1;
     QStringList pvCfgList = m_previewCfg.split('/');
-    if (3 != pvCfgList.count()) qDebug()<<"error: wrong previewconfig "<<m_previewCfg;
-    QStringList valList = pvCfgList[2].split(';');
-    if (0 == valList.count())  qDebug()<<"error: wrong previewconfig value "<<pvCfgList[2];
-    if (*pVal < valList.count())
-        return valList[*pVal];
+    if (2 != pvCfgList.count()) qDebug()<<"error: wrong previewconfig "<<m_previewCfg;
+    uint16_t *pBaseAddr = paramAddress();
+    int internalIdx = ((pVal - pBaseAddr) % m_setSize);
+    for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+        if (internalIdx == (*it)->dataidx()){
+            SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+            if (nullptr != pSetItem) *dataCnt = pSetItem->itemDataCnt();
+            return (*it)->strDataValue(pVal);
+        }
+    }
+
     qDebug()<<"error: wrong value "<<*pVal;
     return "";
+}
+
+bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
+{
+    uint16_t* pBaseAddr = paramAddress();
+    for (int s = 0; s < m_setCnt; s++){
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
+            SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+            if (nullptr != pSetItem){
+                uint8_t dataCnt = pSetItem->itemDataCnt();
+                if (1 == dataCnt){
+                    uint16_t val = static_cast<uint16_t>(obj->value((*it)->paramName()+QString::asprintf("_%d",s)).toInt());
+                    *pAddr = val;
+                }else if (2 == dataCnt){
+                    uint32_t val = static_cast<uint32_t>(obj->value((*it)->paramName()+QString::asprintf("_%d",s)).toInt());
+                    *pAddr = val;
+                    *(pAddr+1) = (val >> 16);
+                }
+            }
+        }
+    }
+    return true;
+}
+bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
+{
+    uint16_t* pBaseAddr = paramAddress();
+    for (int s = 0; s < m_setCnt; s++){
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
+            SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+            if (nullptr != pSetItem){
+                uint8_t dataCnt = pSetItem->itemDataCnt();
+                if (1 == dataCnt){
+                    obj->insert((*it)->paramName()+QString::asprintf("_%d", s), QJsonValue(*pAddr));
+                }else if (2 == dataCnt){
+                    int val = (*(pAddr+1)<<16) + *pAddr;
+                    obj->insert((*it)->paramName()+QString::asprintf("_%d", s), QJsonValue(val));
+                }
+            }
+        }
+    }
+    return true;
 }
 
 //ComboboxItem
@@ -800,6 +926,7 @@ bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
             }
         }
     }
+    return true;
 }
 
 QString ComboboxSetCfgItem::previewInfo()
@@ -933,33 +1060,240 @@ bool SetItemCfgItem::initFromDomElement(QDomElement element)
 UiCfgItem* SetItemCfgItem::createMyself()
 {
     SetItemCfgItem* pItem = new SetItemCfgItem();
-    UiCfgItem::copyTo(pItem);
-    pItem->m_itemDataCnt = m_itemDataCnt;
-    pItem->m_setIndexSource = m_setIndexSource;
+    copyTo(pItem);
 
     return pItem;
 }
-bool SetItemCfgItem::initUi(unsigned short* pStAddr, int w, int h)
+void SetItemCfgItem::copyTo(UiCfgItem* destItem)
 {
-    UiCfgItem::initUi(pStAddr, w, h);
+    UiCfgItem::copyTo(destItem);
+    SetItemCfgItem* pItem = dynamic_cast<SetItemCfgItem*>(destItem);
+    if (nullptr != pItem){
+        pItem->m_itemDataCnt = m_itemDataCnt;
+        pItem->m_setIndexSource = m_setIndexSource;
+    }
+}
+bool SetItemCfgItem::initData(int idx, bool useDef)
+{
     GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
     if (nullptr!= pGroup){
         UiCfgItem* pSetSource = nullptr;
         if (nullptr != (pSetSource = pGroup->findItemById(m_setIndexSource))){
-            CKeyDnSetIndexEdit* pEdit = dynamic_cast<CKeyDnSetIndexEdit*>(pSetSource->getWidget());
             m_pSetIndexSource = pSetSource;
         }
     }
+    SetIndexCfgItem* pSetIdx = dynamic_cast<SetIndexCfgItem*>(m_pSetIndexSource);
+    if (nullptr != pSetIdx)
+        pSetIdx->addItem(this);
+
+    return true;
+}
+bool SetItemCfgItem::initDataWithDefault(uint16_t* pAddr)
+{
+    uint16_t usDef = static_cast<unsigned short>(m_defaultVal.toInt());
+    if (nullptr != pAddr){
+        for (int i = 0; i < m_itemDataCnt; i++){
+            *(pAddr + i) = usDef;
+        }
+    }
+    return true;
+}
+bool SetItemCfgItem::initUi(unsigned short* pStAddr, int w, int h)
+{
+    if (nullptr != m_pWidget){
+        m_pWidget->resize(w, h);
+        m_pWidget->show();
+    }
+    if (nullptr != m_pWidName){
+        int width = QFontMetrics(m_pWidName->font()).width(m_name);
+        m_pWidName->resize(width, h);
+        m_pWidName->show();
+    }
+    if (nullptr != m_pWidDes){
+        QLabel *lbl = dynamic_cast<QLabel*>(m_pWidDes);
+        int width = QFontMetrics(m_pWidDes->font()).width(lbl->text());
+        m_pWidDes->resize(width, h);
+        m_pWidDes->show();
+    }
+
+    unsigned short usMin = 0, usMax = 0, usDef = 0;
+    int iPos0 =  m_range.indexOf("(");
+    int iPos1 =  m_range.indexOf(")");
+    if (-1 < iPos0 && iPos0 < iPos1){
+        QString strRange = m_range.mid(iPos0+1, iPos1 - iPos0 - 1).remove(' ');
+        int pos = strRange.indexOf('-');
+        if (-1 < pos){
+            QString strMin = strRange.left(pos).trimmed();
+            QString strMax = strRange.right(strRange.length() - pos - 1).trimmed();
+            UiCfgItem *pMinItem = nullptr, *pMaxItem = nullptr;
+            uint16_t   usMin = 0xFFFF, usMax = 0xFFFF, usDef;
+            uint16_t  *pMin = nullptr, *pMax = nullptr;
+            GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
+            if (strMin[0] == '#' && nullptr != pGroup){
+                pMinItem = pGroup->findItemById(strMin.right(strMin.length() - 1));
+                pMin = pMinItem->paramAddress();
+                CMinValMngr::instance()->registerMinValUi(dynamic_cast<CKeyDnEdit*>(pMinItem->getWidget()), pMin, this);
+            }else {
+                bool bOk = false;
+                usMin = strMin.toUShort(&bOk);
+                pMin = Uint16PtrMngr::instance()->registerValue(usMin);
+            }
+            if (strMax[0] == '#' && nullptr != pGroup){
+                pMaxItem = pGroup->findItemById(strMax.right(strMax.length() - 1));
+                pMax = pMaxItem->paramAddress();
+                CMinValMngr::instance()->registerMinValUi(dynamic_cast<CKeyDnEdit*>(pMaxItem->getWidget()), pMax, this);
+            }else {
+                bool bOk = false;
+                usMax = strMax.toUShort(&bOk);
+                pMax = Uint16PtrMngr::instance()->registerValue(usMax);
+            }
+            usDef = m_defaultVal.toUShort();
+            //qDebug()<<"name "<<m_name<<" address "<<pAddr+m_dataidx;
+            CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+            if (nullptr != pEdit){
+                CBinder::BindEdit(pEdit, nullptr, pMin, pMax, usDef);
+            }
+        }
+    }
+
     if (nullptr != m_pSetIndexSource){
         //bind data
         unsigned short* pAddr = pStAddr + m_pSetIndexSource->parent()->dataidx() + m_pSetIndexSource->dataidx();
+        CDevPointEdit* pDevPtEdit = dynamic_cast<CDevPointEdit*>(m_pWidget);
         CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-        if (nullptr != pEdit){
+        if (nullptr != pDevPtEdit){
+            pDevPtEdit->setPortType(-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
+            pDevPtEdit->setItemIndex(m_dataidx);
+            pDevPtEdit->setValuePtr(pAddr + m_dataidx);
+            QObject::connect(dynamic_cast<CKeyDnSetIndexEdit*>(m_pSetIndexSource->getWidget()), SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pDevPtEdit, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
+        }else if (nullptr != pEdit){
             pEdit->setItemIndex(m_dataidx);
             pEdit->bindDataPtr(pAddr + m_dataidx);
             QObject::connect(dynamic_cast<CKeyDnSetIndexEdit*>(m_pSetIndexSource->getWidget()), SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pEdit, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
         }
     }
+    GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
+    if (nullptr!= pGroup){
+        UiCfgItem* pEnSource = nullptr;
+        if (nullptr != (pEnSource = pGroup->findItemById(m_enableSourceId))){
+            CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pEnSource->getWidget());
+            if(nullptr != pCmb){
+                CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), m_enableSourceVal, this);
+            }
+            m_enableSource = pEnSource;
+        }
+    }
 
     return true;
+}
+
+//SetItemCfgItemFloat
+HNDZ_IMPLEMENT_DYNCREATE(SetItemCfgItemFloat, UiCfgItem)
+bool SetItemCfgItemFloat::initFromDomElement(QDomElement element)
+{
+    SetItemCfgItem::initFromDomElement(element);
+    setStrValue(m_unit, element, "unit");
+    QString strVal = element.attribute("precision");
+    if (!strVal.isEmpty()){
+        bool bOK = false;
+        m_precision = strVal.toFloat(&bOK);
+        float f = m_precision;
+        m_decimalPlaces = 0;
+        while (fabs(f - 1) > 0.01){
+            f = f * 10;
+            m_decimalPlaces++;
+        }
+    }
+    qDebug()<<"name "<<m_name<<" precision "<<m_precision<<" decimal "<<m_decimalPlaces;
+
+    return true;
+}
+UiCfgItem* SetItemCfgItemFloat::createMyself()
+{
+    SetItemCfgItemFloat* pItem = new SetItemCfgItemFloat();
+    copyTo(pItem);
+    pItem->m_unit = m_unit;
+    pItem->m_precision = m_precision;
+    pItem->m_decimalPlaces = m_decimalPlaces;
+
+    return pItem;
+}
+void SetItemCfgItemFloat::create(QWidget* parent)
+{
+    if (nullptr == m_pWidget){
+        m_pWidget = new CKeyDnEdit(parent);
+        QObject::connect(m_pWidget, SIGNAL(sig_valueChanged(uint16_t *, uint32_t)), dynamic_cast<UiPage*>(parent), SLOT(slot_valueChanged(uint16_t *, uint32_t )));
+        if (!m_name.isEmpty()){
+            QLabel* pBoxName = new QLabel(parent);
+            pBoxName->setAlignment(Qt::AlignLeft);
+            pBoxName->setText(getName());
+            m_pWidName = pBoxName;
+        }
+        QLabel* pBoxDes = new QLabel(parent);
+        pBoxDes->setAlignment(Qt::AlignLeft);
+        QString strDes;
+        if (0 < m_decimalPlaces){
+            QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
+            strDes = QString::asprintf(strFormat.toStdString().c_str(), m_precision).append(m_unit);
+        }else{
+            strDes = m_unit;
+        }
+        if (0 > m_range.indexOf('#')){
+            strDes.append(m_range);
+        }
+        pBoxDes->setText(strDes);
+        m_pWidDes = pBoxDes;
+
+        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
+    }
+}
+QString SetItemCfgItemFloat::strDataValue(uint16_t *pAddr)
+{
+    QString strValue;
+    if (nullptr == pAddr) pAddr = paramAddress();
+    float fVal = *pAddr * m_precision;
+    QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
+    strValue = QString::asprintf(strFormat.toStdString().c_str(), fVal).append(m_unit);
+
+    return strValue;
+}
+
+//ComboboxSetItemCfgItem
+HNDZ_IMPLEMENT_DYNCREATE(ComboboxSetItemCfgItem, UiCfgItem)
+bool ComboboxSetItemCfgItem::initFromDomElement(QDomElement element)
+{
+    SetItemCfgItem::initFromDomElement(element);
+    m_type = UiCfgItem::strTypeCombobox;
+    QString strParams;
+    setStrValue(strParams, element, "params");
+    qDebug()<<strParams;
+    //check value
+    m_params = strParams.split(";");
+    qDebug()<<m_params;
+
+    return true;
+}
+UiCfgItem* ComboboxSetItemCfgItem::createMyself()
+{
+    ComboboxSetItemCfgItem* pItem = new ComboboxSetItemCfgItem();
+    copyTo(pItem);
+    pItem->m_params = m_params;
+
+    return pItem;
+}
+
+bool ComboboxSetItemCfgItem::initUi(unsigned short *pStAddr, int w, int h)
+{
+    CKeyDnComboBox* pBox = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
+    if (nullptr != pBox && -1 < m_dataidx){
+        if (nullptr != m_pSetIndexSource){
+            uint16_t* pAddr = pStAddr + m_pSetIndexSource->parent()->dataidx() + m_pSetIndexSource->dataidx();
+            pBox->setItemIndex(m_dataidx);
+            CBinder::BindComboBox(pBox, pAddr+m_dataidx, m_params, m_defaultVal);
+            QObject::connect(dynamic_cast<CKeyDnSetIndexEdit*>(m_pSetIndexSource->getWidget()), SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pBox, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
+            qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
+        }
+    }
+
+    SetItemCfgItem::initUi(pStAddr, w, h);
 }

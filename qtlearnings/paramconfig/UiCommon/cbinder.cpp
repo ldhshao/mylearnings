@@ -180,16 +180,16 @@ void CBinder::BindComboBox(CKeyDnComboBox *pObj, uint16_t *pVal, const QStringLi
         idx++;
     }
     pObj->setValuePtr(pVal);
-    idx = pObj->findData(*pVal);
-    if (0 <= idx){
-        pObj->setCurrentIndex(idx);
-    }else{
-        idx = strDefault.toInt();
-        idx = pObj->findData(idx);
-        if (idx < 0)
-            idx = 0;
-        pObj->setCurrentIndex(idx);
-    }
+    //idx = pObj->findData(*pVal);
+    //if (0 <= idx){
+    //    pObj->setCurrentIndex(idx);
+    //}else{
+    //    idx = strDefault.toInt();
+    //    idx = pObj->findData(idx);
+    //    if (idx < 0)
+    //        idx = 0;
+    //    pObj->setCurrentIndex(idx);
+    //}
 }
 ////20180710合并
 //void
