@@ -229,7 +229,7 @@ void MainWindow::initPage()
     while (nullptr != pItem) {
         GroupCfgList *uiList = new GroupCfgList();
         uiList->setName(pItem->getName());
-        uiList->setParamName(PARNAME_DEVICE1);
+        uiList->setParamName(pItem->paramName());
         DevCfgList* pList = dynamic_cast<DevCfgList*>(pItem);//1level
         if (nullptr != pList){
             GroupCfgItem* grp = nullptr;
@@ -250,6 +250,7 @@ void MainWindow::initPage()
                     grp = new GroupCfgList();
                 }
                 grp->setName(pSubItem->getName());
+                grp->setParamName(pSubItem->paramName());
                 uiList->addChild(grp);
 
                 pSubItem = pList->getNext();

@@ -15,12 +15,14 @@
 #include "../cdevpointedit.h"
 #include "../cdevposmgr.h"
 #include "Util/PageCfg.h"
+//#include <QJsonValue>
 #include <math.h>
 using namespace std;
 
 QString UiCfgItem::strTypeEdit = "editbox";
 QString UiCfgItem::strTypeDevPointEdit = "devpointedit";
 QString UiCfgItem::strTypeSetIndexEdit = "setindexeditbox";
+QString UiCfgItem::strTypeSetEdit  = "seteditbox";
 QString UiCfgItem::strTypeCombobox = "combobox";
 QString UiCfgItem::strTypeComboboxSet = "combobox";
 QString UiCfgItem::strTypeCheckBox = "checkbox";
@@ -143,6 +145,8 @@ void UiCfgItem::create(QWidget* parent)
             QObject::connect(m_pWidget, SIGNAL(sig_valueChanged(uint16_t *, uint32_t)), page, SLOT(slot_valueChanged(uint16_t *, uint32_t )));
         }else if (m_type == UiCfgItem::strTypeSetIndexEdit){
             m_pWidget = new CKeyDnSetIndexEdit(parent);
+        }else if (m_type == UiCfgItem::strTypeSetEdit){
+            m_pWidget = new CKeyDnSetEdit(parent);
         }else if (m_type == UiCfgItem::strTypeCombobox){
             //m_pWidget = new CMyComboBox(parent);
             m_pWidget = new CKeyDnComboBox(parent);
@@ -203,6 +207,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
         m_pWidDes->show();
     }
 
+    bool badFormat = false;
     unsigned short usMin = 0, usMax = 0, usDef = 0;
     int iPos0 =  m_range.indexOf("(");
     int iPos1 =  m_range.indexOf(")");
@@ -239,8 +244,11 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
             //qDebug()<<"name "<<m_name<<" address "<<pAddr+m_dataidx;
             CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
             if (nullptr != pEdit){
-                CKeyDnSetIndexEdit* pSetEdit = dynamic_cast<CKeyDnSetIndexEdit*>(m_pWidget);
-                if (nullptr != pSetEdit){
+                CKeyDnSetIndexEdit* pSetIdxEdit = dynamic_cast<CKeyDnSetIndexEdit*>(m_pWidget);
+                CKeyDnSetEdit* pSetEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);
+                if (nullptr != pSetIdxEdit){
+                    pSetIdxEdit->initIndexRange(pMin, pMax);
+                }else if (nullptr != pSetEdit){
                     pSetEdit->initIndexRange(pMin, pMax);
                 }else {
                     if (0 == m_datacnt) CBinder::BindEdit(pEdit, nullptr, pMin, pMax, usDef);
@@ -249,6 +257,17 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
                 }
             }else {
             }
+        }else{
+            badFormat = true;
+        }
+    }else{
+        badFormat = true;
+    }
+    if (badFormat){
+        unsigned short* pAddr = pStAddr + parent()->dataidx();
+        CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
+        if (nullptr != pEdit){
+            if (0 < m_datacnt) CBinder::BindEdit(pEdit, pAddr + m_dataidx, nullptr, nullptr, 0);
         }
     }
 
@@ -445,9 +464,17 @@ bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pAddr = paramAddress();
     if (!m_paName.isEmpty() && obj->contains(m_paName) && nullptr != pAddr){
-        uint16_t val = static_cast<uint16_t>(obj->value(m_paName).toInt());
-        *pAddr = val;
-        return true;
+        QJsonValue valTmp = obj->value(m_paName);
+        if (!valTmp.isUndefined()){
+            if (1 == m_datacnt){
+                *pAddr = static_cast<uint16_t>(valTmp.toInt());
+            }else if (2 == m_datacnt){
+                int val32 = valTmp.toInt();
+                *pAddr = val32;
+                *(pAddr + 1) = (val32 >> 16);
+            }
+            return true;
+        }
     }
     return false;
 }
@@ -455,7 +482,11 @@ bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
 {
     uint16_t* pAddr = paramAddress();
     if (!m_paName.isEmpty() && 0 < m_datacnt && nullptr != pAddr){
-        obj->insert(m_paName, QJsonValue(*pAddr));
+        if (1 == m_datacnt)
+            obj->insert(m_paName, QJsonValue(*pAddr));
+        else if (2 == m_datacnt){
+            obj->insert(m_paName, QJsonValue((*(pAddr+1) << 16) + *pAddr));
+        }
         return true;
     }
     return false;
@@ -741,16 +772,20 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
+        QJsonValue  valTmp = obj->value(m_paName + QString::asprintf("_%d", s));
+        if (!valTmp.isObject()) continue;
+        QJsonObject childObj = valTmp.toObject();
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
+            valTmp = childObj.value((*it)->paramName());
             SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
-            if (nullptr != pSetItem){
+            if (!valTmp.isUndefined() && nullptr != pSetItem){
                 uint8_t dataCnt = pSetItem->itemDataCnt();
                 if (1 == dataCnt){
-                    uint16_t val = static_cast<uint16_t>(obj->value((*it)->paramName()+QString::asprintf("_%d",s)).toInt());
+                    uint16_t val = static_cast<uint16_t>(valTmp.toInt());
                     *pAddr = val;
                 }else if (2 == dataCnt){
-                    uint32_t val = static_cast<uint32_t>(obj->value((*it)->paramName()+QString::asprintf("_%d",s)).toInt());
+                    uint32_t val = static_cast<uint32_t>(valTmp.toInt());
                     *pAddr = val;
                     *(pAddr+1) = (val >> 16);
                 }
@@ -763,19 +798,21 @@ bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
+        QJsonObject childObj;
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
             SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
             if (nullptr != pSetItem){
                 uint8_t dataCnt = pSetItem->itemDataCnt();
                 if (1 == dataCnt){
-                    obj->insert((*it)->paramName()+QString::asprintf("_%d", s), QJsonValue(*pAddr));
+                    childObj.insert((*it)->paramName(), QJsonValue(*pAddr));
                 }else if (2 == dataCnt){
                     int val = (*(pAddr+1)<<16) + *pAddr;
-                    obj->insert((*it)->paramName()+QString::asprintf("_%d", s), QJsonValue(val));
+                    childObj.insert((*it)->paramName(), QJsonValue(val));
                 }
             }
         }
+        obj->insert(m_paName + QString::asprintf("_%d", s), childObj);
     }
     return true;
 }
@@ -1040,6 +1077,114 @@ bool ComboboxSetCfgItem::onMaxValChanged(uint32_t max)
             }
         }
         pCmb->onDataCountChanged(max);
+    }
+    return true;
+}
+
+//EditSetCfgItem
+HNDZ_IMPLEMENT_DYNCREATE(EditSetCfgItem, UiCfgItem)
+bool EditSetCfgItem::initFromDomElement(QDomElement element)
+{
+    UiCfgItem::initFromDomElement(element);
+    m_type = UiCfgItem::strTypeSetEdit;
+    setIntValue(m_setSize, element, "setsize");
+    m_datacnt = m_setSize;
+
+    return true;
+}
+UiCfgItem* EditSetCfgItem::createMyself()
+{
+    EditSetCfgItem* pItem = new EditSetCfgItem();
+    UiCfgItem::copyTo(pItem);
+    pItem->m_setSize = this->m_setSize;
+
+    return pItem;
+}
+
+bool EditSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
+{
+    UiCfgItem::initUi(pStAddr, w, h);
+    CKeyDnSetEdit *pEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);
+    if (nullptr != pEdit){
+        pEdit->initData(paramAddress(), m_setSize);
+    }
+
+    return true;
+}
+
+QString EditSetCfgItem::previewInfo()
+{
+    QString strInfo;
+    strInfo.append(m_name+":\n");
+    CKeyDnSetEdit * pEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);
+    uint16_t *pAddr = paramAddress();
+    if (nullptr != pEdit && nullptr != pAddr){
+        int grpCnt = 10;
+        for (int i = 0; i < m_setSize; i++){
+            if (pEdit->isValid(pAddr[i])){
+                int intIdx = i % grpCnt;
+                if (0 < intIdx) strInfo.append(",\t");
+                strInfo.append(QString::number(pAddr[i]));
+                if (grpCnt-1 == intIdx)strInfo.append(",\n");
+            }else
+                break;
+        }
+    }
+    qDebug()<<strInfo;
+    return strInfo;
+}
+QString EditSetCfgItem::previewInfoEx(int nameLenMax)
+{
+    return previewInfo();
+}
+void EditSetCfgItem::setDefaultVal()
+{
+    initData(m_dataidx, true);
+}
+QString EditSetCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
+{
+    QString val;
+    uint16_t *pBaseAddr = paramAddress();
+    if (pBaseAddr <= pVal && pVal < pBaseAddr + m_setSize){
+        int idx = pVal - pBaseAddr;
+        *dataCnt = m_setSize - idx;
+        CKeyDnSetEdit * pEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);
+        if (nullptr != pEdit && nullptr != pBaseAddr){
+            for (int i = 0; i < m_setSize; i++){
+                if (pEdit->isValid(pBaseAddr[i])){
+                    if (0 < i)val.append(",");
+                    val.append(QString::number(pBaseAddr[i]));
+                }else
+                    break;
+            }
+        }
+    }
+    return val;
+}
+bool EditSetCfgItem::loadFromJsonObject(QJsonObject *obj)
+{
+    uint16_t *pBaseAddr = paramAddress();
+    if (!m_paName.isEmpty() && nullptr != pBaseAddr){
+        for (int i = 0; i < m_setSize; i++){
+            QJsonValue valTmp = obj->value(m_paName + QString::asprintf("_%d", i));
+            if (valTmp.isUndefined() || !valTmp.isDouble())
+                break;
+            pBaseAddr[i] = static_cast<uint16_t>(valTmp.toInt());
+        }
+    }
+    return true;
+}
+bool EditSetCfgItem::saveToJsonObject(QJsonObject *obj)
+{
+    uint16_t *pBaseAddr = paramAddress();
+    CKeyDnSetEdit * pEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);
+    if (!m_paName.isEmpty() && nullptr != pEdit && nullptr != pBaseAddr){
+        for (int i = 0; i < m_setSize; i++){
+            if (pEdit->isValid(pBaseAddr[i])){
+                obj->insert(m_paName + QString::asprintf("_%d", i), pBaseAddr[i]);
+            }else
+                break;
+        }
     }
     return true;
 }

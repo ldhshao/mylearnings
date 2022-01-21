@@ -140,7 +140,7 @@ CBinder::BindEdit(CKeyDnEdit *pObj, uint16_t *pVal, uint16_t *min, uint16_t *max
             }
         }
         pObj->showText();
-        qDebug()<<"address "<<pVal<<" value "<<*pVal<<" default "<<defaultVal<<" min "<<*min<<" max "<<*max;
+        //qDebug()<<"address "<<pVal<<" value "<<*pVal<<" default "<<defaultVal<<" min "<<*min<<" max "<<*max;
     }
 }
 void

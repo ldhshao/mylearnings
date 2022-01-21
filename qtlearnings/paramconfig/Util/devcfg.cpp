@@ -120,12 +120,12 @@ QString DevCfgItem::translateType2UiCfgType(DevCfgItem* item, int iType)
         types<<"";//"煤仓";
     }else{
         types<<"";
-        types<<"";//"预警";
+        types<<"prewarninggroup";//"预警";
         types<<"motorgroup";//"电机";
-        types<<"";//"制动闸";
-        types<<"";//"张紧";
+        types<<"brakegroup";//"制动闸";
+        types<<"autotensiongroup";//"张紧";
         types<<"";//"皮带VOITH";
-        types<<"";//"自动张紧";
+        types<<"generalsensor";//"通用传感器";
         types<<"";//"";
         types<<"";//"";
         types<<"";//"";
@@ -200,6 +200,7 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
         int pos = strID.lastIndexOf('_');
         if (-1 == pos) qDebug()<<"error device1 name "<<strID;
         DevCfgList *pList = new DevCfgList();
+        pList->m_paName = strID;
         pList->m_id = strID.right(strID.length() - pos - 1).toInt();
         pList->initFromJsonObject(it->toObject());
         m_children.push_back(pList);
@@ -296,6 +297,7 @@ bool DevCfgList::initChildrenFromJsonObject(QJsonObject obj)
             int pos = strID.lastIndexOf('_');
             if (-1 == pos) qDebug()<<"error device1 name "<<strID;
             DevCfgItem *pItem = new DevCfgItem();
+            pItem->setParamName(strID);
             pItem->setId(strID.right(strID.length() - pos - 1).toInt());
             pItem->initFromJsonObject(it->toObject());
             m_children.append(pItem);

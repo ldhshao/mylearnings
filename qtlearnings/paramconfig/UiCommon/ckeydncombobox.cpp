@@ -16,7 +16,9 @@ void CKeyDnComboBox::updateText()
 {
     updating = true;
     if (nullptr != pVal){
-        setCurrentIndex(static_cast<int>(*pVal));
+        int idx = findData(*pVal);
+        if (-1 < idx)
+            setCurrentIndex(idx);
     }
     updating = false;
 }

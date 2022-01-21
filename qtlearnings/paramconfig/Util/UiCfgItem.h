@@ -20,6 +20,7 @@ public:
     static QString strTypeEdit;
     static QString strTypeDevPointEdit;
     static QString strTypeSetIndexEdit;
+    static QString strTypeSetEdit;
     static QString strTypeCombobox;
     static QString strTypeComboboxSet;
     static QString strTypeCheckBox;
@@ -179,6 +180,29 @@ protected:
     QString    m_previewCfg;
     QString    m_setSize;
     UiCfgItem *pSetIndexSource;
+};
+class EditSetCfgItem : public UiCfgItem
+{
+public:
+    HNDZ_DECLARE_DYNCREATE(EditSetCfgItem)
+    EditSetCfgItem() :m_setSize(0){ 	}
+    virtual ~EditSetCfgItem() {}
+
+    virtual bool initFromDomElement(QDomElement element);
+    virtual UiCfgItem* createMyself();
+    virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
+
+    virtual QString previewInfo();
+    virtual QString previewInfoEx(int nameLenMax);
+    virtual void setDefaultVal();
+    virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
+
+    uint16_t setSize() { return m_setSize; }
+
+    virtual bool loadFromJsonObject(QJsonObject* obj);
+    virtual bool saveToJsonObject(QJsonObject* obj);
+protected:
+    uint16_t m_setSize;
 };
 class SetItemCfgItem : public UiCfgItem
 {

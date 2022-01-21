@@ -17,6 +17,8 @@ public:
 
     virtual void dump();
     QString getType() { return m_type; }
+    QString paramName() { return m_paName; }
+    void    setParamName(QString paName) { m_paName = paName; }
 
 static const QString DevTypeSystem;
 static const QString DevTypeWorkFace;
@@ -33,6 +35,7 @@ protected:
     static QString translateType(DevCfgItem* item, int iType);
     static QString translateType2UiCfgType(DevCfgItem* item, int iType);
     QString m_type;
+    QString m_paName;
 };
 class DevCfgList : public DevCfgItem
 {

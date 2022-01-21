@@ -314,6 +314,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
         hide();
         return;
     }
+    bool needResize = false;
     int cnt0 = menu3List.size();
     GroupCfgItem* group = static_cast<GroupCfgItem*>(pBtn->property(PROPERTY_DEVICE).value<void*>());
     GroupCfgList* list = dynamic_cast<GroupCfgList*>(group);
@@ -328,6 +329,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
                 menu3Mgr.registerButton(pBtn);
                 menu3List.push_back(pBtn);
             }
+            needResize = true;
         }
         UiCfgItem* pItem = list->getHead();
         while(nullptr != pItem){
@@ -346,6 +348,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
             pBtn->resize(menuWidth, menuHeight);
             menu3Mgr.registerButton(pBtn);
             menu3List.push_back(pBtn);
+            needResize = true;
         }
             QVariant var;
             var.setValue<void*>(group);
@@ -358,6 +361,8 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
     for (; idx < cnt0; idx++) {
         menu3List[idx]->hide();
     }
+
+    if (needResize) onResize(width(), height());
 
     menu3Mgr.selectButton(menu3List[0]);
     showPreview(menu3List[0]);

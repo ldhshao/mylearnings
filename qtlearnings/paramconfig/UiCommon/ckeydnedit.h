@@ -88,4 +88,32 @@ protected:
     uint16_t  setCnt;
     uint16_t  setSize;
 };
+class CKeyDnSetEdit : public CKeyDnEdit
+{
+    Q_OBJECT
+
+public:
+    CKeyDnSetEdit(QWidget *parent = 0);
+    ~CKeyDnSetEdit(){
+    }
+
+    void initIndexRange(uint16_t *min, uint16_t* max) { pMin = min; pMax = max; }
+    void initData(uint16_t* pAddr, uint16_t setSize) {
+        pData = pAddr;
+        this->setSize = setSize;
+    }
+    virtual void showText();
+    virtual bool setEditText(const QString& strText);
+    bool isValid(uint16_t val);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent* ev);
+
+protected slots:
+
+protected:
+    uint16_t *pMin, *pMax;//index limit
+    uint16_t *pData;//data info
+    uint16_t  setSize;
+};
 #endif // CKEYDNEDIT_H

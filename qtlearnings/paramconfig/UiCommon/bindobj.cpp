@@ -431,6 +431,9 @@ bool BindUint16Ptr::isValid(uint16_t val)
             return true;
         }
     }
+    if (nullptr == m_iminptr && nullptr == m_imaxptr){
+        return true;
+    }
 
     return false;
 }

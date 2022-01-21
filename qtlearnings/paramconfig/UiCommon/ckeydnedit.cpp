@@ -1,6 +1,7 @@
 ﻿#include "ckeydnedit.h"
 #include "bindobj.h"
 #include <QKeyEvent>
+#include <set>
 #include <QDebug>
 //#include <QMessageBox>
 
@@ -246,6 +247,77 @@ bool CKeyDnSetIndexEdit::setEditText(const QString &strText)
             index = closeValue(index);
         setText(QString::number(index));
         emit sig_dataSetChanged(pData + (index - 1)*setSize, setSize);
+    }else {
+        setText(strText);
+    }
+
+    return bRet;
+}
+
+//CKeyDnSetEdit
+CKeyDnSetEdit::CKeyDnSetEdit(QWidget *parent) :
+    CKeyDnEdit(parent)
+{
+    pMin = nullptr;
+    pMax = nullptr;
+    pData = nullptr;
+    setSize = 0;
+}
+
+void CKeyDnSetEdit::keyPressEvent(QKeyEvent *ev)
+{
+    qWarning()<<"CKeyDnSetEdit::keyPressEvent"<<ev->key();
+    switch (ev->key()) {
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+        case Qt::Key_Comma:
+            QLineEdit::keyPressEvent(ev);
+            break;
+        default:
+            CKeyDnEdit::keyPressEvent(ev);
+            break;
+    }
+}
+
+void CKeyDnSetEdit::showText()
+{
+    QString txt;
+    if (nullptr != pData && nullptr != pMin && 0 < setSize){
+        for (int i = 0; i < setSize; i++){
+            if (!isValid(*(pData + i)))
+                break;
+            if (0 < i) txt.append(',');
+            txt.append(QString::number(*(pData+i)));
+        }
+    }
+    setText(txt);
+}
+
+bool CKeyDnSetEdit::isValid(uint16_t val)
+{
+    if (*pMin <= val && val <= *pMax)
+        return true;
+    return false;
+}
+bool CKeyDnSetEdit::setEditText(const QString &strText)
+{
+    QString currText = text();
+    bool bRet = true;
+    if (nullptr != pData && 0 < setSize ){
+        int dataCnt = 0;
+        set<uint16_t> valSet;
+        QStringList itemList = currText.split(',');
+        for (int i = 0; i < itemList.count() && i < setSize; i++){
+            uint16_t val = static_cast<uint16_t>(itemList[i].trimmed().toInt());
+            if (isValid(val) && valSet.find(val) == valSet.end()){
+                *(pData + dataCnt) = val;
+                dataCnt++;
+                valSet.insert(val);
+            }
+        }
+
+        *(pData + dataCnt) = *pMin - 1;//end;
+        showText();
     }else {
         setText(strText);
     }
