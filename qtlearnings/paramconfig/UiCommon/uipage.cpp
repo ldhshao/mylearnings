@@ -124,6 +124,9 @@ void UiPage::keyPressEvent(QKeyEvent *event)
         if (nullptr != dynamic_cast<CDevPointEdit*>(focusWidget())){
             CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(focusWidget());
             showTipInfo(pEdit->mapToGlobal(QPoint(0, pEdit->height()/2)), pEdit->tipInfo());
+        }else if (nullptr != dynamic_cast<CKeyDnSetEdit*>(focusWidget())){
+            CKeyDnSetEdit* pEdit = dynamic_cast<CKeyDnSetEdit*>(focusWidget());
+            showTipInfo(pEdit->mapToGlobal(QPoint(0, pEdit->height()/2)), pEdit->tipInfo());
         }
         break;
     case Qt::Key_Up:
@@ -131,6 +134,9 @@ void UiPage::keyPressEvent(QKeyEvent *event)
         event->setAccepted(true);
         if (nullptr != dynamic_cast<CDevPointEdit*>(focusWidget())){
             CDevPointEdit* pEdit = dynamic_cast<CDevPointEdit*>(focusWidget());
+            showTipInfo(pEdit->mapToGlobal(QPoint(0, pEdit->height()/2)), pEdit->tipInfo());
+        }else if (nullptr != dynamic_cast<CKeyDnSetEdit*>(focusWidget())){
+            CKeyDnSetEdit* pEdit = dynamic_cast<CKeyDnSetEdit*>(focusWidget());
             showTipInfo(pEdit->mapToGlobal(QPoint(0, pEdit->height()/2)), pEdit->tipInfo());
         }
         break;

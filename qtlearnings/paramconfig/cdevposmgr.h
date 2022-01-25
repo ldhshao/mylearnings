@@ -4,7 +4,7 @@
 #include <QString>
 using namespace std;
 
-#define LINE_MAX    11
+#define LINE_MAX    18
 #define MACHINE_MAX 255
 #define PORT_MAX    2048
 #define LINE_BITS_COUNT    8
@@ -46,6 +46,7 @@ public:
       LINETYPE_CSBS,
       LINETYPE_DIO,
       LINETYPE_COM,
+      LINETYPE_TCP,
       LINETYPE_CNT
     };
     enum {
@@ -63,9 +64,8 @@ protected:
     uint16_t* lineMachineCounts[LINE_MAX];
     bool      portInfos[LINE_MAX][MACHINE_MAX][PORTTYPE_CNT][PORT_MAX];
     uint16_t  lineCount;
-    uint16_t   portCount[LINETYPE_CNT];
-    uint16_t *lineMachineTypes[LINE_MAX];
-    uint16_t  bsDevVal;//valid BS type value
+    uint16_t  portCount[LINETYPE_CNT];
+    uint16_t  lineMachineSizes[LINE_MAX];//for CSBS
     bool      inited;
 };
 

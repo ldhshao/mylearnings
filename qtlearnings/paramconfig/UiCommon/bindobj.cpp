@@ -58,15 +58,23 @@
     switch(keyVal)\
     {\
     case Qt::Key_Left:\
-        if (tmp > *m_iminptr){\
-            tmp = tmp -1;\
-            if(tmp >= *m_iminptr){*pVal = tmp; setState(BS_MODIFIED); }\
+        if (nullptr != m_iminptr){\
+            if (tmp > *m_iminptr){\
+                tmp = tmp -1;\
+                if(tmp >= *m_iminptr){*pVal = tmp; setState(BS_MODIFIED); }\
+            }\
+        }else {\
+            *pVal = tmp - 1; setState(BS_MODIFIED);\
         }\
         break;\
     case Qt::Key_Right:\
-        if (tmp < *m_imaxptr){\
-            tmp = tmp + 1;\
-            if(tmp <= *m_imaxptr){*pVal = tmp; setState(BS_MODIFIED); }\
+        if (nullptr != m_imaxptr){\
+            if (tmp < *m_imaxptr){\
+                tmp = tmp + 1;\
+                if(tmp <= *m_imaxptr){*pVal = tmp; setState(BS_MODIFIED); }\
+            }\
+        }else{\
+            *pVal = tmp + 1; setState(BS_MODIFIED);\
         }\
         break;\
     case Qt::Key_Up:\
@@ -76,8 +84,12 @@
     case Qt::Key_Backspace:\
         if(!isSingle){\
             type n = tmp /10;\
-            if(n >= *m_iminptr){ *pVal = n; setState(BS_MODIFIED);}\
-            else {*pVal = *m_iminptr; setState(BS_MODIFIED);}\
+            if (nullptr != m_iminptr){\
+                if(n >= *m_iminptr){ *pVal = n; setState(BS_MODIFIED);}\
+                else {*pVal = *m_iminptr; setState(BS_MODIFIED);}\
+            }else {\
+                *pVal = n; setState(BS_MODIFIED);\
+            }\
         }\
         break;\
     case Qt::Key_Escape:\
@@ -88,11 +100,15 @@
     case Qt::Key_9:\
         if(isSingle)\
         {\
-            if(((keyVal - 0x30) >= *m_iminptr)&&((keyVal - 0x30) <= *m_imaxptr))    {*pVal = keyVal - 0x30;setState(BS_MODIFIED);}\
+            if (nullptr != m_iminptr && nullptr != m_imaxptr) {\
+                if(((keyVal - 0x30) >= *m_iminptr)&&((keyVal - 0x30) <= *m_imaxptr))    {*pVal = keyVal - 0x30;setState(BS_MODIFIED);}\
+            }else {\
+                *pVal = keyVal - 0x30;setState(BS_MODIFIED);\
+            }\
         }\
         else{\
             tmp = tmp*10 + keyVal - 0x30;\
-            if(tmp > *m_imaxptr) *pVal = *m_imaxptr;\
+            if(nullptr != m_imaxptr && tmp > *m_imaxptr) *pVal = *m_imaxptr;\
             else *pVal = tmp;\
             setState(BS_MODIFIED);\
         }\

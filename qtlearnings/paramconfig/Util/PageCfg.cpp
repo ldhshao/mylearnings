@@ -425,16 +425,31 @@ UiCfgItem* GroupCfgItem::findItemById(const QString& strId)
 UiCfgItem* GroupCfgItem::findItemByName(const QString& strName)
 {
     UiCfgItem* pFind = nullptr;
-    if (m_name == strName) return this;
-    for(auto it = m_children.begin(); it != m_children.end(); it++){
-        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
-        if (nullptr != grp){
-            pFind = grp->findItemByName(strName);
-        }else if ((*it)->getName() == strName){
-            pFind = *it;
+    UiCfgItem* pBase = this;
+    QStringList nameList = strName.split('.');
+    for (int i = 0; i < nameList.count() && nullptr != pBase; i++){
+        pFind = nullptr;
+        if (pBase->getName() == nameList[i]) pFind = this;
+        else {
+            GroupCfgItem* grpBase = dynamic_cast<GroupCfgItem*>(pBase);
+            if (nullptr == grpBase) break;
+
+            UiCfgItem* pItem = grpBase->getHead();
+            while (nullptr != pItem){
+                GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+                if (nullptr != grp){
+                    pFind = grp->findItemByName(nameList[i]);
+                }else if (pItem->getName() == nameList[i]){
+                    pFind = pItem;
+                }
+                if (nullptr != pFind) break;
+                pItem = grpBase->getNext();
+            }
         }
-        if (nullptr != pFind)
+        if (nullptr == pFind)
             break;
+        else
+            pBase = pFind;
     }
 
     return pFind;

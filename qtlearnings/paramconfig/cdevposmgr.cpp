@@ -4,45 +4,46 @@
 #include <QDebug>
 
 static uint16_t gMachineCnt = MACHINE_MAX;
-#define LINE_SIZE 11
+#define LINE_SIZE LINE_MAX
 static QString  gLineNames[] = {
     "CS1",
     "CS2",
-    "CS3",
-    "CS4",
+    "DIO1",
     "CS1_BS",
     "CS2_BS",
-    "CS3_BS",
-    "CS4_BS",
-    "DIO1",
+    "COM1",
+    "COM2",
+    "COM3",
+    "TCP",
+    "CS3",
     "DIO2",
-    "DIO3"
+    "CS3_BS",
+    "CS4",
+    "DIO3",
+    "CS4_BS",
+    "CS5",
+    "DIO4",
+    "CS5_BS",
 };
 static QString  gLineMachineCountNames[] = {
-    "CS1下位机数量",
-    "CS2下位机数量",
-    "CS3下位机数量",
-    "CS4下位机数量",
-    "CS1_BS闭锁数量",
-    "CS2_BS闭锁数量",
-    "CS3_BS闭锁数量",
-    "CS4_BS闭锁数量",
-    "DIO1下位机数量",
-    "DIO2下位机数量",
-    "DIO3下位机数量"
-};
-static QString  gLineMachineTypeNames[] = {
-    "",
-    "",
-    "",
-    "",
-    "CS1_BS闭锁设备",
-    "CS2_BS闭锁设备",
-    "CS3_BS闭锁设备",
-    "CS4_BS闭锁设备",
-    "",
-    "",
-    "",
+    "CS1沿线数据.下设备数量",
+    "CS2沿线数据.下设备数量",
+    "DIO1沿线数据.下设备数量",
+    "CS1沿线数据.闭锁输入设备台号",
+    "CS2沿线数据.闭锁输入设备台号",//"CS2_BS",
+    "COM1",
+    "COM2",
+    "COM3",
+    "TCP",
+    "CS3沿线数据.下设备数量",
+    "DIO2沿线数据.下设备数量",
+    "CS3_BS沿线数据.闭锁输入设备台号",
+    "CS4沿线数据.下设备数量",
+    "DIO3沿线数据.下设备数量",
+    "CS4_BS沿线数据.闭锁输入设备台号",
+    "CS5沿线数据.下设备数量",
+    "DIO4沿线数据.下设备数量",
+    "CS5_BS沿线数据.闭锁输入设备台号",
 };
 
 CDevPosMgr* CDevPosMgr::instance()
@@ -54,7 +55,6 @@ CDevPosMgr* CDevPosMgr::instance()
 CDevPosMgr::CDevPosMgr()
 {
     inited = false;
-    bsDevVal = 0;
     for (int i = 0; i < LINE_MAX; i++){
         if (i < LINE_SIZE){
             if (-1 < gLineNames[i].indexOf("DIO"))
@@ -63,15 +63,19 @@ CDevPosMgr::CDevPosMgr()
                 lineTypes[i] = LINETYPE_CSBS;
             else if (-1 < gLineNames[i].indexOf("COM"))
                 lineTypes[i] = LINETYPE_COM;
+            else if (-1 < gLineNames[i].indexOf("TCP"))
+                lineTypes[i] = LINETYPE_TCP;
             else
                 lineTypes[i] = LINETYPE_CS;
         }
         lineMachineCounts[i] = &gMachineCnt;
-        lineMachineTypes[i] = nullptr;
+        lineMachineSizes[i] = 0;
     }
     lineCount = LINE_SIZE;
     portCount[LINETYPE_CS] = 12;
     portCount[LINETYPE_DIO] = 12;
+    portCount[LINETYPE_COM] = 1000;
+    portCount[LINETYPE_TCP] = 1;
     memset(portInfos, 0, sizeof(portInfos));
 }
 
@@ -80,17 +84,10 @@ bool CDevPosMgr::initDevPosMgr(PageCfgList *devCfg)
     if (!inited){
         for (int i = 0; i < LINE_SIZE; i++){
             UiCfgItem* item = devCfg->findItemByName(gLineMachineCountNames[i]);
-            if (nullptr != item)
+            if (nullptr != item){
                 lineMachineCounts[i] = item->paramAddress();
-            if (!gLineMachineTypeNames[i].isEmpty()){
-                UiCfgItem *typeItem = devCfg->findItemByName(gLineMachineTypeNames[i]);
-                if (nullptr != typeItem){
-                    lineMachineTypes[i] = typeItem->paramAddress();
-                    QStringList params = (dynamic_cast<ComboboxCfgItem*>(typeItem))->params();
-                    if (2 == params.count()){
-                        if (-1 < params[0].indexOf("不"))
-                            bsDevVal = 1;
-                    }
+                if (LINETYPE_CSBS == lineTypes[i]){
+                    lineMachineSizes[i] = item->datacount();
                 }
             }
         }
@@ -147,7 +144,7 @@ list<bool> CDevPosMgr::getMachinePorts(int l, int m, int portType)
     if (portType >= PORTTYPE_CNT || portType < PORTTYPE_IN)
         return portList;
 
-    if (m >= MACHINE_MAX || m >= *(lineMachineCounts[l]) || 0 > m){
+    if (!isValidMachine(l, m)){
         return portList;
     }
     //int ptCnt = portCount[lineTypes[l]];
@@ -166,7 +163,7 @@ list<int> CDevPosMgr::getMachineAvailablePortNos(int l, int m, int portType)
     if (portType >= PORTTYPE_CNT || portType < PORTTYPE_IN)
         return portList;
 
-    if (m >= MACHINE_MAX || m >= *(lineMachineCounts[l]) || 0 > m){
+    if (!isValidMachine(l, m)){
         return portList;
     }
     int ptCnt = getPortCount(l, portType);
@@ -185,7 +182,24 @@ int CDevPosMgr::getMachineCount(int l)
         return iCnt;
     }
 
-    iCnt = *(lineMachineCounts[l]);
+    switch (lineTypes[l]) {
+    case LINETYPE_CS:
+    case LINETYPE_DIO:
+        iCnt = *(lineMachineCounts[l]);
+        break;
+    case LINETYPE_CSBS:
+        for (int i=0; i < lineMachineSizes[l]; i++){
+            if (0 >= lineMachineCounts[l][i]){
+                iCnt = i+1;
+                break;
+            }
+        }
+        break;
+    case LINETYPE_COM:
+        break;
+    case LINETYPE_TCP:
+        break;
+    }
     return iCnt;
 }
 
@@ -200,11 +214,11 @@ list<int> CDevPosMgr::getMachines(int l)
         }
         break;
     case LINETYPE_CSBS:
-        if (nullptr != lineMachineTypes[l]){
-            for (int i = 0; i < *lineMachineCounts[l]; i++){
-                if (*(lineMachineTypes[l] + i) == bsDevVal)
-                    macList.push_back(i);
+        for (int i=0; i < lineMachineSizes[l]; i++){
+            if (0 >= lineMachineCounts[l][i]){//0 is invalid
+                break;
             }
+            macList.push_back(lineMachineCounts[l][i] - 1);//make from 0
         }
         break;
     }
@@ -255,11 +269,11 @@ void CDevPosMgr::setPortValue(int l, int m, int portType, int port, bool use)
     if (l >= LINE_MAX || l >= lineCount){
         return ;
     }
-    if (m >= MACHINE_MAX || m >= *(lineMachineCounts[l])){
-        return ;
-    }
     if (portType >= PORTTYPE_CNT || portType < PORTTYPE_IN)
         return ;
+    if (!isValidMachine(l, m)){
+        return ;
+    }
 
     int ptCnt = getPortCount(l, portType);
     if (port >= ptCnt){
@@ -291,9 +305,6 @@ QString CDevPosMgr::makeStrDevPoint(uint32_t devPoint)
     int p = get_port_from_dev_point(devPoint);
 
     if (0 > l || l>= lineCount){
-        return strDevPoint;
-    }
-    if (0 > m || m>= getMachineCount(l)){
         return strDevPoint;
     }
 
@@ -363,16 +374,16 @@ bool CDevPosMgr::isValidMachine(int l, int m)
         }
         break;
     case LINETYPE_CSBS:
-        if (nullptr != lineMachineTypes[l]){
-            qDebug()<<"count "<<*lineMachineCounts[l]<<m<<"type"<<*(lineMachineTypes[l] + m);
-            if (0 <= m && m < *(lineMachineCounts[l]) && *(lineMachineTypes[l] + m) == bsDevVal){
-                return true;
-            }
-        }else {
-            if (0 <= m && m < *(lineMachineCounts[l])){
-                return true;
+        {
+            list<int> macList = getMachines(l);
+            for (auto it = macList.begin(); it != macList.end(); it++){
+                if (m == *it) return true;
             }
         }
+        break;
+    case LINETYPE_COM:
+        break;
+    case LINETYPE_TCP:
         break;
     }
     return false;

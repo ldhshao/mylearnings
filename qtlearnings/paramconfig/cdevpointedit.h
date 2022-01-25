@@ -35,6 +35,7 @@ signals:
 
 protected slots:
     void slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize);
+    void slot_emitTimer();
 
 protected:
     virtual void keyPressEvent(QKeyEvent *e);
@@ -46,6 +47,9 @@ protected:
     uint8_t   state;
     uint8_t   step;
     uint8_t m_itemIdx;//for set item
+    QTimer               *emitTimer;
+    int                   timerInterval;
+    int                   usrKey;
 };
 
 #endif // CDEVPOINTEDIT_H

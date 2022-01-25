@@ -194,7 +194,6 @@ public:
 
     virtual QString previewInfo();
     virtual QString previewInfoEx(int nameLenMax);
-    virtual void setDefaultVal();
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
 
     uint16_t setSize() { return m_setSize; }

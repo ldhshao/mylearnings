@@ -96,8 +96,8 @@
     	    	</UiCfgItem>
     	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
     	    	</ComboboxCfgItem>
-    	    	<UiCfgItem id="4" name="闭锁输入设备台数" type="editbox"  range="(0-255)" defaultvalue="0"  enablesource="1:1" paname="setBSCount">
-    	    	</UiCfgItem>
+        		<EditSetCfgItem id="4" name="闭锁输入设备台号" range="(1-255)" defaultvalue="0" datacnt="255" setsize="255" enablesource="1:1" paname="setBSCount">
+        		</EditSetCfgItem>
     	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost">
     	    	</ComboboxCfgItem>
 			</GroupCfgItem>
@@ -108,15 +108,15 @@
     	    	</UiCfgItem>
     	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
     	    	</ComboboxCfgItem>
-    	    	<UiCfgItem id="4" name="闭锁输入设备台数" type="editbox"  range="(0-255)" defaultvalue="0"  enablesource="1:1" paname="setBSCount">
-    	    	</UiCfgItem>
+        		<EditSetCfgItem id="4" name="闭锁输入设备台号" range="(1-255)" defaultvalue="0" datacnt="255" setsize="255" enablesource="1:1" paname="setBSCount">
+        		</EditSetCfgItem>
     	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost">
     	    	</ComboboxCfgItem>
 			</GroupCfgItem>
         	<GroupCfgItem id="6" name="DIO1沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="DIO0">
-    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="1"  paname="enable">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
     	    	</ComboboxCfgItem>
-    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="1" enablesource="1:1" paname="setCount">
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
     	    	</UiCfgItem>
     	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
     	    	</ComboboxCfgItem>
@@ -124,20 +124,68 @@
 		</GroupCfgList>
     	<GroupCfgList name="中继1">
         	<GroupCfgItem id="3" name="CS3沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS2">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
+    	    	</ComboboxCfgItem>
+        		<EditSetCfgItem id="4" name="闭锁输入设备台号" range="(1-255)" defaultvalue="0" datacnt="255" setsize="255" enablesource="1:1" paname="setBSCount">
+        		</EditSetCfgItem>
+    	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost">
+    	    	</ComboboxCfgItem>
 			</GroupCfgItem>
         	<GroupCfgItem id="7" name="DIO2沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS3">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
+    	    	</ComboboxCfgItem>
 			</GroupCfgItem>
 		</GroupCfgList>
     	<GroupCfgList name="中继2">
         	<GroupCfgItem id="4" name="CS4沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
+    	    	</ComboboxCfgItem>
+        		<EditSetCfgItem id="4" name="闭锁输入设备台号" range="(1-255)" defaultvalue="0" datacnt="255" setsize="255" enablesource="1:1" paname="setBSCount">
+        		</EditSetCfgItem>
+    	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost">
+    	    	</ComboboxCfgItem>
 			</GroupCfgItem>
         	<GroupCfgItem id="8" name="DIO3沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
+    	    	</ComboboxCfgItem>
 			</GroupCfgItem>
 		</GroupCfgList>
     	<GroupCfgList name="中继3">
         	<GroupCfgItem id="5" name="CS5沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
+    	    	</ComboboxCfgItem>
+        		<EditSetCfgItem id="4" name="闭锁输入设备台号" range="(1-255)" defaultvalue="0" datacnt="255" setsize="255" enablesource="1:1" paname="setBSCount">
+        		</EditSetCfgItem>
+    	    	<ComboboxCfgItem id="5" name="是否与其他控制器联系" params="0:不联系;1:联系" defaultvalue="0"  enablesource="1:1" paname="relationWithOtherHost">
+    	    	</ComboboxCfgItem>
 			</GroupCfgItem>
         	<GroupCfgItem id="9" name="DIO4沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+    	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="0"  paname="enable">
+    	    	</ComboboxCfgItem>
+    	    	<UiCfgItem id="2" name="下设备数量" type="editbox"  range="(0-255)" defaultvalue="0" enablesource="1:1" paname="setCount">
+    	    	</UiCfgItem>
+    	    	<ComboboxCfgItem id="3" name="下设备数量与实际情况不符合是否沿线复位" params="0:复位;1:不复位" defaultvalue="0"  enablesource="1:1" paname="countNotRight">
+    	    	</ComboboxCfgItem>
 			</GroupCfgItem>
 		</GroupCfgList>
 	</GroupCfgList>
@@ -184,7 +232,7 @@
 				-->
         		<SetIndexCfgItem id="22" name="洒水电磁阀输出" type="setindexeditbox" range="(1-48)" defaultvalue="1" setsize="8" setcount="48" previewconfig="洒水电磁阀输出/号电磁阀" datanameconfig="洒水电磁阀输出/号电磁阀" paname="SprinklerPoutPoint">
         		</SetIndexCfgItem>
-        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="addr">
+				<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
         		</SetItemCfgItem>
         	    <ComboboxSetItemCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" enablesource="1:1"  datacnt="0" setindexsource="22" paname="type">
 				</ComboboxSetItemCfgItem> 
@@ -204,7 +252,7 @@
         </GroupCfgList>
         <GroupCfgList id="2" name="输出信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         	<GroupCfgItem id="1" name="机头就地按钮灯输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointPartPOutLamp1">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -218,7 +266,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="2" name="机尾就地按钮输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointPartPOutLamp2">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -234,7 +282,7 @@
         	<GroupCfgItem id="3" name="备妥输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         		<SetIndexCfgItem id="22" name="备妥输出" type="setindexeditbox" range="(1-10)" defaultvalue="1" setsize="8" setcount="10" previewconfig="备妥输出/号输出" datanameconfig="备妥输出/号输出" paname="HoutputPointPartPOutReady">
         		</SetIndexCfgItem>
-        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="addr">
+        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
         		</SetItemCfgItem>
         	    <ComboboxSetItemCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" enablesource="1:1"  datacnt="0" setindexsource="22" paname="type">
 				</ComboboxSetItemCfgItem> 
@@ -250,7 +298,7 @@
         	<GroupCfgItem id="4" name="远停输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         		<SetIndexCfgItem id="22" name="远停输出" type="setindexeditbox" range="(1-10)" defaultvalue="1" setsize="8" setcount="10" previewconfig="远停输出/号输出" datanameconfig="远停输出/号输出" paname="HoutputPointPartPOutYuanTing">
         		</SetIndexCfgItem>
-        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="addr">
+        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
         		</SetItemCfgItem>
         	    <ComboboxSetItemCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" enablesource="1:1"  datacnt="0" setindexsource="22" paname="type">
 				</ComboboxSetItemCfgItem> 
@@ -266,7 +314,7 @@
         	<GroupCfgItem id="5" name="外部设备连锁输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         		<SetIndexCfgItem id="22" name="外部设备连锁输出" type="setindexeditbox" range="(1-10)" defaultvalue="1" setsize="8" setcount="10" previewconfig="外部设备连锁输出/号输出" datanameconfig="外部设备连锁输出/号输出" paname="HoutputPointPartExLinkedControl">
         		</SetIndexCfgItem>
-        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="addr">
+        		<SetItemCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:1" defaultvalue="0"  itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
         		</SetItemCfgItem>
         	    <ComboboxSetItemCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" enablesource="1:1"  datacnt="0" setindexsource="22" paname="type">
 				</ComboboxSetItemCfgItem> 
@@ -280,7 +328,7 @@
 				</SetItemCfgItemFloat> 
         	</GroupCfgItem>
         	<GroupCfgItem id="6" name="启动完成输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointPartPOoutFinsh">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -294,7 +342,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="7" name="急停输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointPartPOoutEmergentStop">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -308,7 +356,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="8" name="过载输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointPartPOoutOverload">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -324,7 +372,7 @@
         </GroupCfgList>
         <GroupCfgList id="3" name="输入信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         	<GroupCfgItem id="1" name="机头就地按钮输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInOutlingControl1">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -338,7 +386,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="2" name="机尾就地按钮输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInOutlingControl2">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit"  defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit"  defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -354,7 +402,7 @@
         	<GroupCfgItem id="3" name="准备就绪输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         		<SetIndexCfgItem id="22" name="准备就绪输入" type="setindexeditbox" range="(1-10)" defaultvalue="1" setsize="8" setcount="10" previewconfig="准备就绪输入/号输入" datanameconfig="准备就绪输入/号输入" paname="HinputPointPartPInReady">
 				</SetIndexCfgItem>
-        		<SetItemCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="addr">
+        		<SetItemCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
         		</SetItemCfgItem>
         	    <ComboboxSetItemCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" datacnt="0" setindexsource="22" paname="type">
 				</ComboboxSetItemCfgItem> 
@@ -368,7 +416,7 @@
         	    </SetItemCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="4" name="连锁设备输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInExlinkedControl">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -382,7 +430,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="5" name="机头就地按钮锁定输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInButtonFront">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -396,7 +444,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="6" name="机尾就地按钮锁定输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInButtonRear">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -410,7 +458,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         	<GroupCfgItem id="7" name="远程启停输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInControl">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -426,7 +474,7 @@
 			<GroupCfgItem id="8" name="远停输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         		<SetIndexCfgItem id="22" name="远停输入" type="setindexeditbox" range="(1-10)" defaultvalue="1" setsize="8" setcount="10" previewconfig="远停输入/号输入" datanameconfig="远停输入/号输入" paname="HinputPointPartPInYuaTing">
 				</SetIndexCfgItem>
-        		<SetItemCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="addr">
+        		<SetItemCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
         		</SetItemCfgItem>
         	    <ComboboxSetItemCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" datacnt="0" setindexsource="22" paname="type">
 				</ComboboxSetItemCfgItem> 
@@ -446,9 +494,9 @@
             <ComboboxCfgItem id="1" name="设备使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             </ComboboxCfgItem>
         </GroupCfgItem>
-        <GroupCfgList id= "2" name="电机" enablesource="10/1:0" paname="HoutputModul_0">
+        <GroupCfgList id= "2" name="电机1" enablesource="10/1:0" paname="HoutputModul_0">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -466,7 +514,7 @@
             <GroupCfgItem id="3" name="减速机冷却水阀控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutWater">
             </GroupCfgItem>
             <GroupCfgItem id="4" name="电机反馈输入1" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthInFeedBack">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -480,6 +528,136 @@
         	    </UiCfgItemFloat>
             </GroupCfgItem>
             <GroupCfgItem id="5" name="电机反馈输入2" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthInFeedBack2">
+            </GroupCfgItem>
+            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="4" name="量程最小值" type="editbox"  range="" precision="1" unit="A"  defaultvalue="0" enablesource="1:1" paname="MessureMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="5" name="量程最大值" type="editbox"  range="(0-1200)" precision="1" unit="A"  defaultvalue="400" enablesource="1:1" paname="MessureMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="6" name="输入最小频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="200" enablesource="1:1" paname="frequencyMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="7" name="输入最大频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="1000" enablesource="1:1" paname="frequencyMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="8" name="额定值" type="editbox"  range="(0-400)" precision="1" unit="A"  defaultvalue="0" enablesource="1:1" paname="ratedValue">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="10" name="高报警值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="110" enablesource="1:1" paname="errorValueMax">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="12" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="15" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="16" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="4" name="量程最小值" type="editbox"  range="(0-300)" precision="1" unit="°C"  defaultvalue="0" enablesource="1:1" paname="MessureMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="5" name="量程最大值" type="editbox"  range="(0-300)" precision="1" unit="°C"  defaultvalue="100" enablesource="1:1" paname="MessureMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="6" name="输入最小频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="200" enablesource="1:1" paname="frequencyMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="7" name="输入最大频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="1000" enablesource="1:1" paname="frequencyMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="8" name="高停车值" type="editbox"  range="(0-100)" precision="1" unit="°C"  defaultvalue="0" enablesource="1:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="9" name="高报警值" type="editbox"  range="(0-100)" precision="1" unit="°C"  defaultvalue="0" enablesource="1:1" paname="errorValueMax">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="13" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="14" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="15" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="4" name="量程最小值" type="editbox"  range="(0-300)" precision="1" unit="°C"  defaultvalue="0" enablesource="1:1" paname="MessureMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="5" name="量程最大值" type="editbox"  range="(0-300)" precision="1" unit="°C"  defaultvalue="100" enablesource="1:1" paname="MessureMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="6" name="输入最小频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="200" enablesource="1:1" paname="frequencyMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="7" name="输入最大频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="1000" enablesource="1:1" paname="frequencyMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="8" name="高停车值" type="editbox"  range="(0-100)" precision="1" unit="°C"  defaultvalue="0" enablesource="1:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="9" name="高报警值" type="editbox"  range="(0-100)" precision="1" unit="°C"  defaultvalue="0" enablesource="1:1" paname="errorValueMax">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="13" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="14" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="15" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+				<UiCfgItemFloat id="4" name="量程最小值" type="editbox"  range="(0-20)" precision="1" unit="mm/s"  defaultvalue="0" enablesource="1:1" paname="MessureMin">
+        		</UiCfgItemFloat>
+				<UiCfgItemFloat id="5" name="量程最大值" type="editbox"  range="(0-20)" precision="1" unit="mm/s"  defaultvalue="0" enablesource="1:1" paname="MessureMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="6" name="输入最小频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="200" enablesource="1:1" paname="frequencyMin">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="7" name="输入最大频率值" type="editbox"  range="(5-2000)" precision="1" unit="HZ"  defaultvalue="1000" enablesource="1:1" paname="frequencyMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="8" name="高停车值" type="editbox"  range="(0-100)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="9" name="高报警值" type="editbox"  range="(0-100)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="errorValueMax">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="13" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="14" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="15" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
     </GroupCfgList>
@@ -507,7 +685,7 @@
             </ComboboxCfgItem>
         </GroupCfgItem>
         <GroupCfgItem id="2" name="自动张紧英式输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -523,7 +701,7 @@
         <GroupCfgItem id="3" name="自动张紧英式输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutPulse">
         </GroupCfgItem>
         <GroupCfgItem id="4" name="张紧完成输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HinputPointPartInFeedBack">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -558,7 +736,7 @@
         </GroupCfgItem>
     	<GroupCfgList id="2" name="制动闸1" paname="HoutputModul_0">
     	    <GroupCfgItem id="1" name="制动闸输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointParthOutMotor">
-        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输出类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -576,7 +754,7 @@
     	    <GroupCfgItem id="3" name="减速机冷却水阀控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointParthOutWater">
     	    </GroupCfgItem>
     	    <GroupCfgItem id="4" name="松闸到位输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointParthInFeedback">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 
@@ -623,7 +801,7 @@
         	</ComboboxCfgItem>
         </GroupCfgItem>
         <GroupCfgItem id="2" name="传感器输入1" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPart_0">
-        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="addr">
+        		<UiCfgItem id="2" name="输入点" type="devpointedit" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
         	    <ComboboxCfgItem id="3" name="输入类型" params="0:开关量常开;1:开关量常闭;2:模拟量" defaultvalue="0" paname="type">
 				</ComboboxCfgItem> 

@@ -324,3 +324,9 @@ bool CKeyDnSetEdit::setEditText(const QString &strText)
 
     return bRet;
 }
+QString CKeyDnSetEdit::tipInfo()
+{
+    QString strTip("用数字键输入\n可输入多项，用，分割");
+
+    return strTip;
+}

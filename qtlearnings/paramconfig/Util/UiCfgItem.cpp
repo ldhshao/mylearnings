@@ -411,20 +411,9 @@ QString UiCfgItem::enableReason()
 
 void UiCfgItem::setDefaultVal()
 {
-    if(!m_defaultVal.isEmpty()){
-        CKeyDnEdit* edit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
-        if (nullptr != edit){
-            edit->setEditText(m_defaultVal);
-        }
-        CDevPointEdit* edit1 = dynamic_cast<CDevPointEdit*>(m_pWidget);
-        if (nullptr != edit1){
-            edit1->setEditText(m_defaultVal);
-        }
-        CKeyDnComboBox* cmb = dynamic_cast<CKeyDnComboBox*>(m_pWidget);
-        if (nullptr != cmb){
-            cmb->setEditText(m_defaultVal);
-        }
-    }
+    initData(m_dataidx, true);
+    CMyCtl *pCtl = dynamic_cast<CMyCtl*>(getWidget());
+    if (nullptr != pCtl) pCtl->updateText();
 }
 bool UiCfgItem::onMaxValChanged(uint32_t max)
 {
@@ -463,17 +452,38 @@ bool UiCfgItem::isDataOK()
 bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pAddr = paramAddress();
-    if (!m_paName.isEmpty() && obj->contains(m_paName) && nullptr != pAddr){
-        QJsonValue valTmp = obj->value(m_paName);
-        if (!valTmp.isUndefined()){
-            if (1 == m_datacnt){
+    if (!m_paName.isEmpty() && nullptr != pAddr){
+        if (1 == m_datacnt){
+            QJsonValue valTmp = obj->value(m_paName);
+            if (!valTmp.isUndefined()){
                 *pAddr = static_cast<uint16_t>(valTmp.toInt());
-            }else if (2 == m_datacnt){
-                int val32 = valTmp.toInt();
-                *pAddr = val32;
-                *(pAddr + 1) = (val32 >> 16);
             }
-            return true;
+        }else if (2 == m_datacnt){
+            //deal device point
+            QStringList paNameList = m_paName.split(';');
+            if (strTypeDevPointEdit == m_type && 3 == paNameList.count()){
+                int l = 0, m = 0, p = 0;
+                uint32_t devPoint = 0;
+                QJsonValue valTmp = obj->value(paNameList[0]);
+                if (!valTmp.isUndefined())
+                    l = valTmp.toInt(l);
+                valTmp = obj->value(paNameList[1]);
+                if (!valTmp.isUndefined())
+                    m = valTmp.toInt(m) - 1;
+                valTmp = obj->value(paNameList[2]);
+                if (!valTmp.isUndefined())
+                    p = valTmp.toInt(p) - 1;
+                devPoint = make_dev_point(l, m, p);
+                *pAddr = devPoint;
+                *(pAddr + 1) = (devPoint >> 16);
+            }else {
+                QJsonValue valTmp = obj->value(m_paName);
+                if (!valTmp.isUndefined()){
+                    int val32 = valTmp.toInt();
+                    *pAddr = val32;
+                    *(pAddr + 1) = (val32 >> 16);
+                }
+            }
         }
     }
     return false;
@@ -485,7 +495,22 @@ bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
         if (1 == m_datacnt)
             obj->insert(m_paName, QJsonValue(*pAddr));
         else if (2 == m_datacnt){
-            obj->insert(m_paName, QJsonValue((*(pAddr+1) << 16) + *pAddr));
+            //deal device point
+            QStringList paNameList = m_paName.split(';');
+            if (strTypeDevPointEdit == m_type && 3 == paNameList.count()){
+                uint32_t devPoint = static_cast<uint32_t>((*(pAddr+1) << 16) + *pAddr);
+                int portType = (-1 < getName().indexOf("输入点"))? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT;
+                if (CDevPosMgr::instance()->isDevPointValid(devPoint, portType)){
+                    int l = get_line_from_dev_point(devPoint);//from 1
+                    int m = get_machine_from_dev_point(devPoint);//from 0
+                    int p = get_port_from_dev_point(devPoint);//from 0
+                    obj->insert(paNameList[0], QJsonValue(l));
+                    obj->insert(paNameList[1], QJsonValue(m+1));
+                    obj->insert(paNameList[2], QJsonValue(p+1));
+                }
+            }else {
+                obj->insert(m_paName, QJsonValue((*(pAddr+1) << 16) + *pAddr));
+            }
         }
         return true;
     }
@@ -715,18 +740,11 @@ QString SetIndexCfgItem::previewInfoEx(int nameLenMax)
 }
 void SetIndexCfgItem::setDefaultVal()
 {
-    if(!m_defaultVal.isEmpty()){
-        //set data to default value
-        uint16_t defVal = m_defaultVal.toUShort();
-        uint16_t *pAddr = paramAddress();
-        for (int i = 0; i < m_datacnt; i++){
-            *pAddr++ = defVal;
-        }
-        CKeyDnSetIndexEdit* edit = dynamic_cast<CKeyDnSetIndexEdit*>(m_pWidget);
-        if (nullptr != edit){
-            edit->setEditText("1");
-        }
+    CKeyDnSetIndexEdit* edit = dynamic_cast<CKeyDnSetIndexEdit*>(m_pWidget);
+    if (nullptr != edit){
+        edit->setEditText("1");
     }
+    initData(m_dataidx, true);
 }
 QString SetIndexCfgItem::getFullName(int idx)
 {
@@ -777,17 +795,37 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
         QJsonObject childObj = valTmp.toObject();
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
-            valTmp = childObj.value((*it)->paramName());
             SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
-            if (!valTmp.isUndefined() && nullptr != pSetItem){
+            if (nullptr != pSetItem){
                 uint8_t dataCnt = pSetItem->itemDataCnt();
+                valTmp = childObj.value((*it)->paramName());
                 if (1 == dataCnt){
-                    uint16_t val = static_cast<uint16_t>(valTmp.toInt());
-                    *pAddr = val;
+                    if (!valTmp.isUndefined())
+                        *pAddr = static_cast<uint16_t>(valTmp.toInt());
                 }else if (2 == dataCnt){
-                    uint32_t val = static_cast<uint32_t>(valTmp.toInt());
-                    *pAddr = val;
-                    *(pAddr+1) = (val >> 16);
+                    QStringList paNameList = (*it)->paramName().split(';');
+                    if ((*it)->isType(strTypeDevPointEdit) && 3 == paNameList.count()){
+                        int l = 0, m = 0, p = 0;
+                        uint32_t devPoint = 0;
+                        valTmp = childObj.value(paNameList[0]);
+                        if (!valTmp.isUndefined())
+                            l = valTmp.toInt(l);
+                        valTmp = childObj.value(paNameList[1]);
+                        if (!valTmp.isUndefined())
+                            m = valTmp.toInt(m) - 1;
+                        valTmp = childObj.value(paNameList[2]);
+                        if (!valTmp.isUndefined())
+                            p = valTmp.toInt(p) - 1;
+                        devPoint = make_dev_point(l, m, p);
+                        *pAddr = devPoint;
+                        *(pAddr + 1) = (devPoint >> 16);
+                    }else{
+                        if (!valTmp.isUndefined()){
+                        uint32_t val = static_cast<uint32_t>(valTmp.toInt());
+                        *pAddr = val;
+                        *(pAddr+1) = (val >> 16);
+                        }
+                    }
                 }
             }
         }
@@ -808,7 +846,20 @@ bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
                     childObj.insert((*it)->paramName(), QJsonValue(*pAddr));
                 }else if (2 == dataCnt){
                     int val = (*(pAddr+1)<<16) + *pAddr;
-                    childObj.insert((*it)->paramName(), QJsonValue(val));
+                    QStringList paNameList = (*it)->paramName().split(';');
+                    if ((*it)->isType(strTypeDevPointEdit) && 3 == paNameList.count()){
+                        int portType = (-1 < (*it)->getName().indexOf("输入点"))? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT;
+                        if (!CDevPosMgr::instance()->isDevPointValid(val, portType)) continue;
+
+                        int l = get_line_from_dev_point(val);//from 1
+                        int m = get_machine_from_dev_point(val);//from 0
+                        int p = get_port_from_dev_point(val);//from 0
+                        childObj.insert(paNameList[0], QJsonValue(l));
+                        childObj.insert(paNameList[1], QJsonValue(m+1));
+                        childObj.insert(paNameList[2], QJsonValue(p+1));
+                    }else{
+                        childObj.insert((*it)->paramName(), QJsonValue(val));
+                    }
                 }
             }
         }
@@ -1010,24 +1061,6 @@ void ComboboxSetCfgItem::setDefaultVal()
 {
     if(0 < datacount() && !m_defaultVal.isEmpty()){
         //set data to default value
-        uint16_t defVal = m_params.count();
-        for (int i = 0; i < m_params.count(); i++){
-            if (m_defaultVal == m_params[i]){
-                defVal = i;
-                break;
-            }
-        }
-        if (defVal >= m_params.count())
-            defVal = 0;
-
-        uint16_t *pAddr = paramAddress();
-        for (int i = 0; i < m_datacnt; i++){
-            *pAddr++ = defVal;
-        }
-        CKeyDnComboBoxSet* edit = dynamic_cast<CKeyDnComboBoxSet*>(m_pWidget);
-        if (nullptr != edit){
-            edit->initUi();
-        }
     }
 }
 QString ComboboxSetCfgItem::getFullName(int idx)
@@ -1115,7 +1148,11 @@ bool EditSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
 QString EditSetCfgItem::previewInfo()
 {
     QString strInfo;
-    strInfo.append(m_name+":\n");
+    return strInfo;
+}
+QString EditSetCfgItem::previewInfoEx(int nameLenMax)
+{
+    QString strInfo, strValue;
     CKeyDnSetEdit * pEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);
     uint16_t *pAddr = paramAddress();
     if (nullptr != pEdit && nullptr != pAddr){
@@ -1123,23 +1160,24 @@ QString EditSetCfgItem::previewInfo()
         for (int i = 0; i < m_setSize; i++){
             if (pEdit->isValid(pAddr[i])){
                 int intIdx = i % grpCnt;
-                if (0 < intIdx) strInfo.append(",\t");
-                strInfo.append(QString::number(pAddr[i]));
-                if (grpCnt-1 == intIdx)strInfo.append(",\n");
+                if (0 < intIdx) strValue.append(",\t");
+                strValue.append(QString::number(pAddr[i]));
+                if (grpCnt-1 == intIdx)strValue.append(",\n");
             }else
                 break;
         }
     }
-    qDebug()<<strInfo;
+    if (strValue.isEmpty()){
+        int tlen = 8;
+        strInfo = m_name + ":";
+        int len = getQstringShowLen(strInfo);
+        if (len < nameLenMax)
+            strInfo.append(QString((nameLenMax - len + tlen - 1)/tlen, QChar('\t')));
+        strInfo.append("无");
+    }else {
+        strInfo.append(m_name + ":\n").append(strValue);
+    }
     return strInfo;
-}
-QString EditSetCfgItem::previewInfoEx(int nameLenMax)
-{
-    return previewInfo();
-}
-void EditSetCfgItem::setDefaultVal()
-{
-    initData(m_dataidx, true);
 }
 QString EditSetCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
 {

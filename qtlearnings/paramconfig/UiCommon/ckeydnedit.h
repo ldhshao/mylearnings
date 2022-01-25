@@ -105,6 +105,7 @@ public:
     virtual void showText();
     virtual bool setEditText(const QString& strText);
     bool isValid(uint16_t val);
+    QString tipInfo();
 
 protected:
     virtual void keyPressEvent(QKeyEvent* ev);

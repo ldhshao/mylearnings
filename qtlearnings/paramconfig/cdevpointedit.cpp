@@ -3,6 +3,7 @@
 #include "clineselector.h"
 #include <QKeyEvent>
 #include <QToolTip>
+#include <QTimer>
 #include <QDebug>
 
 CDevPointEdit::CDevPointEdit(QWidget *parent):QLineEdit(parent)
@@ -11,6 +12,10 @@ CDevPointEdit::CDevPointEdit(QWidget *parent):QLineEdit(parent)
     state = DPES_IDLE;
     step = 0;
     m_itemIdx = 0;
+    usrKey = 0;
+    timerInterval = 400;
+    emitTimer = new QTimer(this);
+    connect(emitTimer, SIGNAL(timeout()), this, SLOT(slot_emitTimer()));
 }
 
 CDevPointEdit::CDevPointEdit(const QString &text, QWidget *parent):QLineEdit(text, parent)
@@ -73,6 +78,23 @@ void CDevPointEdit::updateText()
     }
 }
 
+void CDevPointEdit::slot_emitTimer()
+{
+    emitTimer->stop();
+    qDebug()<<__FUNCTION__<<usrKey;
+    usrKey--;
+    if (usrKey < 0) usrKey = 0;
+    if (usrKey >= 18)
+        usrKey = 18 - 1;
+    QString lvl1Names[18] = {
+        "CS1", "CS2", "DIO1", "CS1_BS", "CS2_BS",
+        "COM1", "COM2", "COM3", "TCP", "CS3", "DIO2", "CS3_BS",
+        "CS4", "DIO3", "CS4_BS", "CS5", "DIO4", "CS5_BS"
+    };
+    setText(lvl1Names[usrKey]);
+    usrKey = 0;
+}
+
 void CDevPointEdit::keyPressEvent(QKeyEvent *e)
 {
     int k = e->key();
@@ -106,6 +128,7 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
         }
     qDebug()<<"CDevPointEdit state"<<state;
         break;
+    case Qt::Key_0:
     case Qt::Key_1:
     case Qt::Key_2:
     case Qt::Key_3:
@@ -116,22 +139,11 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
     case Qt::Key_8:
     case Qt::Key_9:
         if (text().isEmpty()) {
-            QString lvl1Names[9] = {
-                "CS1", "CS2", "CS3", "CS4",
-                "CS1_BS", "CS2_BS", "CS3_BS", "CS4_BS",
-                "DIO1"
-            };
-            setText(lvl1Names[k - Qt::Key_1]);
+            if(emitTimer->isActive()) emitTimer->stop();
+            usrKey = usrKey * 10 + (k - Qt::Key_0);
+            emitTimer->start(timerInterval);
         }else {
             QLineEdit::keyPressEvent(e);
-        }
-        state = DPES_EDITING;
-        break;
-    case Qt::Key_A:
-    case Qt::Key_B:
-        if (text().isEmpty()) {
-            setText((Qt::Key_A == k)? ("DIO2") : ("DIO3"));
-        //QToolTip::showText(mapToGlobal(QPoint(0, height()/2)), "Press A");
         }
         state = DPES_EDITING;
         break;
@@ -203,8 +215,6 @@ void CDevPointEdit::keyPressEvent(QKeyEvent *e)
 }
 void CDevPointEdit::mouseReleaseEvent(QMouseEvent *e)
 {
-    //CDevPosCtl1::instance()->setAttachEdit(this);
-    //CDevPosCtl1::instance()->show();
     state = DPES_EDITING;
     QPoint pt = mapToGlobal(QPoint(0,0));
     int w = width(), h = height();
@@ -266,8 +276,8 @@ void CDevPointEdit::endEdit()
 QString CDevPointEdit::tipInfo()
 {
     if (CDevPosMgr::PORTTYPE_OUT == portType)
-        return "键1=CS1, 2=CS2, 3=CS3, 4=CS4,\n  5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS,\n  A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
-    return "键1=CS1, 2=CS2, 3=CS3, 4=CS4,\n  5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS,\n  A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
+        return "键1=CS1, 2=CS2, 3=DIO1, 4=CS1_BS, 5=CS2_BS\n  6=COM1, 7=COM2, 8=COM3, 9=TCP,\n  10=CS3, 11= DIO2, 12=CS3_BS, 13=CS4, 14= DIO3, 15=CS4_BS, 16=CS5, 17= DIO4, 18=CS5_BS\n用*设置中位机，下位机，口号";
+    return "键1=CS1, 2=CS2, 3=DIO1, 4=CS1_BS, 5=CS2_BS\n  10=CS3, 11= DIO2, 12=CS3_BS, 13=CS4, 14= DIO3, 15=CS4_BS, 16=CS5, 17= DIO4, 18=CS5_BS\n用*设置中位机，下位机，口号";
     return "键1=CS1, 2=CS2, 3=CS3, 4=CS4, 5=CS1_BS, 6=CS2_BS, 7=CS3_BS, 8=CS4_CS, A=DIO1, B= DIO2, C=DIO2\n用*设置中位机，下位机，口号";
 }
 void CDevPointEdit::slot_dataSetChanged(uint16_t* pAddr, uint16_t setSize)

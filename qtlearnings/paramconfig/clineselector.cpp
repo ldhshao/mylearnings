@@ -139,7 +139,7 @@ void CButtonSelector::slot_emitTimer()
 
 CLineSelector::CLineSelector(QWidget *parent) : CButtonSelector(parent)
 {
-    int w = 100, h = 40;
+    int w = 60, h = 40;
     QStringList lineNames = CDevPosMgr::instance()->getLineNames();
     for (int i = 0; i < lineNames.count(); i++) {
         CStateButton* btn = new CKeyStateButton(this);
