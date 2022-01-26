@@ -3,7 +3,11 @@
         "HDevice1_0" : {
             "Name": "1#皮带",
             "Type": 1,
-            "HDevice2_0":{"Name": "电机组","Type": 2}
+            "HDevice2_0":{"Name": "电机组","Type": 2},
+            "HDevice2_1":{"Name": "预警组","Type": 1},
+            "HDevice2_2":{"Name": "制动闸组","Type": 3},
+            "HDevice2_3":{"Name": "自动张紧组","Type": 4},
+            "HDevice2_4":{"Name": "传感器1","Type": 6}
         }
     }
 }

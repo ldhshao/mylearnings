@@ -35,7 +35,7 @@ protected slots:
 
 private:
     map<QWidget*, list<struct SEnablePair>>  uiEnableMap;
-    map<uint16_t*, struct SValListPair>      valUiMap;
+    map<uint16_t*, list<struct SValListPair>>      valUiMap;
     map<QWidget*, bool> sourceMap;
 };
 

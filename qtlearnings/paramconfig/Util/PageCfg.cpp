@@ -526,6 +526,13 @@ QString GroupCfgItem::previewInfo(int col)
     return strInfo;
 }
 
+void GroupCfgItem::setDefaultVal()
+{
+    for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++){
+        (*it)->setDefaultVal();
+    }
+}
+
 bool GroupCfgItem::readJsonFile(QString strFile)
 {
     QFile file(strFile);
@@ -643,7 +650,12 @@ void GroupCfgList::create(QWidget* parent)
 void GroupCfgList::addEnableSource(CKeyDnComboBox* pCmb, uint16_t val)
 {
     for (auto it = m_children.begin(); it != m_children.end(); it++){
-        //CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), val, *it);
+        GroupCfgList* pList = dynamic_cast<GroupCfgList*>(*it);
+        if (nullptr != pList)
+            pList->addEnableSource(pCmb, val);
+        else{
+            CEnableMngr::instance()->registerEableUi(pCmb, pCmb->valuePtr(), val, *it);
+        }
     }
 }
 

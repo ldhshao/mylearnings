@@ -51,6 +51,7 @@ public:
 
     virtual QString previewInfo();
     QString previewInfo(int col);
+    virtual void setDefaultVal();
 
     //load/save json file
     bool readJsonFile(QString strFile);

@@ -20,11 +20,25 @@ void CEnableMngr::registerEableUi(CKeyDnComboBox* pCmb, uint16_t* pVal, uint16_t
         uiEnableMap[item->getWidget()].push_back({pVal, val});
         auto it = valUiMap.find(pVal);
         if (it != valUiMap.end()){
-            it->second.itemList.push_back(item);
+            bool bFind = false;
+            for (auto itVal = it->second.begin(); itVal != it->second.end(); itVal++){
+               if (val == itVal->val){
+                   itVal->itemList.push_back(item);
+                   bFind = true;
+                   break;
+               }
+            }
+            if (!bFind){
+                list<UiCfgItem*> tList;
+                tList.push_back(item);
+                it->second.push_back({val, tList});
+            }
         }else {
             list<UiCfgItem*> tList;
+            list<struct SValListPair> valList;
             tList.push_back(item);
-            valUiMap[pVal] = {val, tList};
+            valList.push_back({val, tList});
+            valUiMap[pVal] = valList;
         }
 
         slot_valueChanged(pVal, *pVal);//set init state
@@ -55,14 +69,15 @@ void CEnableMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
 
     auto itOut = valUiMap.find(pVal);
     if (itOut != valUiMap.end()){
-        bool enable = (itOut->second.val == valNew);
-        auto itItem = itOut->second.itemList.begin();
-        for(; itItem != itOut->second.itemList.end(); itItem++){
-            QWidget* w = (*itItem)->getWidget();
-            if (nullptr != w) w->setEnabled(enable);
-            if (!enable)//set deault val ;
-                (*itItem)->setDefaultVal();
-            qDebug()<<*itItem;
+        for (auto itVal = itOut->second.begin(); itVal != itOut->second.end(); itVal++){
+            bool enable = (itVal->val == valNew);
+            for (auto itItem = itVal->itemList.begin(); itItem != itVal->itemList.end(); itItem++){
+                QWidget* w = (*itItem)->getWidget();
+                if (nullptr != w) w->setEnabled(enable);
+                if (!enable)//set deault val ;
+                    (*itItem)->setDefaultVal();
+                qDebug()<<*itItem;
+            }
         }
     }
 }

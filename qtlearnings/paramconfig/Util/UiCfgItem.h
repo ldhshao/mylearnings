@@ -11,7 +11,7 @@ public:
     HNDZ_DECLARE_DYNCREATE(UiCfgItem)
     UiCfgItem(UiCfgItem *parent = nullptr) : m_dataidx(-1),m_datacnt(1),
                   m_pWidget(nullptr), m_pWidName(nullptr), m_pWidDes(nullptr){
-        m_enableSourceId = -1; m_enableSourceVal = 0;
+        m_enableSourceId = ""; m_enableSourceVal = 0;
         m_parent = parent; m_enableSource = nullptr;
         m_required = false;
     }

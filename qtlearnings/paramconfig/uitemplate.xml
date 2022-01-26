@@ -87,7 +87,7 @@
         <ComboboxCfgItem id="1" name="水电联动选择" col="1" row="1" width="100" height="28" params="有效;无效">
         </ComboboxCfgItem>
     </GroupCfgItem>
-    <GroupCfgList name="electric" paname="hElectric">
+    <GroupCfgList id="1" name="electric" paname="hElectric">
     	<GroupCfgList name="主控制器">
     	    <GroupCfgItem id="1" name="CS1沿线数据" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HCS0">
     	    	<ComboboxCfgItem id="1" name="是否使能" params="0:不使能;1:使能" defaultvalue="1"  paname="enable">
@@ -189,7 +189,7 @@
 			</GroupCfgItem>
 		</GroupCfgList>
 	</GroupCfgList>
-    <GroupCfgList name="workface">
+    <GroupCfgList id="2" name="workface">
         <GroupCfgList id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         	<GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
         	    <ComboboxCfgItem id="1" name="设备使能" params="0:不使能;1:使能" defaultvalue="0" paname="enable">
@@ -225,7 +225,7 @@
         	    <UiCfgItemFloat id="16" name="就地按钮脉冲保持最长时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="30" enablesource="1:1">
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
-        	<GroupCfgItem id="2" name="洒水电磁阀输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+			<GroupCfgItem id="2" name="洒水电磁阀输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" enablesource="1/1:1">
 				<!--
         	    <ComboboxCfgItem id="1" name="点是否使能" params="0:不使能;1:使能" defaultvalue="0" datacnt="1">
 				</ComboboxCfgItem>
@@ -250,7 +250,7 @@
 				-->
         	</GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id="2" name="输出信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+		<GroupCfgList id="2" name="输出信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" enablesource="1/1/1:1">
         	<GroupCfgItem id="1" name="机头就地按钮灯输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HoutputPointPartPOutLamp1">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -370,7 +370,7 @@
         	    </UiCfgItemFloat>
         	</GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id="3" name="输入信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
+        <GroupCfgList id="3" name="输入信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" enablesource="1/1/1:1">
         	<GroupCfgItem id="1" name="机头就地按钮输入" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" paname="HinputPointPartPInOutlingControl1">
         		<UiCfgItem id="2" name="输入点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -489,7 +489,7 @@
         	</GroupCfgItem>
         </GroupCfgList>
     </GroupCfgList>
-    <GroupCfgList id="10" name="motorgroup" paname="HDevice2">
+	<GroupCfgList id="10" name="motorgroup" enablesource="2/1/1/1:1" paname="HDevice2">
         <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
             <ComboboxCfgItem id="1" name="设备使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             </ComboboxCfgItem>
@@ -661,7 +661,7 @@
             </GroupCfgItem>
         </GroupCfgList>
     </GroupCfgList>
-    <GroupCfgList id="11" name="prewarninggroup" paname="HDevice2">
+    <GroupCfgList id="11" name="prewarninggroup" enablesource="2/1/1/1:1" paname="HDevice2">
         <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
             <ComboboxCfgItem id="1" name="设备使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             </ComboboxCfgItem>
@@ -679,7 +679,7 @@
         	</UiCfgItem>
         </GroupCfgItem>
     </GroupCfgList>
-    <GroupCfgList id="12" name="autotensiongroup" paname="HDevice2">
+    <GroupCfgList id="12" name="autotensiongroup" enablesource="2/1/1/1:1" paname="HDevice2">
         <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
             <ComboboxCfgItem id="1" name="设备使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             </ComboboxCfgItem>
@@ -715,7 +715,7 @@
         	    </UiCfgItemFloat>
         </GroupCfgItem>
     </GroupCfgList>
-    <GroupCfgList id="13" name="brakegroup" paname="HDevice2">
+    <GroupCfgList id="13" name="brakegroup" enablesource="2/1/1/1:1" paname="HDevice2">
         <GroupCfgItem id="1" name="基本信息" controlwidth="100" controlheight="28" columnmode="1" unitsize="10">
             <ComboboxCfgItem id="1" name="设备使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             </ComboboxCfgItem>
