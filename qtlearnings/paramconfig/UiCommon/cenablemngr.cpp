@@ -142,3 +142,82 @@ void CMinValMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
         }
     }
 }
+
+//CVisibleMngr
+CVisibleMngr* CVisibleMngr::instance()
+{
+    static CVisibleMngr _ins;
+    return &_ins;
+}
+
+bool isListEqaul(list<uint16_t> *pList1, list<uint16_t> *pList2)
+{
+    if (pList1->size() == pList2->size()){
+        for(auto it1= pList1->begin(), it2 = pList2->begin(); it1 != pList1->end() && it2 != pList2->end(); it1++, it2++){
+            //qDebug()<<*it1<<*it2;
+            if (*it1 != *it2) return false;
+        }
+
+        return true;
+    }
+    return false;
+}
+
+void CVisibleMngr::registerVisibleUi(CKeyDnComboBox* pCmb, uint16_t* pVal, list<uint16_t> *pValList, UiCfgItem* item)
+{
+    if (nullptr != pCmb && nullptr != pVal && nullptr != item){
+        if (sourceMap.find(pCmb) == sourceMap.end()){
+            connect(pCmb, SIGNAL(sig_valueChanged(uint16_t*, uint32_t)), this, SLOT(slot_valueChanged(uint16_t*, uint32_t)));
+            sourceMap[pCmb] = true;
+        }
+        auto it = valUiMap.find(pVal);
+        if (it != valUiMap.end()){
+            bool bFind = false;
+            for (auto itPair = it->second.begin(); itPair != it->second.end(); itPair++){
+               if (isListEqaul(pValList, &itPair->valList)){
+                   itPair->itemList.push_back(item);
+                   bFind = true;
+                   break;
+               }
+            }
+            if (!bFind){
+                list<UiCfgItem*> tList;
+                tList.push_back(item);
+                it->second.push_back({*pValList, tList});
+            }
+        }else {
+            struct SVallistListPair pairList;
+            pairList.valList = *pValList;
+            pairList.itemList.push_back(item);
+            pairList.valList.sort();
+            list<struct SVallistListPair> tList;
+            tList.push_back(pairList);
+            valUiMap[pVal] = tList;
+        }
+
+        slot_valueChanged(pVal, *pVal);//set init state
+    }
+}
+void CVisibleMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
+{
+    qDebug()<<"addr "<<pVal<<" value "<<valNew<<" value "<<*pVal;
+    auto itOut = valUiMap.find(pVal);
+    if (itOut != valUiMap.end()){
+        for (auto itPair = itOut->second.begin(); itPair != itOut->second.end(); itPair++){
+            bool enable = false;
+            for (auto itVal = itPair->valList.begin(); itVal != itPair->valList.end(); itVal++){
+                if (valNew == *itVal){
+                    enable = true; break;
+                }
+            }
+            for (auto itItem = itPair->itemList.begin(); itItem != itPair->itemList.end(); itItem++){
+                QWidget* w = (*itItem)->getWidget();
+                if (nullptr != w) w->setVisible(enable);
+                w = (*itItem)->getWidName();
+                if (nullptr != w) w->setVisible(enable);
+                w = (*itItem)->getWidDes();
+                if (nullptr != w) w->setVisible(enable);
+            }
+        }
+    }
+}

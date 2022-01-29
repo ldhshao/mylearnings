@@ -1,5 +1,6 @@
 #include "ItemBase.h"
 #include <qtextstream.h>
+#include <QFile>
 #include <QtDebug>
 
 HNDZ_IMPLEMENT_DYNCREATE(XmlItem, BaseObject)
@@ -56,8 +57,7 @@ bool XmlList::readXmlFile(QString strFile)
 }
 void XmlList::deleteAll()
 {
-    QList<XmlItem*>::ConstIterator it = m_children.cbegin();
-    for (; it != m_children.cend(); it++){
+    for (auto it = m_children.begin(); it != m_children.end(); it++){
         delete *it;
     }
     m_children.clear();
@@ -88,8 +88,7 @@ XmlItem* XmlList::getItemById(int id)
     if (id == m_id)
         return this;
 
-    QList<XmlItem*>::iterator it = m_children.begin();
-    for (; it != m_children.cend(); it++){
+    for (auto it = m_children.begin(); it != m_children.end(); it++){
         XmlList *pList = dynamic_cast<XmlList*>(*it);
         if (nullptr != pList){
             XmlItem* pItem = pList->getItemById(id);
@@ -139,8 +138,7 @@ bool XmlList::initChildrenFromDomElement(QDomNodeList list)
 void XmlList::dump()
 {
     XmlItem::dump();
-    QList<XmlItem*>::ConstIterator it = m_children.cbegin();
-    for (; it != m_children.cend(); it++){
+    for (auto it = m_children.begin(); it != m_children.end(); it++){
         (*it)->dump();
     }
 }

@@ -60,7 +60,7 @@ public:
         Chinese_TW,
         Chinese_HK
     };
-    Q_ENUM(Language)
+    //Q_ENUM(Language)
 
     enum Position {
         UnderWidget,           // 显示位置在控件的下方
@@ -69,7 +69,7 @@ public:
         ProcessBottom,         // 应用程序下方
         Embedded               // 同主程序显示位置对齐,嵌入式平台尽量设置此方式
     };
-    Q_ENUM(Position)
+    //Q_ENUM(Position)
 
     enum Style {
         BLUE = 0,        //淡蓝色
@@ -81,7 +81,7 @@ public:
         GRAY,            //灰色
         LIGHTYELLOW      //浅黄色
     };
-    Q_ENUM(Style)
+    //Q_ENUM(Style)
 
     static QkeyTools *getInstance();
 

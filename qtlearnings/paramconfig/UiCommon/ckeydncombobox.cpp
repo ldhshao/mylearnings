@@ -40,6 +40,7 @@ void CKeyDnComboBox::setValuePtr(uint16_t *val)
         int idx = findData(*pVal);
         if (-1 < idx)
             setCurrentIndex(idx);
+        emit sig_valueChanged(pVal, *pVal);
     }
 }
 

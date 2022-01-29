@@ -144,7 +144,7 @@ CLineSelector::CLineSelector(QWidget *parent) : CButtonSelector(parent)
     for (int i = 0; i < lineNames.count(); i++) {
         CStateButton* btn = new CKeyStateButton(this);
         btn->resize(w,h);
-        btn->setText(lineNames[i] + QString::asprintf("\n(%d)",i+1));
+        btn->setText(lineNames[i] + "\n" + QString::number(i+1));
         btn->setProperty(PROPERTY_INDEX, i);
         btn->move(i*w, 0);
         btnMgr.registerButton(btn);
@@ -189,7 +189,7 @@ CMachineSelector::CMachineSelector(QWidget *parent) : CButtonSelector(parent),cu
     for (int i = 0; i < MACHINE_MAX; i++) {
         CStateButton* btn = new CKeyStateButton(this);
         btn->resize(w,h);
-        btn->setText(QString::asprintf("%d\n(%d)", i+1, i+1));
+        btn->setText(QString::number(i+1) + "\n" + QString::number(i+1));
         btn->setProperty(PROPERTY_INDEX, i);
         btn->move((i % lineBtnCnt)*w, row*h);
         btnMgr.registerButton(btn);
@@ -271,7 +271,7 @@ CPortSelector::CPortSelector(QWidget *parent) : QWidget(parent),currLine(-1),cur
     for (int i = 0; i < PORT_MAX; i++) {
         QCheckBox* btn = new CKeyCheckBox(this);
         btn->resize(w,h);
-        btn->setText(QString::asprintf("%d\n(%d)", i+1, i+1));
+        btn->setText(QString::number(i+1) + "\n" + QString::number(i+1));
         btn->setProperty(PROPERTY_INDEX, i);
         btn->move(m+i*w, 0);
         connect(btn, SIGNAL(stateChanged(int)), this, SLOT(on_checkbox_stateChanged(int)));

@@ -43,7 +43,7 @@ void CDeviceModPreview::initTable()
         }
     }
     ui->tableWidget->resizeColumnsToContents();
-    ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
+    ui->label_lineno->setText("共" + QString::number(ui->tableWidget->rowCount()) + "行");
     autoSetSize();
 }
 

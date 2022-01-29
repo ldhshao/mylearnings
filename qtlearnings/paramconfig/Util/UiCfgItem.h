@@ -1,7 +1,10 @@
 #ifndef UIITEM_H
 #define UIITEM_H
 #include "ItemBase.h"
-#include <QJsonObject>
+#include "json.h"
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#include <stdint.h>
+#endif
 
 class QWidget;
 int getQstringShowLen(const QString& str);
@@ -79,6 +82,7 @@ protected:
     QString m_range;
     QString m_defaultVal;
     QString m_enableSourceId;//ID path; example: 1)5 2)../5/7
+    QString m_visibleSource;//example: 1)5:1 2)5:2,3
     QString m_paName;//for load and save for other
     uint16_t m_enableSourceVal;
     UiCfgItem  *m_parent;
@@ -125,6 +129,7 @@ public:
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
 
     uint16_t setSize() { return m_setSize; }
+    uint16_t setCount() { return m_setCnt; }
     void addItem(UiCfgItem* item);
 
     virtual bool loadFromJsonObject(QJsonObject* obj);
@@ -134,7 +139,7 @@ protected:
     uint16_t m_setCnt;
     QString  m_previewCfg;
     QString  m_dataNameCfg;
-    list<UiCfgItem*> m_itemList;
+    QList<UiCfgItem*> m_itemList;
 };
 class ComboboxCfgItem : public UiCfgItem
 {
@@ -216,8 +221,10 @@ public:
     virtual bool initData(int idx, bool useDef);//attach to set index item
     virtual bool initDataWithDefault(uint16_t* pAddr);
     virtual bool initUi(unsigned short* pStAddr, int w=0, int h=0);//init data
+    virtual void setDefaultVal();
 
     uint8_t itemDataCnt() { return m_itemDataCnt; }
+    UiCfgItem* getSetIndexSource() { return m_pSetIndexSource; }
 protected:
     //use dataidx as internal index;
     QString    m_setIndexSource;

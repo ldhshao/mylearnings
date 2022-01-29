@@ -36,7 +36,7 @@ QString CStateButton::removeStyle(const QString& strStyle, QString strAttr)
         if (-1 == styleList[i].indexOf(strAttr))
             dstList.append(styleList[i]);
     }
-    return dstList.join(';');
+    return dstList.join(";");
 }
 
 CWidgetButton::CWidgetButton(QWidget *w, QWidget *parent)

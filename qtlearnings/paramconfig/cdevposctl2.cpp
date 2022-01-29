@@ -41,7 +41,7 @@ void CDevPosCtl2::initAllCtls()
     for(int i = 0; i < iRows; i++){
         int iX0 = iX + iItemSpan;
         int iY0 = iY + i * (iChkHeight + 4);
-        QLabel *lblName = new QLabel(QString::asprintf("下位机%d", i+1), this);
+        QLabel *lblName = new QLabel("下位机%d"+ QString::number(i+1), this);
         lblName->setAlignment(Qt::AlignLeft | Qt::AlignTop);
         lblName->resize(iLableWidth, iLablHeight);
         lblName->move(iX0, iY0);
@@ -49,7 +49,7 @@ void CDevPosCtl2::initAllCtls()
         lblMachines[i] = lblName;
         iX0 += (lblName->width() + iItemSpan);
         for (int j = 0; j < iCols; j++) {
-            QCheckBox* pChk = new CKeyCheckBox(QString::asprintf("%d", j+1), this);
+            QCheckBox* pChk = new CKeyCheckBox(QString::number(j+1), this);
             pChk->resize(iChkWidth, iChkHeight);
             pChk->move(iX0, iY0);
             //pChk->hide();

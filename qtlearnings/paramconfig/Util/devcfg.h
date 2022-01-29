@@ -1,7 +1,7 @@
 #ifndef DEVCFG_H
 #define DEVCFG_H
 #include "ItemBase.h"
-#include <QJsonObject>
+#include "json.h"
 
 class DevCfgItem : public ItemBase
 {
@@ -11,8 +11,13 @@ public:
     virtual ~DevCfgItem() {}
 
     virtual bool initFromDomElement(QDomElement element);
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    virtual bool initFromJsonObject(QJsonObject* obj);
+    virtual bool initChildrenFromJsonObject(QJsonObject* obj);
+#else
     virtual bool initFromJsonObject(QJsonObject obj);
     virtual bool initChildrenFromJsonObject(QJsonObject obj);
+#endif
     virtual DevCfgItem* createMyself();
 
     virtual void dump();
@@ -54,7 +59,11 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    virtual bool initChildrenFromJsonObject(QJsonObject* obj);
+#else
     virtual bool initChildrenFromJsonObject(QJsonObject obj);
+#endif
     virtual DevCfgItem* createMyself();
     void    copyChildren(DevCfgList* pDst);
 

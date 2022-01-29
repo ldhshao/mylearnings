@@ -16,6 +16,10 @@ struct SValListPair{
     uint16_t val;
     list<UiCfgItem*> itemList;
 };
+struct SVallistListPair{
+    list<uint16_t> valList;
+    list<UiCfgItem*> itemList;
+};
 class CEnableMngr : public QObject
 {
     Q_OBJECT
@@ -76,5 +80,26 @@ protected slots:
 
 private:
     map<uint16_t*, list<UiCfgItem*>>      valListMap;
+};
+
+class CVisibleMngr : public QObject
+{
+    Q_OBJECT
+
+public:
+    static CVisibleMngr* instance();
+    void registerVisibleUi(CKeyDnComboBox* pCmb, uint16_t* pVal, list<uint16_t> *pValList, UiCfgItem* item);
+
+protected:
+    CVisibleMngr(QWidget *parent = 0){}
+    virtual ~CVisibleMngr(){
+    }
+
+protected slots:
+    void slot_valueChanged(uint16_t* pVal, uint32_t valNew);
+
+private:
+    map<uint16_t*, list<struct SVallistListPair>>      valUiMap;
+    map<QWidget*, bool> sourceMap;
 };
 #endif // CKEYDNEDIT_H

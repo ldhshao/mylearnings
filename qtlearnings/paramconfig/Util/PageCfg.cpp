@@ -3,9 +3,13 @@
 #include "UiCommon/ckeydncombobox.h"
 #include "UiCommon/cenablemngr.h"
 #include <QGroupBox>
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#else
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
+#endif
+#include <QFile>
 #include <set>
 #include <vector>
 #include <utility>
@@ -545,15 +549,22 @@ bool GroupCfgItem::readJsonFile(QString strFile)
         return false;
     }
 
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    QJsonObject root;
+    if (!root.fromString(file.readAll()))
+        return false;
+    loadFromJsonObject(root.children()[0]);
+#else
     QJsonParseError parseError;
     QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
     file.close();
     if(parseError.error!=QJsonParseError::NoError){
         return false;
     }
-
     QJsonObject obj=doc.object().begin()->toObject();
     loadFromJsonObject(&obj);
+#endif
+
     qDebug()<<"load successfully 1";
     qWarning()<<"load successfully 2";
 
@@ -561,6 +572,22 @@ bool GroupCfgItem::readJsonFile(QString strFile)
 }
 bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    for(auto it = m_children.begin(); it != m_children.end(); it++){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+        if (nullptr != grp){
+            QString childName = (*it)->paramName();
+            if (!childName.isEmpty() && obj->exists(childName)){
+                QJsonObject *childObj = obj->get(childName);
+                (*it)->loadFromJsonObject(childObj);
+            }else {
+                (*it)->loadFromJsonObject(obj);
+            }
+        }else{
+            (*it)->loadFromJsonObject(obj);
+        }
+    }
+#else
     for(auto it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
@@ -575,6 +602,7 @@ bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj)
             (*it)->loadFromJsonObject(obj);
         }
     }
+#endif
     return true;
 }
 bool GroupCfgItem::saveJsonFile(QString strFile)
@@ -586,11 +614,17 @@ bool GroupCfgItem::saveJsonFile(QString strFile)
     }
 
     QJsonObject root;
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    QJsonObject* obj = root.addObject(m_paName);
+    saveToJsonObject(obj);
+    file.write(root.toString().toUtf8());
+#else
     QJsonObject obj;
     saveToJsonObject(&obj);
     root.insert(m_paName, obj);
     QJsonDocument doc(root);
     file.write(doc.toJson());
+#endif
     file.close();
     qDebug()<<"save successfully 1";
     qWarning()<<"save successfully 2";
@@ -602,6 +636,15 @@ bool GroupCfgItem::saveToJsonObject(QJsonObject *obj)
     for(auto it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+            QString childName = (*it)->paramName();
+            if (!childName.isEmpty()){
+                QJsonObject *childObj = obj->addObject(childName);
+                (*it)->saveToJsonObject(childObj);
+            }else {
+                (*it)->saveToJsonObject(obj);
+            }
+#else
             QJsonObject childObj;
             QString childName = (*it)->paramName();
             if (!childName.isEmpty()){
@@ -610,6 +653,7 @@ bool GroupCfgItem::saveToJsonObject(QJsonObject *obj)
             }else {
                 (*it)->saveToJsonObject(obj);
             }
+#endif
         }else{
             (*it)->saveToJsonObject(obj);
         }

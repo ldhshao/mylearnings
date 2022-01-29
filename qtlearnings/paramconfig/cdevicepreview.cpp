@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QAbstractButton>
+#include <QResizeEvent>
 #include <QDebug>
 
 #define WIDGET_STYLE     "background-color:rgba(80,80,100,100%);"

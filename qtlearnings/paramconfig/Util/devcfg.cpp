@@ -1,8 +1,12 @@
 #include "devcfg.h"
 #include <qtextstream.h>
+#include <QByteArray>
+#include <QFile>
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#else
 #include <QJsonDocument>
 #include <QJsonParseError>
-#include <QByteArray>
+#endif
 #include <QtDebug>
 
 const QString DevCfgItem::DevTypeSystem = "system";
@@ -25,6 +29,26 @@ bool DevCfgItem::initFromDomElement(QDomElement element)
 
     return true;
 }
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+bool DevCfgItem::initFromJsonObject(QJsonObject* obj)
+{
+    qDebug()<<obj;
+    m_name = obj->value("Name").toString();
+    bool bOK = false;
+    int iType = obj->value("Type").toInt(&bOK);
+    if (bOK){
+        m_type = translateType2UiCfgType(this, iType);
+    }
+
+    initChildrenFromJsonObject(obj);
+
+    return true;
+}
+bool DevCfgItem::initChildrenFromJsonObject(QJsonObject* obj)
+{
+    return true;
+}
+#else
 bool DevCfgItem::initFromJsonObject(QJsonObject obj)
 {
     qDebug()<<obj;
@@ -54,6 +78,7 @@ bool DevCfgItem::initChildrenFromJsonObject(QJsonObject obj)
 {
     return true;
 }
+#endif
 DevCfgItem* DevCfgItem::createMyself()
 {
     DevCfgItem *pItem = new DevCfgItem();
@@ -187,7 +212,22 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
         return false;
     }
 
-
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    QJsonObject root;
+    if (!root.fromString(file.readAll()))
+        return false;
+    QList<QJsonObject*> devList = root.children()[0]->children();
+    for (auto it = devList.begin(); it != devList.end(); it++){
+        QString strID = (*it)->key();
+        int pos = strID.lastIndexOf('_');
+        if (-1 == pos) qDebug()<<"error device1 name "<<strID;
+        DevCfgList *pList = new DevCfgList();
+        pList->m_paName = strID;
+        pList->m_id = strID.right(strID.length() - pos - 1).toInt();
+        pList->initFromJsonObject(*it);
+        m_children.push_back(pList);
+    }
+#else
     QJsonParseError parseError;
     QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
     file.close();
@@ -205,12 +245,12 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
         pList->initFromJsonObject(it->toObject());
         m_children.push_back(pList);
     }
+#endif
 }
 
 void DevCfgList::deleteAll()
 {
-    QList<DevCfgItem*>::ConstIterator it = m_children.cbegin();
-    for (; it != m_children.cend(); it++){
+    for (auto it=m_children.begin(); it != m_children.end(); it++){
         delete *it;
     }
     m_children.clear();
@@ -241,8 +281,7 @@ DevCfgItem* DevCfgList::getItemById(int id)
     if (id == m_id)
         return this;
 
-    QList<DevCfgItem*>::iterator it = m_children.begin();
-    for (; it != m_children.cend(); it++){
+    for (auto it=m_children.begin(); it != m_children.end(); it++){
         DevCfgList *pList = dynamic_cast<DevCfgList*>(*it);
         if (nullptr != pList){
             DevCfgItem* pItem = pList->getItemById(id);
@@ -289,6 +328,26 @@ bool DevCfgList::initChildrenFromDomElement(QDomNodeList list)
     }
 
 }
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+bool DevCfgList::initChildrenFromJsonObject(QJsonObject* obj)
+{
+    QList<QJsonObject*> childList = obj->children();
+    for (auto it = childList.begin(); it != childList.end(); it++){
+        if (QJsonObject::vtfObject == (*it)->type()){
+            QString strID = (*it)->key();
+            int pos = strID.lastIndexOf('_');
+            if (-1 == pos) qDebug()<<"error device1 name "<<strID;
+            DevCfgItem *pItem = new DevCfgItem();
+            pItem->setParamName(strID);
+            pItem->setId(strID.right(strID.length() - pos - 1).toInt());
+            pItem->initFromJsonObject(*it);
+            m_children.append(pItem);
+        }
+    }
+
+    return true;
+}
+#else
 bool DevCfgList::initChildrenFromJsonObject(QJsonObject obj)
 {
     for (auto it = obj.begin(); it != obj.end(); it++){
@@ -306,6 +365,7 @@ bool DevCfgList::initChildrenFromJsonObject(QJsonObject obj)
 
     return true;
 }
+#endif
 DevCfgItem* DevCfgList::createMyself()
 {
     DevCfgList* pList = new DevCfgList();
@@ -328,8 +388,7 @@ void DevCfgList::copyChildren(DevCfgList *pDst)
 void DevCfgList::dump()
 {
     DevCfgItem::dump();
-    QList<DevCfgItem*>::ConstIterator it = m_children.cbegin();
-    for (; it != m_children.cend(); it++){
+    for (auto it=m_children.begin(); it != m_children.end(); it++){
         (*it)->dump();
     }
 }

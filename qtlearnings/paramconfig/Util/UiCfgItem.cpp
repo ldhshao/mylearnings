@@ -16,6 +16,7 @@
 #include "../cdevposmgr.h"
 #include "Util/PageCfg.h"
 //#include <QJsonValue>
+#include <QStringList>
 #include <math.h>
 using namespace std;
 
@@ -59,6 +60,7 @@ bool UiCfgItem::initFromDomElement(QDomElement element)
     setStrValue(m_paName, element, "paname");
     QString strEnableSource;
     setStrValue(strEnableSource, element, "enablesource");
+    setStrValue(m_visibleSource, element, "visiblesource");
     if (!strEnableSource.isEmpty()){
         int pos = strEnableSource.indexOf(':');
         if (-1 < pos){
@@ -289,6 +291,23 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
             }
             m_enableSource = pEnSource;
         }
+        UiCfgItem* pVisibleSource = nullptr;
+        if (!m_visibleSource.isEmpty()){
+            bool bOK = false;
+            QStringList tList = m_visibleSource.split(':');
+            if (2 == tList.count() && nullptr != (pVisibleSource = pGroup->findItemById(tList[0].trimmed()))){
+                tList = tList[1].split(',');
+                list<uint16_t> valList;
+                foreach (QString val, tList){
+                    uint16_t usVal = static_cast<uint16_t>(val.toInt(&bOK));
+                    if (bOK) valList.push_back(usVal);
+                }
+                CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pVisibleSource->getWidget());
+                if (0 < valList.size() && nullptr != pCmb){
+                    CVisibleMngr::instance()->registerVisibleUi(pCmb, pCmb->valuePtr(), &valList, this);
+                }
+            }
+        }
     }
     return true;
 }
@@ -328,6 +347,7 @@ void UiCfgItem::copyTo(UiCfgItem* destItem)
     destItem->m_defaultVal = m_defaultVal;
     destItem->m_enableSourceId = m_enableSourceId;
     destItem->m_enableSourceVal = m_enableSourceVal;
+    destItem->m_visibleSource = m_visibleSource;
     destItem->m_required = m_required;
     destItem->m_paName = m_paName;
 }
@@ -453,10 +473,10 @@ bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pAddr = paramAddress();
     if (!m_paName.isEmpty() && nullptr != pAddr){
+        int valTmp;
         if (1 == m_datacnt){
-            QJsonValue valTmp = obj->value(m_paName);
-            if (!valTmp.isUndefined()){
-                *pAddr = static_cast<uint16_t>(valTmp.toInt());
+            if (getJsonObjectIntVal(obj, m_paName, &valTmp)){
+                *pAddr = static_cast<uint16_t>(valTmp);
             }
         }else if (2 == m_datacnt){
             //deal device point
@@ -464,24 +484,18 @@ bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
             if (strTypeDevPointEdit == m_type && 3 == paNameList.count()){
                 int l = 0, m = 0, p = 0;
                 uint32_t devPoint = 0;
-                QJsonValue valTmp = obj->value(paNameList[0]);
-                if (!valTmp.isUndefined())
-                    l = valTmp.toInt(l);
-                valTmp = obj->value(paNameList[1]);
-                if (!valTmp.isUndefined())
-                    m = valTmp.toInt(m) - 1;
-                valTmp = obj->value(paNameList[2]);
-                if (!valTmp.isUndefined())
-                    p = valTmp.toInt(p) - 1;
+                getJsonObjectIntVal(obj, paNameList[0], &l);
+                getJsonObjectIntVal(obj, paNameList[1], &m);
+                getJsonObjectIntVal(obj, paNameList[2], &p);
+                m -= 1;
+                p -= 1;
                 devPoint = make_dev_point(l, m, p);
                 *pAddr = devPoint;
                 *(pAddr + 1) = (devPoint >> 16);
             }else {
-                QJsonValue valTmp = obj->value(m_paName);
-                if (!valTmp.isUndefined()){
-                    int val32 = valTmp.toInt();
-                    *pAddr = val32;
-                    *(pAddr + 1) = (val32 >> 16);
+                if (getJsonObjectIntVal(obj, m_paName, &valTmp)){
+                    *pAddr = valTmp;
+                    *(pAddr + 1) = (valTmp >> 16);
                 }
             }
         }
@@ -493,7 +507,7 @@ bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
     uint16_t* pAddr = paramAddress();
     if (!m_paName.isEmpty() && 0 < m_datacnt && nullptr != pAddr){
         if (1 == m_datacnt)
-            obj->insert(m_paName, QJsonValue(*pAddr));
+            setJsonObjectIntVal(obj, m_paName, *pAddr);
         else if (2 == m_datacnt){
             //deal device point
             QStringList paNameList = m_paName.split(';');
@@ -504,12 +518,12 @@ bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
                     int l = get_line_from_dev_point(devPoint);//from 1
                     int m = get_machine_from_dev_point(devPoint);//from 0
                     int p = get_port_from_dev_point(devPoint);//from 0
-                    obj->insert(paNameList[0], QJsonValue(l));
-                    obj->insert(paNameList[1], QJsonValue(m+1));
-                    obj->insert(paNameList[2], QJsonValue(p+1));
+                    setJsonObjectIntVal(obj, paNameList[0], l);
+                    setJsonObjectIntVal(obj, paNameList[1], m+1);
+                    setJsonObjectIntVal(obj, paNameList[2], p+1);
                 }
             }else {
-                obj->insert(m_paName, QJsonValue((*(pAddr+1) << 16) + *pAddr));
+                setJsonObjectIntVal(obj, m_paName, (*(pAddr+1) << 16) + *pAddr);
             }
         }
         return true;
@@ -562,8 +576,10 @@ void UiCfgItemFloat::create(QWidget* parent)
         pBoxDes->setAlignment(Qt::AlignLeft);
         QString strDes;
         if (0 < m_decimalPlaces){
-            QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
-            strDes = QString::asprintf(strFormat.toStdString().c_str(), m_precision).append(m_unit);
+            char strFormat[50] = {0}, strTmp[100] = {0};
+            sprintf(strFormat, "%%.%df", m_decimalPlaces);
+            sprintf(strTmp, strFormat, m_precision);
+            strDes.append(strTmp).append(m_unit);
         }else{
             strDes = m_unit;
         }
@@ -581,8 +597,10 @@ QString UiCfgItemFloat::strDataValue(uint16_t *pAddr)
     QString strValue;
     if (nullptr == pAddr) pAddr = paramAddress();
     float fVal = *pAddr * m_precision;
-    QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
-    strValue = QString::asprintf(strFormat.toStdString().c_str(), fVal).append(m_unit);
+    char strFormat[50] = {0}, strTmp[100] = {0};
+    sprintf(strFormat, "%%.%df", m_decimalPlaces);
+    sprintf(strTmp, strFormat, fVal);
+    strValue.append(strTmp).append(m_unit);
 
     return strValue;
 }
@@ -714,7 +732,6 @@ QString SetIndexCfgItem::previewInfo()
             strInfo.append(QString(tCnt - getQstringShowLen(strTemp)/tlen, '\t'));
         }
         strInfo.append("\n");
-        qWarning()<<tCntList;
         for (int s = 0; s < m_setCnt; s++){
             strTemp = QString::number(s+1) + pvCfgList[1] + ": ";
             strInfo.append(strTemp);
@@ -740,11 +757,11 @@ QString SetIndexCfgItem::previewInfoEx(int nameLenMax)
 }
 void SetIndexCfgItem::setDefaultVal()
 {
+    initData(m_dataidx, true);
     CKeyDnSetIndexEdit* edit = dynamic_cast<CKeyDnSetIndexEdit*>(m_pWidget);
     if (nullptr != edit){
         edit->setEditText("1");
     }
-    initData(m_dataidx, true);
 }
 QString SetIndexCfgItem::getFullName(int idx)
 {
@@ -790,8 +807,43 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+        if (!obj->exists(m_paName + "_" + QString::number(s))) continue;
+        QJsonObject* childObj = obj->get(m_paName +  "_" + QString::number(s));
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
+            SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+            if (nullptr != pSetItem){
+                uint8_t dataCnt = pSetItem->itemDataCnt();
+                int tmpVal;
+                if (1 == dataCnt){
+                    if(getJsonObjectIntVal(childObj, (*it)->paramName(), &tmpVal))
+                        *pAddr = tmpVal;
+                }else if (2 == dataCnt){
+                    QStringList paNameList = (*it)->paramName().split(';');
+                    if ((*it)->isType(strTypeDevPointEdit) && 3 == paNameList.count()){
+                        int l = 0, m = 0, p = 0;
+                        uint32_t devPoint = 0;
+                        getJsonObjectIntVal(childObj, paNameList[0], &l);
+                        getJsonObjectIntVal(childObj, paNameList[1], &m);
+                        getJsonObjectIntVal(childObj, paNameList[2], &p);
+                        if (0 < m) m--;
+                        if (0 < p) p--;
+                        devPoint = make_dev_point(l, m, p);
+                        *pAddr = devPoint;
+                        *(pAddr + 1) = (devPoint >> 16);
+                    }else{
+                        if(getJsonObjectIntVal(childObj, (*it)->paramName(), &tmpVal)){
+                            *pAddr = tmpVal;
+                            *(pAddr+1) = (tmpVal >> 16);
+                        }
+                    }
+                }
+            }
+        }
+#else
         QJsonValue  valTmp = obj->value(m_paName + QString::asprintf("_%d", s));
-        if (!valTmp.isObject()) continue;
+        if (!valTmp.isUndefined()) continue;
         QJsonObject childObj = valTmp.toObject();
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
@@ -829,6 +881,7 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
                 }
             }
         }
+#endif
     }
     return true;
 }
@@ -836,6 +889,35 @@ bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+        QJsonObject *childObj = obj->addObject(m_paName + "_" + QString::number(s));
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
+            SetItemCfgItem* pSetItem = dynamic_cast<SetItemCfgItem*>(*it);
+            if (nullptr != pSetItem){
+                uint8_t dataCnt = pSetItem->itemDataCnt();
+                if (1 == dataCnt){
+                    childObj->add((*it)->paramName(), *pAddr);
+                }else if (2 == dataCnt){
+                    int val = (*(pAddr+1)<<16) + *pAddr;
+                    QStringList paNameList = (*it)->paramName().split(';');
+                    if ((*it)->isType(strTypeDevPointEdit) && 3 == paNameList.count()){
+                        int portType = (-1 < (*it)->getName().indexOf("输入点"))? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT;
+                        if (!CDevPosMgr::instance()->isDevPointValid(val, portType)) continue;
+
+                        int l = get_line_from_dev_point(val);//from 1
+                        int m = get_machine_from_dev_point(val);//from 0
+                        int p = get_port_from_dev_point(val);//from 0
+                        childObj->add(paNameList[0], l);
+                        childObj->add(paNameList[1], m+1);
+                        childObj->add(paNameList[2], p+1);
+                    }else{
+                        childObj->add((*it)->paramName(), val);
+                    }
+                }
+            }
+        }
+#else
         QJsonObject childObj;
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
@@ -864,6 +946,7 @@ bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
             }
         }
         obj->insert(m_paName + QString::asprintf("_%d", s), childObj);
+#endif
     }
     return true;
 }
@@ -1204,10 +1287,10 @@ bool EditSetCfgItem::loadFromJsonObject(QJsonObject *obj)
     uint16_t *pBaseAddr = paramAddress();
     if (!m_paName.isEmpty() && nullptr != pBaseAddr){
         for (int i = 0; i < m_setSize; i++){
-            QJsonValue valTmp = obj->value(m_paName + QString::asprintf("_%d", i));
-            if (valTmp.isUndefined() || !valTmp.isDouble())
-                break;
-            pBaseAddr[i] = static_cast<uint16_t>(valTmp.toInt());
+            int tmpVal;
+            if (getJsonObjectIntVal(obj, m_paName + "_" + QString::number(i), &tmpVal)){
+                pBaseAddr[i] = tmpVal;
+            }
         }
     }
     return true;
@@ -1219,7 +1302,7 @@ bool EditSetCfgItem::saveToJsonObject(QJsonObject *obj)
     if (!m_paName.isEmpty() && nullptr != pEdit && nullptr != pBaseAddr){
         for (int i = 0; i < m_setSize; i++){
             if (pEdit->isValid(pBaseAddr[i])){
-                obj->insert(m_paName + QString::asprintf("_%d", i), pBaseAddr[i]);
+                setJsonObjectIntVal(obj, m_paName + " " + QString::number(i), pBaseAddr[i]);
             }else
                 break;
         }
@@ -1365,11 +1448,43 @@ bool SetItemCfgItem::initUi(unsigned short* pStAddr, int w, int h)
             }
             m_enableSource = pEnSource;
         }
+        UiCfgItem* pVisibleSource = nullptr;
+        if (!m_visibleSource.isEmpty()){
+            bool bOK = false;
+            QStringList tList = m_visibleSource.split(':');
+            if (2 == tList.count() && nullptr != (pVisibleSource = pGroup->findItemById(tList[0].trimmed()))){
+                tList = tList[1].split(',');
+                list<uint16_t> valList;
+                foreach (QString val, tList){
+                    uint16_t usVal = static_cast<uint16_t>(val.toInt(&bOK));
+                    if (bOK) valList.push_back(usVal);
+                }
+                CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(pVisibleSource->getWidget());
+                if (0 < valList.size() && nullptr != pCmb){
+                    SetItemCfgItem* pItemVisSource = dynamic_cast<SetItemCfgItem*>(pVisibleSource);
+                    if (nullptr != pItemVisSource){
+                        SetIndexCfgItem* pVisSourceSetIndex = dynamic_cast<SetIndexCfgItem*>(pItemVisSource->getSetIndexSource());
+                        uint16_t setSize = pVisSourceSetIndex->setSize();
+                        uint16_t setCnt = pVisSourceSetIndex->setCount();
+                        uint16_t *pDataAddr = pCmb->valuePtr();
+                        for (int i = 0; i < setCnt; i++){
+                            CVisibleMngr::instance()->registerVisibleUi(pCmb, pDataAddr+i*setSize, &valList, this);
+                        }
+                    }else {
+                        CVisibleMngr::instance()->registerVisibleUi(pCmb, pCmb->valuePtr(), &valList, this);
+                    }
+                }
+            }
+        }
     }
 
     return true;
 }
 
+void SetItemCfgItem::setDefaultVal()
+{
+    //nothine; setindex has done
+}
 //SetItemCfgItemFloat
 HNDZ_IMPLEMENT_DYNCREATE(SetItemCfgItemFloat, UiCfgItem)
 bool SetItemCfgItemFloat::initFromDomElement(QDomElement element)
@@ -1416,8 +1531,10 @@ void SetItemCfgItemFloat::create(QWidget* parent)
         pBoxDes->setAlignment(Qt::AlignLeft);
         QString strDes;
         if (0 < m_decimalPlaces){
-            QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
-            strDes = QString::asprintf(strFormat.toStdString().c_str(), m_precision).append(m_unit);
+            char strFormat[50] = {0}, strTmp[100] = {0};
+            sprintf(strFormat, "%%.%df", m_decimalPlaces);
+            sprintf(strTmp, strFormat, m_precision);
+            strDes.append(strTmp).append(m_unit);
         }else{
             strDes = m_unit;
         }
@@ -1435,9 +1552,10 @@ QString SetItemCfgItemFloat::strDataValue(uint16_t *pAddr)
     QString strValue;
     if (nullptr == pAddr) pAddr = paramAddress();
     float fVal = *pAddr * m_precision;
-    QString strFormat = QString::asprintf("%%.%df", m_decimalPlaces);
-    strValue = QString::asprintf(strFormat.toStdString().c_str(), fVal).append(m_unit);
-
+    char strFormat[50] = {0}, strTmp[100] = {0};
+    sprintf(strFormat, "%%.%df", m_decimalPlaces);
+    sprintf(strTmp, strFormat, fVal);
+    strValue.append(strTmp).append(m_unit);
     return strValue;
 }
 

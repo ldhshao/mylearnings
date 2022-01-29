@@ -1,11 +1,15 @@
-include ($$PWD/Util/Util.pri)
-include ($$PWD/UiCommon/UiCommon.pri)
-
 QT       += core gui xml sql
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4) {
+        QT += widgets
+        CONFIG += c++11
+}else {
+        QMAKE_CXXFLAGS += -std=c++0x
+        INCLUDEPATH += /opt/poky/1.7/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/c++/4.9.1
+}
 
-CONFIG += c++11
+include ($$PWD/Util/Util.pri)
+include ($$PWD/UiCommon/UiCommon.pri)
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -61,7 +65,43 @@ FORMS += \
     cuploadquerywid.ui \
     mainwindow.ui
 
-DESTDIR = $$PWD/../bin
+linux-g++{
+          CONFIG(debug, debug|release) {
+               QBUILD = $$PWD/../bin/debug/x86
+          }
+          CONFIG(release, debug|release) {
+                QBUILD =$$PWD/../bin/release/x86
+               DEFINES += QT_NO_DEBUG_OUTPUT
+           }
+           #库使用
+           DEFINES += I386
+           DEFINES+=SUPPORT_SYSCOMM
+           #应用程序使用
+           DEFINES += PC_PLATFORM
+           #DEFINES+=FTPCONNECTION
+}
+
+linux-gnueabi-oe-g++{
+           CONFIG(debug, debug|release) {
+               QBUILD =  $$PWD/../bin/debug/arm
+           }
+           CONFIG(release, debug|release) {
+                QBUILD = $$PWD/../bin/release/arm
+                DEFINES += QT_NO_DEBUG_OUTPUT
+            }
+           #库使用
+           DEFINES += ARM_PLATFORM
+          # DEFINES += TASHIZHUJI
+           DEFINES += ARM
+           DEFINES+=SUPPORT_SYSCOMM
+           #应用程序使用
+           #DEFINES+=FTPCONNECTION
+           message(linux-arm-g++)
+}
+#DESTDIR = $$PWD/../bin
+DESTDIR = $$QBUILD
+message(The project $$QBUILD)
+message(qt version $$QT_VERSION)
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

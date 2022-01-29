@@ -309,7 +309,7 @@ QString CDevPosMgr::makeStrDevPoint(uint32_t devPoint)
     }
 
     strDevPoint = gLineNames[l];
-    strDevPoint.append(QString::asprintf(".%d.%d", m+1, p+1));
+    strDevPoint.append(".").append(QString::number(m+1)).append(".").append(QString::number(p+1));
 
     return strDevPoint;
 }

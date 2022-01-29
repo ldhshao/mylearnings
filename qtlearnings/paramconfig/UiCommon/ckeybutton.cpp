@@ -74,5 +74,5 @@ QString CKeyButtonEx::removeStyle(const QString& strStyle, QString strAttr)
         if (-1 == styleList[i].indexOf(strAttr))
             dstList.append(styleList[i]);
     }
-    return dstList.join(';');
+    return dstList.join(";");
 }

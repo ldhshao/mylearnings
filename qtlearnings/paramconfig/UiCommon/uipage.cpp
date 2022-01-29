@@ -160,7 +160,6 @@ void UiPage::keyPressEvent(QKeyEvent *event)
         //save modified param address to global modified param address list
         if (!mparamAddrList.empty()){
             emit sig_modifiedParamAddrList(&mparamAddrList);
-            qDebug()<<mparamAddrList;
         }
         mparamAddrList.clear();
         hide();
