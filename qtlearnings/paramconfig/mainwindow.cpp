@@ -114,7 +114,7 @@ bool MainWindow::initWorkDir()
     }else {
         temp->setPath(workDir);
         QFileInfoList dirList = temp->entryInfoList(QDir::Dirs);
-        for (auto it = dirList.rbegin(); it != dirList.rend(); it++) {
+        for (auto it = dirList.begin(); it != dirList.end(); it++) {
             if ("." == it->fileName() || ".." == it->fileName()) continue;
             QString strDir(it->fileName());
             if (!temp->exists(strDir + "/" + SYSTEM_CFG_FILEPATH))
@@ -321,8 +321,9 @@ bool MainWindow::saveParam()
        int i = 0;
        while (nullptr != pItem){
            GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
-           grp->saveJsonFile(workDir + QString::asprintf("/hp%d.json", i));
+           grp->readJsonFile(workDir + QString("/hp").append(QString::number(i)).append(".json"));
            pItem = devUiCfgList.getNext();
+           i++;
        }
     }
     return true;
@@ -340,8 +341,9 @@ bool MainWindow::loadParam()
     int i = 0;
     while (nullptr != pItem){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
-        grp->readJsonFile(workDir + QString::asprintf("/hp%d.json", i));
+        grp->readJsonFile(workDir + QString("/hp").append(QString::number(i)).append(".json"));
         pItem = devUiCfgList.getNext();
+        i++;
     }
     return ret;
 }
@@ -513,7 +515,7 @@ void MainWindow::slot_bakeupRestoreClicked(QWidget* w)
 
 void MainWindow::slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList)
 {
-    qDebug()<<__FUNCTION__<<*pMparamAddrList;
+    //qDebug()<<__FUNCTION__<<*pMparamAddrList;
     for (auto it = pMparamAddrList->begin(); it != pMparamAddrList->end(); it++) {
         uint32_t idx = (*it) - paramLocalAddr;
         addModifiedParamIndex(idx);
@@ -522,7 +524,7 @@ void MainWindow::slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList)
 
 void MainWindow::slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList)
 {
-    qDebug()<<__FUNCTION__<<*pMparamAddrList;
+    //qDebug()<<__FUNCTION__<<*pMparamAddrList;
     for (auto it = pMparamAddrList->begin(); it != pMparamAddrList->end(); it++) {
         uint32_t idx = (*it) - paramLocalAddr;
         //deal device point
@@ -612,7 +614,7 @@ void MainWindow::on_pushButton_preview_clicked()
             itemList.push_back(item);
     }
 
-    qDebug()<<itemList;
+    //qDebug()<<itemList;
     //CModParamPreview dlg(&itemList);
     //if (QDialog::Accepted == dlg.exec()){
     //    qDebug()<<mparamIdxList;
@@ -637,12 +639,14 @@ void MainWindow::on_pushButton_save_clicked()
         QString strParam = workDir + "/";
         time_t rawtime;
         struct tm * timeinfo;
-        qDebug()<<mparamIdxList;
+        char strTemp[100] = {0};
+        //qDebug()<<mparamIdxList;
 
         time (&rawtime);
         timeinfo = localtime (&rawtime);
-        strParam.append(QString::asprintf("%d%02d%02d%02d%02d%02dmodified.dat",
-                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
+        sprintf(strTemp, "%d%02d%02d%02d%02d%02dmodified.dat",
+                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+        strParam.append(strTemp);
         outFile.open(strParam.toStdString(), ios_base::out|ios_base::binary);
         char *buf = new char[6*mparamIdxList.size()];
         int i = 0;
@@ -677,10 +681,12 @@ void MainWindow::slot_emitTimer()
     QString strTime;
         time_t rawtime;
         struct tm * timeinfo;
+        char strTemp[100] = {0};
         time (&rawtime);
         timeinfo = localtime (&rawtime);
-        strTime.append(QString::asprintf("%d-%02d-%02d %02d:%02d:%02d",
-                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
+        sprintf(strTemp, "%d-%02d-%02d %02d:%02d:%02d",
+                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+        strTime.append(strTemp);
         timeLbl->setText(strTime);
     emitTimer->start(timerInterval);
 }

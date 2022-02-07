@@ -138,7 +138,7 @@ void CParamTableMngrWid::changeEvent(QEvent *event)
 void CParamTableMngrWid::on_pushButton_bakeup_clicked()
 {
     if(ui->lineEdit_fileNo->text().length() > fileNameMax){
-        showMessage(QString::asprintf("备份文件名过长!最大长度为%d", fileNameMax));
+        showMessage(QString("备份文件名过长!最大长度为").append(QString::number(fileNameMax)));
         return ;
     }
     else if(ui->lineEdit_fileNo->text().length() == 0){

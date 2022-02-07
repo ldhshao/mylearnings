@@ -5,7 +5,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
         CONFIG += c++11
 }else {
         QMAKE_CXXFLAGS += -std=c++0x
-        INCLUDEPATH += /opt/poky/1.7/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/c++/4.9.1
+        #INCLUDEPATH += /opt/poky/1.7/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/c++/4.9.1
+        INCLUDEPATH += /home/test/armc++4.9.1
 }
 
 include ($$PWD/Util/Util.pri)

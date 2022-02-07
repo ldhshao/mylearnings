@@ -1,5 +1,6 @@
 #include "ckeybutton.h"
 #include <QKeyEvent>
+#include <QStringList>
 #include <QDebug>
 
 CKeyButton::CKeyButton(QWidget *parent)
@@ -71,8 +72,10 @@ QString CKeyButtonEx::removeStyle(const QString& strStyle, QString strAttr)
     QStringList dstList;
     QStringList styleList = strStyle.split(';');
     for (int i = 0; i < styleList.count(); i++) {
-        if (-1 == styleList[i].indexOf(strAttr))
-            dstList.append(styleList[i]);
+        if (-1 == styleList[i].indexOf(strAttr)){
+            QString str = styleList[i];
+            dstList.append(str);
+        }
     }
     return dstList.join(";");
 }

@@ -165,7 +165,9 @@ void CModParamQuery::on_pushButton_query_clicked()
     ui->tableWidget->setRowCount(count);
     int row = 0;
     for (auto it = mapTimeRecords.begin(); it != mapTimeRecords.end(); it++) {
-        QString strTime = QString::asprintf("%04d/%02d/%02d ", y, m, d);
+        char strTemp[20] = {0};
+        sprintf(strTemp, "%04d/%02d/%02d ", y, m, d);
+        QString strTime(strTemp);
         strTime.append(it->first.mid(0,2) + ":" + it->first.mid(2,2) + ":" + it->first.mid(4,2));
         for (int i = 0; i < it->second.count(); i++) {
             QTableWidgetItem *item = new QTableWidgetItem(strTime);
@@ -179,7 +181,7 @@ void CModParamQuery::on_pushButton_query_clicked()
         }
     }
 
-    ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
+    ui->label_lineno->setText(QString("共").append(QString::number(ui->tableWidget->rowCount()) + "行"));
     autoAdjustTableColumns();
 }
 
@@ -207,10 +209,12 @@ void CModParamQuery::autoSetFocus()
 void CModParamQuery::readModifiedRecord(int y, int m, int d, map<QString, QStringList> *mapTimeRecords)
 {
     QString strParam("/opt/data/paramconfig");
-    QString strDate = QString::asprintf("%4d%02d%02d", y, m, d);
+    char strTemp[20] = {0};
+    sprintf(strTemp, "%04d%02d%02d", y, m, d);
+    QString strDate(strTemp);
     QDir temp(strParam);
     QFileInfoList dirList = temp.entryInfoList(QDir::Files);
-    for (auto it = dirList.rbegin(); it != dirList.rend(); it++) {
+    for (auto it = dirList.begin(); it != dirList.end(); it++) {
         if ("." == it->fileName() || ".." == it->fileName()) continue;
         qDebug()<<it->fileName();
         if (strDate == it->fileName().left(strDate.length()) && "modified.dat" == it->fileName().right(12)){

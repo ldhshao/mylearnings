@@ -86,7 +86,7 @@ void CModParamPreview::initTable()
     }
     autoAdjustTableColumns();
     if (0 < ui->tableWidget->rowCount()){
-        ui->label_lineno->setText(QString::asprintf("共%d行", ui->tableWidget->rowCount()));
+        ui->label_lineno->setText(QString("共").append(QString::number(ui->tableWidget->rowCount()) + "行"));
     }else{
         ui->label_lineno->setText("无参数变更");
     }
@@ -379,11 +379,12 @@ void CModParamPreview::saveModifiedParams()
        QString strParam("/opt/data/paramconfig/");
        time_t rawtime;
        struct tm * timeinfo;
+       char   strTemp[100] = {0};
 
        time (&rawtime);
        timeinfo = localtime (&rawtime);
-       strParam.append(QString::asprintf("%d%02d%02d%02d%02d%02dmodified.dat",
-                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec));
+       sprintf(strTemp, "%d%02d%02d%02d%02d%02dmodified.dat",timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+       strParam.append(strTemp);
        outFile.open(strParam.toStdString(), ios_base::out);
         for (int i = 0; i < rowCnt; i++) {
             QPushButton* btn0 = dynamic_cast<QPushButton*>(ui->tableWidget->cellWidget(i, 3));
