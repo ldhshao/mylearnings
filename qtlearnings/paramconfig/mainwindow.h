@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "Util/devcfg.h"
 #include "Util/PageCfg.h"
+#include "Util/logger.h"
 #include "UiCommon/cwidgetbutton.h"
 #include <list>
 #include <vector>

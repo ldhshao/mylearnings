@@ -246,6 +246,7 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
         m_children.push_back(pList);
     }
 #endif
+    return true;
 }
 
 void DevCfgList::deleteAll()

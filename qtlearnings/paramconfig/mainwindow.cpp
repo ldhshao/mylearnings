@@ -58,6 +58,7 @@
 #define PROPERTY_WIDGET "widget"
 #define PROPERTY_WORKDIR "workdir"
 #define PROPERTY_PARCNT  "paramcount"
+#define PROPERTY_LOGGER  "logger"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -119,7 +120,6 @@ bool MainWindow::initWorkDir()
             QString strDir(it->fileName());
             if (!temp->exists(strDir + "/" + SYSTEM_CFG_FILEPATH))
                 continue;
-            qDebug()<<strDir;
             if (!temp->exists(strDir + "/" + UITEMP_CFG_FILEPATH))
                 continue;
             //if (!temp->exists(strDir + "/" + PARAMS_FILEPATH))
@@ -139,8 +139,8 @@ void MainWindow::initTitle()
     bkLbl = new QLabel(this);
     topLbl = new QLabel(this);
     logoLbl = new QLabel(this);
-    titleLbl = new QLabel("KTC236通信控制系统参数设置",this);
-    verLbl = new QLabel("版本:VL0.0.0",this);
+    titleLbl = new QLabel(u8"KTC236通信控制系统参数设置",this);
+    verLbl = new QLabel(u8"版本:VL0.0.0",this);
     timeLbl = new QLabel(this);
     bkLbl->setStyleSheet(WIDGET_BKCOLOR);
     titleLbl->setStyleSheet(TITLE_STYLE);
@@ -152,7 +152,8 @@ void MainWindow::initMenu()
 {
     qDebug()<<workDir;
     QString strDevCfg = workDir + "/" + SYSTEM_CFG_FILEPATH;
-    devCfg.readDevCfgFile(strDevCfg);
+    bool loaded = devCfg.readDevCfgFile(strDevCfg);
+    qDebug()<<strDevCfg;
     DevCfgItem *pItem = devCfg.getHead();
     int idx = 0;
     CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
@@ -214,7 +215,7 @@ void MainWindow::initPage()
 {
     GroupCfgList cfgTemplate;
     QString strTemplate = workDir + "/" + UITEMP_CFG_FILEPATH;
-    cfgTemplate.readXmlFile(strTemplate);
+    bool loaded = cfgTemplate.readXmlFile(strTemplate);
     //add electrics
     {
         GroupCfgItem *pGroup = cfgTemplate.findGroupByName(UITEMPLATE_ELECTRIC);
@@ -267,7 +268,7 @@ void MainWindow::initPage()
     devUiCfgList.setParamTbl(paramLocalAddr);
     devUiCfgList.initData(0, true);//
     //check data count
-    bool loaded = loadParam();
+    loaded = loadParam();
 
     qWarning()<<"param address "<<paramLocalAddr<<" param count "<<paramCount;
     memcpy(paramServerAddr, paramLocalAddr, paramCount*sizeof(uint16_t));

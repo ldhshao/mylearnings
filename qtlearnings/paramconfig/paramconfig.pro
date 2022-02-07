@@ -1,8 +1,8 @@
 QT       += core gui xml sql
+CONFIG += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4) {
         QT += widgets
-        CONFIG += c++11
 }else {
         QMAKE_CXXFLAGS += -std=c++0x
         #INCLUDEPATH += /opt/poky/1.7/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/c++/4.9.1

@@ -9,6 +9,7 @@ HEADERS +=\
           $$UTIL/ItemBase.h    \
           $$UTIL/UiCfgItem.h   \
           $$UTIL/PageCfg.h     \
+          $$UTIL/logger.h     \
           $$UTIL/devcfg.h
 
 SOURCES +=\
@@ -17,4 +18,5 @@ SOURCES +=\
           $$UTIL/ItemBase.cpp \
           $$UTIL/UiCfgItem.cpp   \
           $$UTIL/PageCfg.cpp     \
+          $$UTIL/logger.cpp      \
           $$UTIL/devcfg.cpp

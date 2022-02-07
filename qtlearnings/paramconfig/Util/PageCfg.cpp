@@ -96,7 +96,7 @@ bool GroupCfgItem::initChildrenFromDomElement(QDomNodeList list)
         }
     }
 
-    return false;
+    return true;
 }
 
 void GroupCfgItem::dump()
