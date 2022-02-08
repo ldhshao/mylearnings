@@ -1,5 +1,6 @@
 #include "cwidgetbutton.h"
 #include <QKeyEvent>
+#include <QDebug>
 
 #define MENU_NORMAL_ORIGIN "color:rgba(255,255,255,100%);background-color: rgba(80, 80, 100, 100%);"
 #define MENU_NORMAL "background-color: rgba(80, 80, 100, 100%)"
@@ -63,6 +64,7 @@ CKeyStateButton::CKeyStateButton(QWidget *parent)
 }
 void CKeyStateButton::keyPressEvent(QKeyEvent *event)
 {
+    //qDebug()<<"CKeyStateButton "<<__FUNCTION__<<event->key();
     QWidget *focus = focusWidget();
     switch (event->key()) {
     case Qt::Key_Left:

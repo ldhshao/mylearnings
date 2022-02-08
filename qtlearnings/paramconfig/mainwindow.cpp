@@ -160,17 +160,20 @@ void MainWindow::initMenu()
     pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_systemClicked(QWidget*)));
+    pBtn->installEventFilter(this);
     devList.push_back(pBtn);
 
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("通讯");
     pBtn->setImagePath(":/images/comm.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    pBtn->installEventFilter(this);
     devList.push_back(pBtn);
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("参数表备份与恢复");
     pBtn->setImagePath(":/images/help.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    pBtn->installEventFilter(this);
     devList.push_back(pBtn);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_bakeupRestoreClicked(QWidget*)));
     pBtn = new CDeviceIconWidget(this);
@@ -178,11 +181,13 @@ void MainWindow::initMenu()
     pBtn->setImagePath(":/images/help.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_uploadQueryClicked(QWidget*)));
+    pBtn->installEventFilter(this);
     devList.push_back(pBtn);
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("帮助");
     pBtn->setImagePath(":/images/help.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    pBtn->installEventFilter(this);
     devList.push_back(pBtn);
 
     while (nullptr != pItem) {
@@ -197,6 +202,7 @@ void MainWindow::initMenu()
         pBtn->setProperty(PROPERTY_DEVICE, var);
         pBtn->setProperty(PROPERTY_INDEX, idx++);
         connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_deviceClicked(QWidget*)));
+        pBtn->installEventFilter(this);
         devList.push_back(pBtn);
         pItem = devCfg.getNext();
     }
@@ -205,6 +211,7 @@ void MainWindow::initMenu()
         pBtn->setTitle("test");
         pBtn->setImagePath(":/images/system.png");
         pBtn->setProperty(PROPERTY_INDEX, idx);
+        pBtn->installEventFilter(this);
         devList.push_back(pBtn);
     }
 
@@ -435,7 +442,7 @@ QWidget* MainWindow::getCloseWidget(QWidget* wid, bool up)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"MainWindow "<<__FUNCTION__;
+    qDebug()<<"MainWindow "<<__FUNCTION__<<event->key();
     switch (event->key()) {
         case Qt::Key_Up:
             getCloseWidget(focusWidget(), true)->setFocus();
@@ -456,6 +463,45 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 devList[0]->setFocus();
             return ;
     }
+}
+bool MainWindow::eventFilter(QObject * watched, QEvent * event)
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    if (nullptr != dynamic_cast<CDeviceIconWidget*>(watched)) {
+        CDeviceIconWidget* wid = dynamic_cast<CDeviceIconWidget*>(watched);
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+            int key = keyEvent->key();
+            if (Qt::Key_Return == key)
+                return false;
+            else if (Qt::Key_Up == key){
+                getCloseWidget(wid, true)->setFocus();
+                return true;
+            }else if (Qt::Key_Down == key){
+                getCloseWidget(wid, false)->setFocus();
+                return true;
+            }else if (Qt::Key_Left == key){
+                focusNextPrevChild(false);
+                return true;
+            }else if (Qt::Key_Right == key){
+                focusNextPrevChild(true);
+                return true;
+            }else if (Qt::Key_Escape == key){
+                if (!closeLbl->hasFocus())
+                    closeLbl->setFocus();
+                else
+                    devList[0]->setFocus();
+                return true;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        return QMainWindow::eventFilter(watched, event);
+    }
+#else
+    return QMainWindow::eventFilter(watched, event);
+#endif
 }
 void MainWindow::slot_systemClicked(QWidget* w)
 {

@@ -84,6 +84,7 @@ void CDeviceConfig::initMenu2(GroupCfgItem* grpItem)
             pBtn->setProperty(PROPERTY_INDEX, cnt0+i);
             pBtn->resize(menuWidth, menuHeight);
             menu2Mgr.registerButton(pBtn);
+            pBtn->installEventFilter(this);
             menu2List.push_back(pBtn);
         }
     }
@@ -194,7 +195,7 @@ void CDeviceConfig::resizeEvent(QResizeEvent *event)
 
 void CDeviceConfig::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"deviceconfig "<<__FUNCTION__;
+    qDebug()<<"deviceconfig "<<__FUNCTION__<<event->key();
     bool bMenu4Show = (nullptr != menu4Mgr.currentButton());
     switch (event->key()) {
         case Qt::Key_Return:
@@ -269,6 +270,24 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
             return ;
     }
 }
+bool CDeviceConfig::eventFilter(QObject * watched, QEvent * event)
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    if (nullptr != dynamic_cast<QWidget*>(watched)) {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+            keyPressEvent(keyEvent);
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return QMainWindow::eventFilter(watched, event);
+    }
+#else
+    return QMainWindow::eventFilter(watched, event);
+#endif
+}
 bool CDeviceConfig::onExit()
 {
     //show modified info
@@ -326,6 +345,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
                 CStateButton* pBtn = new CKeyStateButton(this);
                 pBtn->setProperty(PROPERTY_INDEX, cnt0+i);
                 pBtn->resize(menuWidth, menuHeight);
+                pBtn->installEventFilter(this);
                 menu3Mgr.registerButton(pBtn);
                 menu3List.push_back(pBtn);
             }
@@ -346,6 +366,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
             CStateButton* pBtn = new CKeyStateButton(this);
             pBtn->setProperty(PROPERTY_INDEX, 0);
             pBtn->resize(menuWidth, menuHeight);
+            pBtn->installEventFilter(this);
             menu3Mgr.registerButton(pBtn);
             menu3List.push_back(pBtn);
             needResize = true;

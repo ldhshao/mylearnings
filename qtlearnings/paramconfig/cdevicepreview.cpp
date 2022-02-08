@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QAbstractButton>
+#include <QKeyEvent>
 #include <QResizeEvent>
 #include <QDebug>
 
@@ -71,7 +72,7 @@ void CDevicePreview::clearConfigPage()
 
 void CDevicePreview::keyReleaseEvent(QKeyEvent *event)
 {
-    qDebug()<<"preview "<<__FUNCTION__;
+    qDebug()<<"preview "<<__FUNCTION__<<event->key();
 }
 void CDevicePreview::mouseDoubleClickEvent(QMouseEvent *event)
 {

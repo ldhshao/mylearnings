@@ -38,7 +38,7 @@ void CDeviceIconWidget::setImagePath(QString strImgPath)
 
 void CDeviceIconWidget::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"CDeviceIconWidget "<<__FUNCTION__;
+    qDebug()<<"CDeviceIconWidget "<<__FUNCTION__<<event->key();
     switch (event->key()) {
         case Qt::Key_Return:
             emit clicked(this);
@@ -49,6 +49,7 @@ void CDeviceIconWidget::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Right:
         case Qt::Key_Escape:
             event->setAccepted(false);
+            //qDebug()<<"CDeviceIconWidget accept false";
             return ;
     }
     QWidget::keyPressEvent(event);

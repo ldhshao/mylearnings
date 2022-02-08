@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
             a.setFont(fontThis);
         }
     }
-    qInstallMsgHandler(customMessageHandler);
+    //qInstallMsgHandler(customMessageHandler);
 #else
     qInstallMessageHandler(customMessageHandler);
 #endif
