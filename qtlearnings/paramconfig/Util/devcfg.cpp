@@ -2,7 +2,7 @@
 #include <qtextstream.h>
 #include <QByteArray>
 #include <QFile>
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
 #else
 #include <QJsonDocument>
 #include <QJsonParseError>
@@ -29,17 +29,17 @@ bool DevCfgItem::initFromDomElement(QDomElement element)
 
     return true;
 }
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
 bool DevCfgItem::initFromJsonObject(QJsonObject* obj)
 {
-    qDebug()<<obj;
+    //qDebug()<<obj;
     m_name = obj->value("Name").toString();
     bool bOK = false;
     int iType = obj->value("Type").toInt(&bOK);
     if (bOK){
         m_type = translateType2UiCfgType(this, iType);
     }
-
+    qDebug()<<"Name type "<<m_name<<m_type;
     initChildrenFromJsonObject(obj);
 
     return true;
@@ -212,9 +212,10 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
         return false;
     }
 
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     QJsonObject root;
-    if (!root.fromString(file.readAll()))
+    QTextStream stream(file.readAll());
+    if (!root.fromString(stream.readAll()))
         return false;
     QList<QJsonObject*> devList = root.children()[0]->children();
     for (auto it = devList.begin(); it != devList.end(); it++){
@@ -229,6 +230,10 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
     }
 #else
     QJsonParseError parseError;
+    QByteArray ba = file.readAll();
+    for (int i = 0; i < ba.size(); ++i) {
+        qDebug("%04hhX ", ba.at(i));
+    }
     QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
     file.close();
     if(parseError.error!=QJsonParseError::NoError){
@@ -329,7 +334,7 @@ bool DevCfgList::initChildrenFromDomElement(QDomNodeList list)
     }
 
 }
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
 bool DevCfgList::initChildrenFromJsonObject(QJsonObject* obj)
 {
     QList<QJsonObject*> childList = obj->children();

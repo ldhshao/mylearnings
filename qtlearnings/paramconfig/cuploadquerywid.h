@@ -31,6 +31,7 @@ protected:
     void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual bool eventFilter(QObject * watched, QEvent * event);//for arm 4.8.6
 
 protected slots:
     void slot_menu2_clicked(CStateButton* pBtn);

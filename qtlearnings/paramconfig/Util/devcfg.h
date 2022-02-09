@@ -11,7 +11,7 @@ public:
     virtual ~DevCfgItem() {}
 
     virtual bool initFromDomElement(QDomElement element);
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     virtual bool initFromJsonObject(QJsonObject* obj);
     virtual bool initChildrenFromJsonObject(QJsonObject* obj);
 #else
@@ -59,7 +59,7 @@ public:
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     virtual bool initChildrenFromJsonObject(QJsonObject* obj);
 #else
     virtual bool initChildrenFromJsonObject(QJsonObject obj);

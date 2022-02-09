@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     }
     //qInstallMsgHandler(customMessageHandler);
 #else
-    qInstallMessageHandler(customMessageHandler);
+    //qInstallMessageHandler(customMessageHandler);
 #endif
     MainWindow w;
     //w.setStyleSheet("MainWindow{ border-image: url(:/images/background2.png);}");

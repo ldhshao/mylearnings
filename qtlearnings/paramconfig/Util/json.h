@@ -1,18 +1,17 @@
 #ifndef JSON_H
 #define JSON_H
 
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
 #include <jsk_json.h>
 #include <QString>
 #define QJsonObject QT_JSON::JSONObject
-
 #else
 #include <QJsonObject>
 #include <QJsonValue>
 #endif
 
 static bool getJsonObjectIntVal(QJsonObject* obj, const QString& key, int* pVal){
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     if (nullptr != obj && obj->exists(key)){
         bool bOK = false;
         int val = obj->value(key).toInt(&bOK);
@@ -33,7 +32,7 @@ static bool getJsonObjectIntVal(QJsonObject* obj, const QString& key, int* pVal)
 
 static void setJsonObjectIntVal(QJsonObject* obj, const QString& key, int val){
     if (nullptr != obj && !key.isEmpty()){
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
         obj->add(key, val);
 #else
         obj->insert(key, val);

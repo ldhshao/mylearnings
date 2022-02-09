@@ -147,13 +147,13 @@ void MainWindow::initTitle()
     verLbl->setStyleSheet(VER_STYLE);
     timeLbl->setStyleSheet(VER_STYLE);
 }
-
 void MainWindow::initMenu()
 {
     qDebug()<<workDir;
     QString strDevCfg = workDir + "/" + SYSTEM_CFG_FILEPATH;
     bool loaded = devCfg.readDevCfgFile(strDevCfg);
     qDebug()<<strDevCfg;
+    //devCfg.dump();
     DevCfgItem *pItem = devCfg.getHead();
     int idx = 0;
     CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);

@@ -807,7 +807,7 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
         if (!obj->exists(m_paName + "_" + QString::number(s))) continue;
         QJsonObject* childObj = obj->get(m_paName +  "_" + QString::number(s));
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
@@ -889,7 +889,7 @@ bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
         QJsonObject *childObj = obj->addObject(m_paName + "_" + QString::number(s));
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();

@@ -3,7 +3,7 @@
 #include "UiCommon/ckeydncombobox.h"
 #include "UiCommon/cenablemngr.h"
 #include <QGroupBox>
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
 #else
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -549,7 +549,7 @@ bool GroupCfgItem::readJsonFile(QString strFile)
         return false;
     }
 
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     QJsonObject root;
     if (!root.fromString(file.readAll()))
         return false;
@@ -572,7 +572,7 @@ bool GroupCfgItem::readJsonFile(QString strFile)
 }
 bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     for(auto it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
@@ -614,7 +614,7 @@ bool GroupCfgItem::saveJsonFile(QString strFile)
     }
 
     QJsonObject root;
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
     QJsonObject* obj = root.addObject(m_paName);
     saveToJsonObject(obj);
     file.write(root.toString().toUtf8());
@@ -636,7 +636,7 @@ bool GroupCfgItem::saveToJsonObject(QJsonObject *obj)
     for(auto it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
-#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+#ifdef USE_JSON_SRC
             QString childName = (*it)->paramName();
             if (!childName.isEmpty()){
                 QJsonObject *childObj = obj->addObject(childName);

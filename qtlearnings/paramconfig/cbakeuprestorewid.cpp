@@ -68,6 +68,7 @@ void CBakeupRestoreWid::initMenu()
     pBtn->setText("参数表管理");
     pBtn->setProperty(PROPERTY_INDEX, i++);
     pBtn->resize(menuWidth, menuHeight);
+    pBtn->installEventFilter(this);
     menu2Mgr.registerButton(pBtn);
     menu2List.push_back(pBtn);
 
@@ -75,6 +76,7 @@ void CBakeupRestoreWid::initMenu()
     pBtn->setText("返回");
     pBtn->setProperty(PROPERTY_INDEX, i++);
     pBtn->resize(menuWidth, menuHeight);
+    pBtn->installEventFilter(this);
     menu2Mgr.registerButton(pBtn);
     menu2List.push_back(pBtn);
 }
@@ -149,4 +151,23 @@ void CBakeupRestoreWid::keyPressEvent(QKeyEvent *event)
     default:
         QMainWindow::keyPressEvent(event);
     }
+}
+
+bool CBakeupRestoreWid::eventFilter(QObject * watched, QEvent * event)
+{
+#if (QT_VERSION < QT_VERSION_CHECK(5,0,0))
+    if (nullptr != dynamic_cast<QWidget*>(watched)) {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+            keyPressEvent(keyEvent);
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return QMainWindow::eventFilter(watched, event);
+    }
+#else
+    return QMainWindow::eventFilter(watched, event);
+#endif
 }

@@ -1,6 +1,5 @@
 ﻿#include "jsk_json.h"
-#include <QtDebug>
-#include<QDebug>
+#include <QDebug>
 namespace QT_JSON
 {
 
@@ -313,6 +312,7 @@ QString JSONObject::toString() const
 bool JSONObject::fromString(QString jsonText)
 {
     clear();
+    qDebug()<<jsonText;
     std::basic_string<wchar_t> ws = jsonText.toStdWString();
     const wchar_t* ptr = ws.c_str();
     ptr=skip(ptr);
@@ -418,7 +418,8 @@ const wchar_t* JSONObject::parseKey(QString& Value, const wchar_t* ptr)
                 }
             }else
             {
-                Value += *ptr;
+                wchar_t wch = *ptr;
+                Value.append(wch);
                 ptr++;
             }
         }
@@ -437,6 +438,7 @@ const wchar_t* JSONObject::parseValue(QString Key, const wchar_t* ptr)
             QString Value;
             ptr = skip(parseKey(Value, ptr));
             add(newKey(Key), Value);
+            qDebug()<<"key value "<<Key<<Value;
         }else
             if ( *ptr==L'{' )
             {

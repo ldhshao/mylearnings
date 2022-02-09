@@ -7,6 +7,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
         QMAKE_CXXFLAGS += -std=c++0x
         #INCLUDEPATH += /opt/poky/1.7/sysroots/cortexa9hf-vfp-neon-poky-linux-gnueabi/usr/include/c++/4.9.1
         INCLUDEPATH += /home/test/armc++4.9.1
+        DEFINES += USE_JSON_SRC
 }
 
 include ($$PWD/Util/Util.pri)
