@@ -40,6 +40,8 @@ public:
     bool       isDevPointValid(uint32_t devPoint, int portType);
     bool       isDevPointAvailable(uint32_t devPoint, int portType);
     bool       initDevPosMgr(PageCfgList* devCfg);//after load config, call this function
+    bool       isValidLine(int l);
+    bool       isValidPortType(int portType);
 
     enum {
       LINETYPE_CS = 0,

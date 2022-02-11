@@ -96,6 +96,19 @@ bool CDevPosMgr::initDevPosMgr(PageCfgList *devCfg)
 
     return inited;
 }
+bool CDevPosMgr::isValidLine(int l)
+{
+    if (l >= LINE_MAX || l >= lineCount || 0 > l)
+        return false;
+    return true;
+}
+bool CDevPosMgr::isValidPortType(int portType)
+{
+    if (portType >= PORTTYPE_CNT || portType < PORTTYPE_IN)
+        return false;
+    return true;
+}
+
 QStringList CDevPosMgr::getLineNames()
 {
     QStringList names;

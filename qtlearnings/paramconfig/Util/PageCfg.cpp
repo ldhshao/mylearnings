@@ -2,6 +2,7 @@
 #include "UiCommon/uipage.h"
 #include "UiCommon/ckeydncombobox.h"
 #include "UiCommon/cenablemngr.h"
+#include "cdevposmgr.h"
 #include <QGroupBox>
 #ifdef USE_JSON_SRC
 #else
@@ -471,6 +472,33 @@ UiCfgItem* GroupCfgItem::findItemByDataIdx(int dataidx)
         }
     }
     return pFind;
+}
+
+void GroupCfgItem::findPortInfoByPortType(int line, int portType, list<pair<uint32_t,QString>> *infoList, bool chkVal)
+{
+    if (CDevPosMgr::instance()->isValidLine(line) && CDevPosMgr::instance()->isValidPortType(portType)){
+        for (auto it = m_children.begin(); it != m_children.end(); it++){
+            GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
+            if (nullptr != grp){
+                grp->findPortInfoByPortType(line, portType, infoList, chkVal);
+            }else {
+                SetIndexCfgItem *pSetIndex = dynamic_cast<SetIndexCfgItem*>(*it);
+                if (nullptr != pSetIndex){
+                    pSetIndex->findPortInfoByPortType(line, portType, infoList, chkVal);
+                }else if (0 < (*it)->datacount() && (*it)->getPortType() == portType){
+                    uint16_t *pAddr = (*it)->paramAddress();
+                    uint32_t  devPt = (*(pAddr + 1) << 16) + *pAddr;
+                    int l = get_line_from_dev_point(devPt) - 1;
+                    if (chkVal){
+                        if (l == line && CDevPosMgr::instance()->isDevPointValid(devPt, portType))
+                            infoList->push_back(pair<uint32_t, QString>(devPt, (*it)->getFullName()));
+                    }else if (l == line){
+                        infoList->push_back(pair<uint32_t, QString>(devPt, (*it)->getFullName()));
+                    }
+                }
+            }
+        }
+    }
 }
 
 uint16_t* GroupCfgItem::firstParamAddress()

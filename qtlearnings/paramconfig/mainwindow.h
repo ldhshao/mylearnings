@@ -51,6 +51,7 @@ protected slots:
     void slot_deviceClicked(QWidget* w);
     void slot_uploadQueryClicked(QWidget* w);
     void slot_bakeupRestoreClicked(QWidget* w);
+    void slot_helpClicked(QWidget* w);
     void slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList);
     void slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList);
     void slot_emitTimer();

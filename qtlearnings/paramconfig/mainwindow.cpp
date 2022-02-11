@@ -14,6 +14,7 @@
 #include "cdeviceiconwidget.h"
 #include "cuploadquerywid.h"
 #include "cbakeuprestorewid.h"
+#include "chelpwid.h"
 #include <QComboBox>
 #include <QCoreApplication>
 #include <fstream>
@@ -187,6 +188,7 @@ void MainWindow::initMenu()
     pBtn->setTitle("帮助");
     pBtn->setImagePath(":/images/help.png");
     pBtn->setProperty(PROPERTY_INDEX, idx++);
+    connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_helpClicked(QWidget*)));
     pBtn->installEventFilter(this);
     devList.push_back(pBtn);
 
@@ -272,6 +274,9 @@ void MainWindow::initPage()
     paramLocalAddr = new uint16_t[paramCount];
     paramServerAddr = new uint16_t[paramCount];
     QCoreApplication::instance()->setProperty(PROPERTY_PARCNT, paramCount);
+    QVariant varDevice;
+    varDevice.setValue<void*>(&devUiCfgList);
+    QCoreApplication::instance()->setProperty(PROPERTY_DEVICE, varDevice);//set global device
     devUiCfgList.setParamTbl(paramLocalAddr);
     devUiCfgList.initData(0, true);//
     //check data count
@@ -329,7 +334,7 @@ bool MainWindow::saveParam()
        int i = 0;
        while (nullptr != pItem){
            GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
-           grp->readJsonFile(workDir + QString("/hp").append(QString::number(i)).append(".json"));
+           grp->saveJsonFile(workDir + QString("/hp").append(QString::number(i)).append(".json"));
            pItem = devUiCfgList.getNext();
            i++;
        }
@@ -547,6 +552,24 @@ void MainWindow::slot_bakeupRestoreClicked(QWidget* w)
         CBakeupRestoreWid* wid = new CBakeupRestoreWid();
         wid->setDeviceUiCfg(&devUiCfgList);
         wid->setParamAddr(paramServerAddr, paramLocalAddr);
+        QVariant var;
+        var.setValue<void*>(wid);
+        w->setProperty(PROPERTY_WIDGET, var);
+        wid->resize(width(), height());
+        wid->move(0,0);
+        pWid = wid;
+    }
+
+    if (nullptr != pWid){
+        pWid->showUi();
+    }
+}
+void MainWindow::slot_helpClicked(QWidget* w)
+{
+    CHelpWid* pWid = static_cast<CHelpWid*>(w->property(PROPERTY_WIDGET).value<void*>());
+    if (nullptr == pWid){
+        CHelpWid* wid = new CHelpWid();
+        wid->setDeviceUiCfg(&devUiCfgList);
         QVariant var;
         var.setValue<void*>(wid);
         w->setProperty(PROPERTY_WIDGET, var);

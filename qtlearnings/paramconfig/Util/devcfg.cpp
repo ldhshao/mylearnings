@@ -230,10 +230,6 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
     }
 #else
     QJsonParseError parseError;
-    QByteArray ba = file.readAll();
-    for (int i = 0; i < ba.size(); ++i) {
-        qDebug("%04hhX ", ba.at(i));
-    }
     QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
     file.close();
     if(parseError.error!=QJsonParseError::NoError){

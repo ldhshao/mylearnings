@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CHelpWid</class>
+ <widget class="QMainWindow" name="CHelpWid">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label_title">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>20</y>
+      <width>241</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>帮助系统</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_copyright">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>550</y>
+      <width>511</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parameter Configuration Copyright@2020-2025 All rights reserved V0.0.0</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -45,6 +45,7 @@ public:
     UiCfgItem* findItemById(const QString& strId);
     UiCfgItem* findItemByName(const QString& strName);
     virtual UiCfgItem* findItemByDataIdx(int dataidx);
+    void findPortInfoByPortType(int line, int portType, list<pair<uint32_t,QString>> *infoList, bool chkVal=false);
 
     virtual uint16_t *paramAddress() { return nullptr; }
     uint16_t *firstParamAddress();

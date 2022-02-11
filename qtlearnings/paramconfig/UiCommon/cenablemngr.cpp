@@ -76,7 +76,7 @@ void CEnableMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
                 if (nullptr != w) w->setEnabled(enable);
                 if (!enable)//set deault val ;
                     (*itItem)->setDefaultVal();
-                qDebug()<<*itItem;
+                //qDebug()<<*itItem;
             }
         }
     }

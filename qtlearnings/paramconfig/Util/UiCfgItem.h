@@ -76,6 +76,8 @@ public:
     void setParamName(QString strPaName) { m_paName = strPaName; }
     virtual bool loadFromJsonObject(QJsonObject* obj);
     virtual bool saveToJsonObject(QJsonObject* obj);
+
+    int getPortType();
 protected:
     int m_dataidx, m_datacnt;
     QString m_type;
@@ -127,6 +129,8 @@ public:
     virtual void setDefaultVal();
     virtual QString getFullName(int idx);
     virtual QString getDataValue(uint16_t *pVal, int *dataCnt);//return data value in string; and data count, u16
+
+    void findPortInfoByPortType(int line, int portType, list<pair<uint32_t,QString>> *infoList, bool chkVal=false);
 
     uint16_t setSize() { return m_setSize; }
     uint16_t setCount() { return m_setCnt; }

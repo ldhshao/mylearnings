@@ -530,6 +530,17 @@ bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
     }
     return false;
 }
+
+int UiCfgItem::getPortType()
+{
+    int type = CDevPosMgr::PORTTYPE_CNT;
+    if (UiCfgItem::strTypeDevPointEdit == m_type){
+        type = (-1 < getName().indexOf("输入点"))? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT;
+    }
+
+    return type;
+}
+
 //ComboboxItem
 HNDZ_IMPLEMENT_DYNCREATE(UiCfgItemFloat, UiCfgItem)
 bool UiCfgItemFloat::initFromDomElement(QDomElement element)
@@ -803,6 +814,30 @@ QString SetIndexCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
     return "";
 }
 
+void SetIndexCfgItem::findPortInfoByPortType(int line, int portType, list<pair<uint32_t,QString>> *infoList, bool chkVal)
+{
+    if (CDevPosMgr::instance()->isValidPortType(portType)){
+        uint16_t* pBaseAddr = paramAddress();
+        for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
+            if ((*it)->getPortType() == portType){
+                for(int s=0; s < m_setCnt; s++){
+                    uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();
+                    uint32_t  devPt = (*(pAddr + 1) << 16) + *pAddr;
+                    int l = get_line_from_dev_point(devPt) - 1;
+                    QString strName = (*it)->getFullName() + QString::number(s+1);
+                    if (chkVal){
+                        if (l == line && CDevPosMgr::instance()->isDevPointValid(devPt, portType))
+                            infoList->push_back(pair<uint32_t, QString>(devPt, strName));
+                    }else if(l == line){
+                        infoList->push_back(pair<uint32_t, QString>(devPt, strName));
+                    }
+
+                }
+            }
+        }
+    }
+}
+
 bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
 {
     uint16_t* pBaseAddr = paramAddress();
@@ -843,7 +878,7 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
         }
 #else
         QJsonValue  valTmp = obj->value(m_paName + QString::asprintf("_%d", s));
-        if (!valTmp.isUndefined()) continue;
+        if (valTmp.isUndefined()) continue;
         QJsonObject childObj = valTmp.toObject();
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             uint16_t* pAddr = pBaseAddr + s * m_setSize + (*it)->dataidx();

@@ -19,6 +19,7 @@ include ($$PWD/UiCommon/UiCommon.pri)
 
 SOURCES += \
     cbakeuprestorewid.cpp \
+    cdeviceadrtblwid.cpp \
     cdeviceconfig.cpp \
     cdeviceiconwidget.cpp \
     cdevicemodpreview.cpp \
@@ -26,18 +27,21 @@ SOURCES += \
     cdevpointedit.cpp \
     cdevposctl2.cpp \
     cdevposmgr.cpp \
+    chelpwid.cpp \
     ckeycheckbox.cpp \
     ckeycombobox.cpp \
     clineselector.cpp \
     cmodparampreview.cpp \
     cmodparamquery.cpp \
     cparamtablemngrwid.cpp \
+    csingledevadrtblwid.cpp \
     cuploadquerywid.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     cbakeuprestorewid.h \
+    cdeviceadrtblwid.h \
     cdeviceconfig.h \
     cdeviceiconwidget.h \
     cdevicemodpreview.h \
@@ -45,25 +49,30 @@ HEADERS += \
     cdevpointedit.h \
     cdevposctl2.h \
     cdevposmgr.h \
+    chelpwid.h \
     ckeycheckbox.h \
     ckeycombobox.h \
     clineselector.h \
     cmodparampreview.h \
     cmodparamquery.h \
     cparamtablemngrwid.h \
+    csingledevadrtblwid.h \
     cuploadquerywid.h \
     mainwindow.h
 
 FORMS += \
     cbakeuprestorewid.ui \
+    cdeviceadrtblwid.ui \
     cdeviceconfig.ui \
     cdeviceiconwidget.ui \
     cdevicemodpreview.ui \
     cdevicepreview.ui \
     cdevposctl2.ui \
+    chelpwid.ui \
     cmodparampreview.ui \
     cmodparamquery.ui \
     cparamtablemngrwid.ui \
+    csingledevadrtblwid.ui \
     cuploadquerywid.ui \
     mainwindow.ui
 
