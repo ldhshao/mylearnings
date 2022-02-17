@@ -46,7 +46,7 @@ void UiPage::fillColList(int col, QWidget* w)
     if (col <0 || col >= UIPAGE_COL_NUM) qDebug()<<"wrong pos "<<col;
     if(0 <= col && UIPAGE_COL_NUM > col)
         colList[col].push_back(w);
-    qDebug()<<"col "<<col<<" wid "<<w;
+    //qDebug()<<"col "<<col<<" wid "<<w;
 }
 
 void UiPage::updateUi()
@@ -116,7 +116,7 @@ void UiPage::showPage()
 void UiPage::keyPressEvent(QKeyEvent *event)
 {
     bool bEsc = false;
-    qDebug()<<focusWidget();
+    //qDebug()<<focusWidget();
     switch (event->key()) {
     case Qt::Key_Down:
         focusNextPrevChild(true);
@@ -164,15 +164,15 @@ void UiPage::keyPressEvent(QKeyEvent *event)
         mparamAddrList.clear();
         hide();
         emit sig_configFinished();
-        qDebug()<<"emit sig_configFinished()"<<this;
+        //qDebug()<<"emit sig_configFinished()"<<this;
         break;
     }
-    qDebug()<<focusWidget();
+    //qDebug()<<focusWidget();
 }
 
 void UiPage::focusInEvent(QFocusEvent *event)
 {
-    qDebug()<<"UiPage::focusInEvent";
+    //qDebug()<<"UiPage::focusInEvent";
 }
 
 void UiPage::resizeEvent(QResizeEvent *event)
@@ -181,7 +181,7 @@ void UiPage::resizeEvent(QResizeEvent *event)
 
     QSize s0 = event->oldSize();
     QSize s1 = event->size();
-    qDebug()<<__FUNCTION__<<this<<" old "<<s0<<" new "<<s1;
+    //qDebug()<<__FUNCTION__<<this<<" old "<<s0<<" new "<<s1;
     int cols = 0;
     for (int i = 0; i < UIPAGE_COL_NUM; i++) {
         if (0 == colList[i].size()){
@@ -194,14 +194,14 @@ void UiPage::resizeEvent(QResizeEvent *event)
     if (s0.width() > 0){
         deltX = (s1.width() - s0.width())/(cols+1);
     }
-    qDebug()<<"deltX "<<deltX<<" initSize() "<<initWidth<<" "<<initHeight;
+    //qDebug()<<"deltX "<<deltX<<" initSize() "<<initWidth<<" "<<initHeight;
     if (s1.width() > initWidth && s1.height() > initHeight){
         for (int i = 0; i < UIPAGE_COL_NUM; i++) {
             for (auto it = colList[i].begin(); it != colList[i].end(); it++) {
                 int x = (*it)->pos().x();
                 int y = (*it)->pos().y();
                 (*it)->move(x + deltX*(i+1), y);
-                qDebug()<<*it<<" pos "<<(*it)->pos();
+                //qDebug()<<*it<<" pos "<<(*it)->pos();
             }
         }
     }

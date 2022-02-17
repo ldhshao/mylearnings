@@ -35,22 +35,31 @@ protected:
     void deleteAll();
     bool saveParam();
     bool loadParam();
-    QWidget* getCloseWidget(QWidget* wid, bool up);
+    QWidget* getCloseWidget(QWidget* wid, int direction);
     int getDeviceCols();
     bool initWorkDir();
     void addModifiedParamIndex(uint32_t idx);
     void connectPages();
+    void getRowsAndCols(int* pRows, int *pCols);
     void onResize(int width, int height);
     virtual void resizeEvent(QResizeEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual bool eventFilter(QObject * watched, QEvent * event);//for arm 4.8.6
 
+    enum {
+      DIRECTION_UP = 0,
+      DIRECTION_DOWN,
+      DIRECTION_LEFT,
+      DIRECTION_RIGHT,
+      DIRECTION_CNT,
+    };
 protected slots:
     //void slot_deviceClicked(QLabel* lbl);
     void slot_systemClicked(QWidget* w);
     void slot_deviceClicked(QWidget* w);
     void slot_uploadQueryClicked(QWidget* w);
     void slot_bakeupRestoreClicked(QWidget* w);
+    void slot_commClicked(QWidget* w);
     void slot_helpClicked(QWidget* w);
     void slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList);
     void slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList);
@@ -86,5 +95,6 @@ private:
     CKeyLabel                  *closeLbl;
     QTimer               	   *emitTimer;
     int                         timerInterval;
+    int                         rowMax;
 };
 #endif // MAINWINDOW_H

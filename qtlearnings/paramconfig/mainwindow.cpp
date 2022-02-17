@@ -35,6 +35,8 @@
 #define PARAMS_FILEPATH     "param.dat"
 #define UITEMPLATE_ELECTRIC     "electric"
 #define DEVNAME_ELECTRIC        "电气系统"
+#define UITEMPLATE_COMM        "comm"
+#define DEVNAME_COMM           "通讯"
 #define PARNAME_DEVICE1        "HDevice1"
 #define MENU1_STYLE         "QPushButton {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}"
 #define MENU1_CMB_STYLE     "QComboBox {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}\
@@ -61,12 +63,17 @@
 #define PROPERTY_PARCNT  "paramcount"
 #define PROPERTY_LOGGER  "logger"
 
+#define make_index(row,col) (((row)<<16)+(col))
+#define get_row_from_index(index) ((index)>>16)
+#define get_col_from_index(index) ((index)&0xFFFF)
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), devUiCfgList(0)
 {
     initTitle();
+    setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
     QPixmap pmClose(":/images/close.png");//close connect failed when before setuoUI, unkown reason
     closeLbl = new CKeyLabel(this);
@@ -78,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
     paramLocalAddr = nullptr;
     paramServerAddr = nullptr;
     paramCount = 0;
+    rowMax = 5;
     deviceUi = new CDeviceConfig();
     deviceUi->hide();
     timerInterval = 1000;
@@ -153,66 +161,63 @@ void MainWindow::initMenu()
     qDebug()<<workDir;
     QString strDevCfg = workDir + "/" + SYSTEM_CFG_FILEPATH;
     bool loaded = devCfg.readDevCfgFile(strDevCfg);
-    qDebug()<<strDevCfg;
+    //qDebug()<<strDevCfg;
     //devCfg.dump();
     DevCfgItem *pItem = devCfg.getHead();
     int idx = 0;
     CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+    pBtn->setTitle(DEVNAME_ELECTRIC);
     pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_systemClicked(QWidget*)));
     pBtn->installEventFilter(this);
     devList.push_back(pBtn);
 
     pBtn = new CDeviceIconWidget(this);
-    pBtn->setTitle("通讯");
+    pBtn->setTitle(DEVNAME_COMM);
     pBtn->setImagePath(":/images/comm.png");
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
     pBtn->installEventFilter(this);
     devList.push_back(pBtn);
+    connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_commClicked(QWidget*)));
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("参数表备份与恢复");
     pBtn->setImagePath(":/images/help.png");
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
     pBtn->installEventFilter(this);
     devList.push_back(pBtn);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_bakeupRestoreClicked(QWidget*)));
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("参数变更上传与查询");
     pBtn->setImagePath(":/images/help.png");
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_uploadQueryClicked(QWidget*)));
     pBtn->installEventFilter(this);
     devList.push_back(pBtn);
     pBtn = new CDeviceIconWidget(this);
     pBtn->setTitle("帮助");
     pBtn->setImagePath(":/images/help.png");
-    pBtn->setProperty(PROPERTY_INDEX, idx++);
     connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_helpClicked(QWidget*)));
     pBtn->installEventFilter(this);
     devList.push_back(pBtn);
 
     while (nullptr != pItem) {
-        CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
-        pBtn->setTitle(pItem->getName());
-        if (pItem->getName() == "破碎机")
-            pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
-        else
-            pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
-        QVariant var;
-        var.setValue<void*>(pItem);
-        pBtn->setProperty(PROPERTY_DEVICE, var);
-        pBtn->setProperty(PROPERTY_INDEX, idx++);
-        connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_deviceClicked(QWidget*)));
-        pBtn->installEventFilter(this);
-        devList.push_back(pBtn);
+        if (!pItem->getName().isEmpty()){
+            CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
+            pBtn->setTitle(pItem->getName());
+            if (pItem->getName() == "破碎机")
+                pBtn->setProperty(PROPERTY_IMAGE, ":/images/crusher.png");
+            else
+                pBtn->setProperty(PROPERTY_IMAGE, ":/images/system.png");
+            QVariant var;
+            var.setValue<void*>(pItem);
+            pBtn->setProperty(PROPERTY_DEVICE, var);
+            connect(pBtn, SIGNAL(clicked(QWidget*)), this, SLOT(slot_deviceClicked(QWidget*)));
+            pBtn->installEventFilter(this);
+            devList.push_back(pBtn);
+        }
         pItem = devCfg.getNext();
     }
-    for (; idx < 15; idx++) {
+    for (idx =devList.size(); idx < 20; idx++) {
         CDeviceIconWidget* pBtn = new CDeviceIconWidget(this);
         pBtn->setTitle("test");
         pBtn->setImagePath(":/images/system.png");
-        pBtn->setProperty(PROPERTY_INDEX, idx);
         pBtn->installEventFilter(this);
         devList.push_back(pBtn);
     }
@@ -225,14 +230,20 @@ void MainWindow::initPage()
     GroupCfgList cfgTemplate;
     QString strTemplate = workDir + "/" + UITEMP_CFG_FILEPATH;
     bool loaded = cfgTemplate.readXmlFile(strTemplate);
-    //add electrics
     {
+    //add electrics
         GroupCfgItem *pGroup = cfgTemplate.findGroupByName(UITEMPLATE_ELECTRIC);
         if (nullptr != pGroup){
             GroupCfgItem *grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
             grp->setName(DEVNAME_ELECTRIC);
             devUiCfgList.addChild(grp);
-            devList[0]->setTitle(DEVNAME_ELECTRIC);
+        }
+    //add comm
+        pGroup = cfgTemplate.findGroupByName(UITEMPLATE_COMM);
+        if (nullptr != pGroup){
+            GroupCfgItem *grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
+            grp->setName(DEVNAME_COMM);
+            devUiCfgList.addChild(grp);
         }
     }
     DevCfgItem *pItem = devCfg.getHead();
@@ -257,11 +268,14 @@ void MainWindow::initPage()
                 if (nullptr != pGroup){
                     grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
                 }else {
-                    grp = new GroupCfgList();
+                    //grp = new GroupCfgList();
+                    grp = nullptr;
                 }
-                grp->setName(pSubItem->getName());
-                grp->setParamName(pSubItem->paramName());
-                uiList->addChild(grp);
+                if (nullptr != grp){
+                    grp->setName(pSubItem->getName());
+                    grp->setParamName(pSubItem->paramName());
+                    uiList->addChild(grp);
+                }
 
                 pSubItem = pList->getNext();
             }
@@ -296,7 +310,7 @@ void MainWindow::connectPages()
         QObject::connect(*it, SIGNAL(sig_configFinished()), deviceUi->getPreview(), SLOT(slot_configFinished()));
         QObject::connect(*it, SIGNAL(sig_modifiedParamAddrList(list<uint16_t*> *)), this, SLOT(slot_modifiedParamAddrList(list<uint16_t*> *)));
         QObject::connect(*it, SIGNAL(sig_rollBack_paramAddrList(list<uint16_t*> *)), this, SLOT(slot_rollBack_paramAddrList(list<uint16_t*> *)));
-        qDebug()<<"bind uipage "<<*it;
+        //qDebug()<<"bind uipage "<<*it;
     }
 }
 
@@ -331,10 +345,39 @@ bool MainWindow::saveParam()
            pItem = devUiCfgList.getNext();
            break;
        }
+       while (nullptr != pItem){
+           GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+           grp->saveJsonFile(workDir + "/hc.json");
+           pItem = devUiCfgList.getNext();
+           break;
+       }
        int i = 0;
        while (nullptr != pItem){
            GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
            grp->saveJsonFile(workDir + QString("/hp").append(QString::number(i)).append(".json"));
+           pItem = devUiCfgList.getNext();
+           i++;
+       }
+
+       //save to /opt/data/paramconfig/
+       QString strDir("/opt/data/paramconfig");
+       pItem = devUiCfgList.getHead();
+       while (nullptr != pItem){
+           GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+           grp->saveJsonFile(strDir + "/he.json");
+           pItem = devUiCfgList.getNext();
+           break;
+       }
+       while (nullptr != pItem){
+           GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+           grp->saveJsonFile(strDir + "/hc.json");
+           pItem = devUiCfgList.getNext();
+           break;
+       }
+       i = 0;
+       while (nullptr != pItem){
+           GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+           grp->saveJsonFile(strDir + QString("/hp").append(QString::number(i)).append(".json"));
            pItem = devUiCfgList.getNext();
            i++;
        }
@@ -351,6 +394,12 @@ bool MainWindow::loadParam()
         pItem = devUiCfgList.getNext();
         break;
     }
+    while (nullptr != pItem){
+        GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
+        grp->readJsonFile(workDir + "/hc.json");
+        pItem = devUiCfgList.getNext();
+        break;
+    }
     int i = 0;
     while (nullptr != pItem){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(pItem);
@@ -360,6 +409,19 @@ bool MainWindow::loadParam()
     }
     return ret;
 }
+void MainWindow::getRowsAndCols(int* pRows, int *pCols)
+{
+    int cnt = devList.size();
+    int cols = 5, rows = (cnt + cols - 1)/cols;
+    if (rows >= rowMax){
+        rows = 5;
+        cols = (cnt-rows) / (rows - 1) + 1;
+    }
+
+    *pRows = rows;
+    *pCols = cols;
+}
+
 void MainWindow::onResize(int width, int height)
 {
     int t1 = height - 50;
@@ -390,19 +452,38 @@ void MainWindow::onResize(int width, int height)
     ui->label_copyright->move((width - w1)/2, t1);
 
     //layout device
-    int cols = 5, rows = 3, cnt = 0;
+    int rowMax = 5;
+    int cols = 0, rows = 0, cnt = 0;
     int m2 = 80, s2 = 20, t2 = th;
-    if (24 < devList.size()){
-        cols = 7;
-        rows = 5;
-    }
+    getRowsAndCols(&rows, &cols);
+
     int w2 = (width - 2*m2 - (cols -1)*s2) / cols;
     int h2 = (height - t2 - (height - t1) - m2 - (rows - 1)*s2) / rows;
-    qDebug()<<"w2 "<<w2<<"h2"<<h2;
-    for (auto it = devList.begin(); it!= devList.end(); it++) {
-        (*it)->resize(w2, h2);
-        (*it)->move(m2 + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(h2+s2));
-        cnt++;
+    //qDebug()<<"w2 "<<w2<<"h2"<<h2;
+    if (rowMax > rows){
+        for (auto it = devList.begin(); it!= devList.end(); it++) {
+            (*it)->resize(w2, h2);
+            (*it)->move(m2 + (cnt%cols)*(w2+s2), t2 + (cnt/cols)*(h2+s2));
+            (*it)->setProperty(PROPERTY_INDEX, make_index(cnt/cols, cnt%cols));
+            cnt++;
+        }
+    }else {
+        auto it = devList.begin();
+        //layout first col
+        for (; it!= devList.end() && cnt<rowMax; it++) {
+            (*it)->resize(w2, h2);
+            (*it)->move(m2, t2 + cnt*(h2+s2));
+            (*it)->setProperty(PROPERTY_INDEX, make_index(cnt, 0));
+            cnt++;
+        }
+        //layout rest, by row
+        cnt = 0;
+        for (; it!= devList.end(); it++) {
+            (*it)->resize(w2, h2);
+            (*it)->move(m2 + (cnt%(cols-1) + 1)*(w2+s2), t2 + (cnt/(cols-1))*(h2+s2));
+            (*it)->setProperty(PROPERTY_INDEX, make_index(cnt/(cols-1), cnt%(cols-1)+1));
+            cnt++;
+        }
     }
 }
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -418,28 +499,45 @@ int MainWindow::getDeviceCols()
     return cols;
 }
 
-QWidget* MainWindow::getCloseWidget(QWidget* wid, bool up)
+QWidget* MainWindow::getCloseWidget(QWidget* wid, int direction)
 {
     CDeviceIconWidget* pBtn = dynamic_cast<CDeviceIconWidget*>(wid);
-    if (nullptr != pBtn){
-        int cols = 5;
-        int rows = (devList.size() + cols - 1)/ cols;
-        int idx = pBtn->property(PROPERTY_INDEX).toInt();
-        int col = (idx % cols);
-        int row = idx / cols;
-        if (up){
-            if (0 == row){
-                idx = (rows-1) * cols + col;
-                if (idx >= devList.size()) idx -= cols;
-            }else {
-                idx -= cols;
-            }
-        }else {
-            idx += cols;
-            if (idx >= devList.size()) idx = col;
+    if (nullptr != pBtn && DIRECTION_UP <= direction && direction < DIRECTION_CNT){
+        int index = pBtn->property(PROPERTY_INDEX).toInt(), nIdx;
+        int row = get_row_from_index(index);
+        int col = get_col_from_index(index);
+        int cnt = devList.size();
+        int cols = 0, rows = 0, currCols;
+        getRowsAndCols(&rows, &cols);
+        switch (direction) {
+        case DIRECTION_UP:
+            row = (row - 1 + rows) % rows;
+            if (row * cols + col >= cnt)
+                row = (row - 1 + rows) % rows;
+            break;
+        case DIRECTION_DOWN:
+            row = (row + 1) % rows;
+            if (row * cols + col >= cnt)
+                row = (row + 1) % rows;
+            break;
+        case DIRECTION_LEFT:
+            currCols = cols;
+            if (row == rows -1 && 0 != cnt % cols) currCols = cnt % cols;
+            col = (col - 1 + currCols) % currCols;
+            break;
+        case DIRECTION_RIGHT:
+            currCols = cols;
+            if (row == rows -1 && 0 != cnt % cols) currCols = cnt % cols;
+            col = (col + 1) % currCols;
+            break;
         }
-        if (0 <= idx)
-            return devList[idx];
+
+        nIdx = make_index(row, col);
+        for (auto it = devList.begin(); it != devList.end(); it++) {
+            int tIdx = (*it)->property(PROPERTY_INDEX).toInt();
+            if (tIdx == nIdx)
+                return *it;
+        }
     }
 
     return wid;
@@ -447,19 +545,19 @@ QWidget* MainWindow::getCloseWidget(QWidget* wid, bool up)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"MainWindow "<<__FUNCTION__<<event->key();
+    //qDebug()<<"MainWindow "<<__FUNCTION__<<event->key();
     switch (event->key()) {
         case Qt::Key_Up:
-            getCloseWidget(focusWidget(), true)->setFocus();
+            getCloseWidget(focusWidget(), DIRECTION_UP)->setFocus();
             return ;
         case Qt::Key_Down:
-            getCloseWidget(focusWidget(), false)->setFocus();
+            getCloseWidget(focusWidget(), DIRECTION_DOWN)->setFocus();
             return ;
         case Qt::Key_Left:
-            focusNextPrevChild(false);
+            getCloseWidget(focusWidget(), DIRECTION_LEFT)->setFocus();
             return ;
         case Qt::Key_Right:
-            focusNextPrevChild(true);
+            getCloseWidget(focusWidget(), DIRECTION_RIGHT)->setFocus();
             return ;
         case Qt::Key_Escape:
             if (!closeLbl->hasFocus())
@@ -479,23 +577,8 @@ bool MainWindow::eventFilter(QObject * watched, QEvent * event)
             int key = keyEvent->key();
             if (Qt::Key_Return == key)
                 return false;
-            else if (Qt::Key_Up == key){
-                getCloseWidget(wid, true)->setFocus();
-                return true;
-            }else if (Qt::Key_Down == key){
-                getCloseWidget(wid, false)->setFocus();
-                return true;
-            }else if (Qt::Key_Left == key){
-                focusNextPrevChild(false);
-                return true;
-            }else if (Qt::Key_Right == key){
-                focusNextPrevChild(true);
-                return true;
-            }else if (Qt::Key_Escape == key){
-                if (!closeLbl->hasFocus())
-                    closeLbl->setFocus();
-                else
-                    devList[0]->setFocus();
+            else{
+                keyPressEvent(keyEvent);
                 return true;
             }
         } else {
@@ -518,7 +601,7 @@ void MainWindow::slot_deviceClicked(QWidget* w)
     QVariant var = w->property(PROPERTY_DEVICE);
     if (var.isValid()){
         DevCfgList* list = static_cast<DevCfgList*>(var.value<void*>());
-        qDebug()<<" device "<<list;
+        //qDebug()<<" device "<<list;
 
         deviceUi->updateUi(list->getName(), &devUiCfgList);
         deviceUi->showUi(1);
@@ -564,6 +647,12 @@ void MainWindow::slot_bakeupRestoreClicked(QWidget* w)
         pWid->showUi();
     }
 }
+void MainWindow::slot_commClicked(QWidget* w)
+{
+    deviceUi->updateUi(DEVNAME_COMM, &devUiCfgList);
+    deviceUi->showUi(1);
+}
+
 void MainWindow::slot_helpClicked(QWidget* w)
 {
     CHelpWid* pWid = static_cast<CHelpWid*>(w->property(PROPERTY_WIDGET).value<void*>());
@@ -607,7 +696,7 @@ void MainWindow::slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList)
         }else {
             *(*it) = *(paramServerAddr + idx);
         }
-        qDebug()<<"modified "<<*(*it)<<" old "<<*(paramServerAddr+idx);
+        //qDebug()<<"modified "<<*(*it)<<" old "<<*(paramServerAddr+idx);
     }
 }
 
@@ -625,13 +714,13 @@ void MainWindow::addModifiedParamIndex(uint32_t idx)
 
 void MainWindow::on_pushButton_load_clicked()
 {
-    qDebug()<<__FUNCTION__;
+    //qDebug()<<__FUNCTION__;
     //获取应用程序的路径
     QString dlgTitle="选择一个文件"; //对话框标题
     QString filter="数据文件(*.dat);;所有文件(*.*)"; //文件过滤器
     QString fileName=QFileDialog::getOpenFileName(this,dlgTitle,workDir,filter);
     if (!fileName.isEmpty()){
-        qDebug()<<fileName;
+        //qDebug()<<fileName;
         ifstream inFile;
         int count = 0;
         inFile.open(fileName.toStdString(), ios_base::in | ios_base::binary);

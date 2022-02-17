@@ -173,7 +173,7 @@ void UiCfgItem::create(QWidget* parent)
                 m_pWidDes = pBoxDes;
             }
         }
-        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
+        //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
     }
 }
 bool UiCfgItem::initData(int idx, bool useDef)
@@ -186,8 +186,8 @@ bool UiCfgItem::initData(int idx, bool useDef)
             for (int i = 0; i < m_datacnt; i++)
                 *(pAddr+i) = usDef;
         }
-        qWarning()<<"name "<<m_name<<" address "<<pAddr<<" default "<<usDef;
-        qWarning()<<"initData name "<<m_name<<" index count "<<m_dataidx<<datacount();
+        //qDebug()<<"name "<<m_name<<" address "<<pAddr<<" default "<<usDef;
+        //qDebug()<<"initData name "<<m_name<<" index count "<<m_dataidx<<datacount();
     }
     return true;
 }
@@ -419,7 +419,7 @@ QString UiCfgItem::enableReason()
             CKeyDnComboBox* pCmb = dynamic_cast<CKeyDnComboBox*>(enSource->getWidget());
             GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(enSource->parent());
             strReason.append(grp->getNamePath(grp->titleDepth()-1)).append(enSource->previewInfo());
-            qDebug()<<"enablesource "<<enSource->getNamePath(10)<<" enableval "<<pItem->m_enableSourceVal;
+            //qDebug()<<"enablesource "<<enSource->getNamePath(10)<<" enableval "<<pItem->m_enableSourceVal;
             break;
         }
         pItem = pItem->parent();
@@ -487,8 +487,8 @@ bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
                 getJsonObjectIntVal(obj, paNameList[0], &l);
                 getJsonObjectIntVal(obj, paNameList[1], &m);
                 getJsonObjectIntVal(obj, paNameList[2], &p);
-                m -= 1;
-                p -= 1;
+                if (0 < m) m -= 1;
+                if (0 < p) p -= 1;
                 devPoint = make_dev_point(l, m, p);
                 *pAddr = devPoint;
                 *(pAddr + 1) = (devPoint >> 16);
@@ -558,7 +558,7 @@ bool UiCfgItemFloat::initFromDomElement(QDomElement element)
             m_decimalPlaces++;
         }
     }
-    qDebug()<<"name "<<m_name<<" precision "<<m_precision<<" decimal "<<m_decimalPlaces;
+    //qDebug()<<"name "<<m_name<<" precision "<<m_precision<<" decimal "<<m_decimalPlaces;
 
     return true;
 }
@@ -600,7 +600,7 @@ void UiCfgItemFloat::create(QWidget* parent)
         pBoxDes->setText(strDes);
         m_pWidDes = pBoxDes;
 
-        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
+        //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
     }
 }
 QString UiCfgItemFloat::strDataValue(uint16_t *pAddr)
@@ -676,7 +676,7 @@ bool SetIndexCfgItem::initData(int idx, bool useDef)
                     uint16_t *pAddr = pBaseAddr + i * m_setSize + pSetItem->dataidx();
                     pSetItem->initDataWithDefault(pAddr);
                 }
-                qWarning()<<"SetIndexCfg: item index count"<<pSetItem->dataidx()<<pSetItem->itemDataCnt();
+                //qDebug()<<"SetIndexCfg: item index count"<<pSetItem->dataidx()<<pSetItem->itemDataCnt();
             }
         }
     }
@@ -753,13 +753,13 @@ QString SetIndexCfgItem::previewInfo()
                 strTemp = (*it)->strDataValue(pAddr);
                 strInfo.append(strTemp);
                 strInfo.append(QString(tCntList[i] - getQstringShowLen(strTemp)/tlen, '\t'));
-                qWarning()<<getQstringShowLen(strTemp)<<tCntList[i] - getQstringShowLen(strTemp)/tlen;
+                //qDebug()<<getQstringShowLen(strTemp)<<tCntList[i] - getQstringShowLen(strTemp)/tlen;
             }
             strInfo.append("\n");
         }
     }
 
-    qDebug()<<strInfo;
+    //qDebug()<<strInfo;
     return strInfo;
 }
 QString SetIndexCfgItem::previewInfoEx(int nameLenMax)
@@ -810,7 +810,7 @@ QString SetIndexCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
         }
     }
 
-    qDebug()<<"error: wrong value "<<*pVal;
+    //qDebug()<<"error: wrong value "<<*pVal;
     return "";
 }
 
@@ -899,10 +899,12 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
                             l = valTmp.toInt(l);
                         valTmp = childObj.value(paNameList[1]);
                         if (!valTmp.isUndefined())
-                            m = valTmp.toInt(m) - 1;
+                            m = valTmp.toInt(m);
                         valTmp = childObj.value(paNameList[2]);
                         if (!valTmp.isUndefined())
-                            p = valTmp.toInt(p) - 1;
+                            p = valTmp.toInt(p);
+                        if (0 < m) m--;
+                        if (0 < p) p--;
                         devPoint = make_dev_point(l, m, p);
                         *pAddr = devPoint;
                         *(pAddr + 1) = (devPoint >> 16);
@@ -995,10 +997,10 @@ bool ComboboxCfgItem::initFromDomElement(QDomElement element)
         m_type = UiCfgItem::strTypeCombobox;
     QString strParams;
     setStrValue(strParams, element, "params");
-    qDebug()<<strParams;
+    //qDebug()<<strParams;
     //check value
     m_params = strParams.split(";");
-    qDebug()<<m_params;
+    //qDebug()<<m_params;
 
     return true;
 }
@@ -1037,7 +1039,7 @@ bool ComboboxCfgItem::initUi(unsigned short *pStAddr, int w, int h)
     if (nullptr != pBox && -1 < m_dataidx){
         unsigned short* pAddr = pStAddr + parent()->dataidx();
         CBinder::BindComboBox(pBox, pAddr+m_dataidx, m_params, m_defaultVal);
-        qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
+        //qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
     }
 }
 
@@ -1088,7 +1090,7 @@ void ComboboxSetCfgItem::create(QWidget* parent)
             pBoxDes->setText(m_range);
             m_pWidDes = pBoxDes;
         }
-        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
+        //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
     }
 }
 bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
@@ -1097,13 +1099,13 @@ bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
     QString strMaxLenName = m_name + QString::number(m_datacnt);
     int width = QFontMetrics(m_pWidName->font()).width(strMaxLenName);
     m_pWidName->resize(width, h);
-    qDebug()<<m_pWidName<<m_pWidName->width()<<m_pWidName->size().width();
+    //qDebug()<<m_pWidName<<m_pWidName->width()<<m_pWidName->size().width();
 
     CKeyDnComboBoxSet* pBox = dynamic_cast<CKeyDnComboBoxSet*>(m_pWidget);
     if (nullptr != pBox){
         unsigned short* pAddr = pStAddr + parent()->dataidx();
         pBox->addItems(m_params);
-        qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
+        //qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
         GroupCfgItem *pGroup = dynamic_cast<GroupCfgItem*>(m_parent);
         if (nullptr!= pGroup){
             UiCfgItem* pSetSource = nullptr;
@@ -1168,7 +1170,7 @@ QString ComboboxSetCfgItem::previewInfo()
             strInfo.append("\n");
         }
     }
-    qDebug()<<strInfo;
+    //qDebug()<<strInfo;
     return strInfo;
 }
 QString ComboboxSetCfgItem::previewInfoEx(int nameLenMax)
@@ -1463,10 +1465,22 @@ bool SetItemCfgItem::initUi(unsigned short* pStAddr, int w, int h)
         CDevPointEdit* pDevPtEdit = dynamic_cast<CDevPointEdit*>(m_pWidget);
         CKeyDnEdit* pEdit = dynamic_cast<CKeyDnEdit*>(m_pWidget);
         if (nullptr != pDevPtEdit){
-            pDevPtEdit->setPortType(-1 < m_name.indexOf("输入点")? CDevPosMgr::PORTTYPE_IN : CDevPosMgr::PORTTYPE_OUT);
+            int portType = getPortType();
+            pDevPtEdit->setPortType(portType);
             pDevPtEdit->setItemIndex(m_dataidx);
             pDevPtEdit->setValuePtr(pAddr + m_dataidx);
             QObject::connect(dynamic_cast<CKeyDnSetIndexEdit*>(m_pSetIndexSource->getWidget()), SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pDevPtEdit, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
+            //init dev pos mgr values
+            SetIndexCfgItem* pSetIdx = dynamic_cast<SetIndexCfgItem*>(m_pSetIndexSource);
+            if (nullptr != pSetIdx){
+                int setCnt = pSetIdx->setCount();
+                int setSize = pSetIdx->setSize();
+                for (int s = 0; s < setCnt; s++){
+                    uint16_t *pDpAddr = pAddr + s*setSize + m_dataidx;
+                    uint32_t devPt = (*(pDpAddr + 1) << 16) + *pDpAddr;
+                    CDevPosMgr::instance()->setDevPoint(devPt, portType, true);
+                }
+            }
         }else if (nullptr != pEdit){
             pEdit->setItemIndex(m_dataidx);
             pEdit->bindDataPtr(pAddr + m_dataidx);
@@ -1537,7 +1551,7 @@ bool SetItemCfgItemFloat::initFromDomElement(QDomElement element)
             m_decimalPlaces++;
         }
     }
-    qDebug()<<"name "<<m_name<<" precision "<<m_precision<<" decimal "<<m_decimalPlaces;
+    //qDebug()<<"name "<<m_name<<" precision "<<m_precision<<" decimal "<<m_decimalPlaces;
 
     return true;
 }
@@ -1579,7 +1593,7 @@ void SetItemCfgItemFloat::create(QWidget* parent)
         pBoxDes->setText(strDes);
         m_pWidDes = pBoxDes;
 
-        qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
+        //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
     }
 }
 QString SetItemCfgItemFloat::strDataValue(uint16_t *pAddr)
@@ -1602,10 +1616,10 @@ bool ComboboxSetItemCfgItem::initFromDomElement(QDomElement element)
     m_type = UiCfgItem::strTypeCombobox;
     QString strParams;
     setStrValue(strParams, element, "params");
-    qDebug()<<strParams;
+    //qDebug()<<strParams;
     //check value
     m_params = strParams.split(";");
-    qDebug()<<m_params;
+    //qDebug()<<m_params;
 
     return true;
 }
@@ -1627,7 +1641,7 @@ bool ComboboxSetItemCfgItem::initUi(unsigned short *pStAddr, int w, int h)
             pBox->setItemIndex(m_dataidx);
             CBinder::BindComboBox(pBox, pAddr+m_dataidx, m_params, m_defaultVal);
             QObject::connect(dynamic_cast<CKeyDnSetIndexEdit*>(m_pSetIndexSource->getWidget()), SIGNAL(sig_dataSetChanged(uint16_t*, uint16_t)), pBox, SLOT(slot_dataSetChanged(uint16_t*, uint16_t)));
-            qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
+            //qDebug()<<"name "<<getName()<<" addr "<<pAddr+m_dataidx<<" value "<<*(pAddr+m_dataidx);
         }
     }
 

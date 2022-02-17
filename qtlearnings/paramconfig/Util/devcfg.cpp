@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #endif
+#include <algorithm>
 #include <QtDebug>
 
 const QString DevCfgItem::DevTypeSystem = "system";
@@ -19,6 +20,11 @@ const QString DevCfgItem::DevTypeMotor = "motor";
 const QString DevCfgItem::DevTypeWorkVoithGroup = "workvoithgroup";
 const QString DevCfgItem::DevTypeWorkVoith = "workvoith";
 const QString DevCfgItem::DevTypeAnalogProtect = "analogprotect";
+
+bool devCfgItemCompare (DevCfgItem* pItemLeft, DevCfgItem* pItemRight)
+{
+    return (pItemLeft->getId()< pItemRight->getId());
+}
 
 HNDZ_IMPLEMENT_DYNCREATE(DevCfgItem, BaseObject)
 bool DevCfgItem::initFromDomElement(QDomElement element)
@@ -37,9 +43,9 @@ bool DevCfgItem::initFromJsonObject(QJsonObject* obj)
     bool bOK = false;
     int iType = obj->value("Type").toInt(&bOK);
     if (bOK){
-        m_type = translateType2UiCfgType(this, iType);
+        m_type = translateType2UiCfgType(nullptr!=dynamic_cast<DevCfgList*>(this), obj, iType);
     }
-    qDebug()<<"Name type "<<m_name<<m_type;
+    //qDebug()<<"Name type "<<m_name<<m_type;
     initChildrenFromJsonObject(obj);
 
     return true;
@@ -51,7 +57,7 @@ bool DevCfgItem::initChildrenFromJsonObject(QJsonObject* obj)
 #else
 bool DevCfgItem::initFromJsonObject(QJsonObject obj)
 {
-    qDebug()<<obj;
+    //qDebug()<<obj;
     QJsonValue::Type type = obj.value("Name").type();
     switch (type){
     case QJsonValue::String:
@@ -63,7 +69,7 @@ bool DevCfgItem::initFromJsonObject(QJsonObject obj)
     switch (type){
     case QJsonValue::Double:
         iType = obj.value("Type").toInt();
-        m_type = translateType2UiCfgType(this, iType);
+        m_type = translateType2UiCfgType(nullptr!=dynamic_cast<DevCfgList*>(this), obj, iType);
         break;
     case QJsonValue::String:
         m_type = obj.value("Type").toString();
@@ -89,7 +95,7 @@ DevCfgItem* DevCfgItem::createMyself()
 
 void DevCfgItem::dump()
 {
-    qDebug()<<"ID "<<m_id<<" name "<<m_name <<" type "<<m_type;
+    //qDebug()<<"ID "<<m_id<<" name "<<m_name <<" type "<<m_type;
 }
 
 QString DevCfgItem::translateType(DevCfgItem* item, int iType)
@@ -129,20 +135,23 @@ QString DevCfgItem::translateType(DevCfgItem* item, int iType)
         return types[iType];
     return "";
 }
-QString DevCfgItem::translateType2UiCfgType(DevCfgItem* item, int iType)
+#ifdef USE_JSON_SRC
+QString DevCfgItem::translateType2UiCfgType(bool bList, QJsonObject *obj, int iType)
+#else
+QString DevCfgItem::translateType2UiCfgType(bool bList, QJsonObject obj, int iType)
+#endif
 {
-    DevCfgList* pList = dynamic_cast<DevCfgList*>(item);
     QStringList types;
-    if (nullptr != pList){
+    if (bList){
         types<<"";
         types<<"workface";//"皮带";
         types<<"workface";//"破碎机";
         types<<"workface";//"转载机";
-        types<<"";//"运输机";
-        types<<"";//"清水泵";
-        types<<"";//"乳化泵";
-        types<<"";//"单点";
-        types<<"";//"煤仓";
+        types<<"workface";//"运输机";
+        types<<"workface";//"清水泵";
+        types<<"workface";//"乳化泵";
+        types<<"workface";//"单点";
+        types<<"workface";//"煤仓";
     }else{
         types<<"";
         types<<"prewarninggroup";//"预警";
@@ -162,8 +171,38 @@ QString DevCfgItem::translateType2UiCfgType(DevCfgItem* item, int iType)
         types<<"";//"";
     }
 
-    if (0 <= iType && iType < types.count())
+    if (0 <= iType && iType < types.count()){
+        //deal sensor
+        if (!bList && 6 == iType){
+            //sensorType [15-29]/[30-34]
+#ifdef USE_JSON_SRC
+            if (obj->exists("sensorType")){
+                int sensorType = obj->value("sensorType").toInt();
+#else
+            if (obj.value("sensorType").isDouble()){
+                int sensorType = obj.value("sensorType").toInt();
+#endif
+                if (15 <= sensorType && sensorType <=19){
+                    QStringList sensorTypes;//15=带速 16=滚筒温度 17=张力 18=滚筒振动 19=人员接近_模拟
+                    sensorTypes<<"beltspeedsensor";
+                    sensorTypes<<"rollertempersensor";
+                    sensorTypes<<"tensionsensor";
+                    sensorTypes<<"rollervibrationsensor";
+                    sensorTypes<<"personapproachsensor";
+                    return sensorTypes[sensorType - 15];
+                //}else if (30 <= sensorType && sensorType <=34){
+                //    QStringList sensorTypes;
+                //    sensorTypes<<"";
+                //    sensorTypes<<"";
+                //    sensorTypes<<"";
+                //    sensorTypes<<"";
+                //    sensorTypes<<"";
+                //    return sensorTypes[sensorType - 30];
+                }
+            }
+        }
         return types[iType];
+    }
     return "";
 }
 
@@ -199,7 +238,7 @@ bool DevCfgList::readDevCfgFile(QString strFile)
         return false;
     }
     file.close();
-    qDebug()<<"load successfully 1";
+    //qDebug()<<"load successfully 1";
     qWarning()<<"load successfully 2";
 
     return initFromDomElement(doc.documentElement());
@@ -239,7 +278,7 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
     for (QJsonObject::iterator it = obj.begin(); it != obj.end(); it++){
         QString strID = it.key();
         int pos = strID.lastIndexOf('_');
-        if (-1 == pos) qDebug()<<"error device1 name "<<strID;
+        if (-1 == pos) continue;
         DevCfgList *pList = new DevCfgList();
         pList->m_paName = strID;
         pList->m_id = strID.right(strID.length() - pos - 1).toInt();
@@ -247,6 +286,8 @@ bool DevCfgList::readDevCfgJsonFile(QString strFile)
         m_children.push_back(pList);
     }
 #endif
+    std::sort(m_children.begin(), m_children.end(), devCfgItemCompare);
+
     return true;
 }
 

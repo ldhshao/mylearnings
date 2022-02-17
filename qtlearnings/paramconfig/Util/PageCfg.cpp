@@ -283,7 +283,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr, int w, int h)
             wOther += w0->size().width();
         }
         if (nullptr != w1){
-        qDebug()<<w1<<w1->width()<<w1->size().width();
+        //qDebug()<<w1<<w1->width()<<w1->size().width();
             wName += w1->size().width();
         }
         if (nullptr != w2){
@@ -309,21 +309,21 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr, int w, int h)
         QWidget *w2 = (*it)->getWidDes();
         int top = iTitleHeight + (i % m_ctlUnitSize) * (iSpanMargin + m_ctlHeight);
         int grp = i /m_ctlUnitSize;
-        qDebug()<<(*it)->getName()<<": top "<<top;
+        //qDebug()<<(*it)->getName()<<": top "<<top;
         if (nullptr != w0){
             w0->move(left + colWidths[grp].iName + iSpanName, top);
-            qDebug()<<w0->width()<<","<<w0->height();
-            qDebug()<<"l0: "<<w0->pos();
+            //qDebug()<<w0->width()<<","<<w0->height();
+            //qDebug()<<"l0: "<<w0->pos();
         }
         if (nullptr != w1){
             w1->move(left, top);
-            qDebug()<<w1->width()<<","<<w1->height();
-            qDebug()<<"l1: "<<w1->pos();
+            //qDebug()<<w1->width()<<","<<w1->height();
+            //qDebug()<<"l1: "<<w1->pos();
         }
         if (nullptr != w2){
             w2->move(w0->pos().x() + w0->width() + iSpanDes, top);
-            qDebug()<<w2->width()<<","<<w2->height();
-            qDebug()<<"l2: "<<w2->pos();
+            //qDebug()<<w2->width()<<","<<w2->height();
+            //qDebug()<<"l2: "<<w2->pos();
         }
 
         if (m_ctlUnitSize -1 == i % m_ctlUnitSize){
@@ -339,7 +339,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr, int w, int h)
     iWidth += iSpanMargin;
     if (iWidth < iWidthMin) iWidth = iWidthMin;
     iHeight += (i > m_ctlUnitSize)? (m_ctlUnitSize*(iSpanMargin + m_ctlHeight)) : (i * (iSpanMargin + m_ctlHeight));
-    qDebug()<<"group "<<getName()<<": "<<iWidth<<","<<iHeight;
+    //qDebug()<<"group "<<getName()<<": "<<iWidth<<","<<iHeight;
     UiPage* page = dynamic_cast<UiPage*>(m_pWidget);
     if (nullptr != page){
         page->setTitle(getNamePath(m_titleDepth-1));
@@ -381,7 +381,7 @@ bool GroupCfgItem::readXmlFile(QString strFile)
         return false;
     }
     file.close();
-    qDebug()<<"load successfully 1";
+    //qDebug()<<"load successfully 1";
     qWarning()<<"load successfully 2";
 
     return initFromDomElement(doc.documentElement());
@@ -654,8 +654,7 @@ bool GroupCfgItem::saveJsonFile(QString strFile)
     file.write(doc.toJson());
 #endif
     file.close();
-    qDebug()<<"save successfully 1";
-    qWarning()<<"save successfully 2";
+    qDebug()<<"save successfully"<<strFile;
 
     return true;
 }
@@ -803,6 +802,6 @@ bool PageCfgList::createAllPage(list<UiPage*> &pageList)
         page->createPage(pageList);
         page->initUi(m_pParamTbl);
     }
-    dump();
+    //dump();
     return true;
 }

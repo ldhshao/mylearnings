@@ -42,12 +42,12 @@ void CEnableMngr::registerEableUi(CKeyDnComboBox* pCmb, uint16_t* pVal, uint16_t
         }
 
         slot_valueChanged(pVal, *pVal);//set init state
-        qDebug()<<"item "<<item<<" enableaddr "<<pVal<<" enableval "<<val;
+        //qDebug()<<"item "<<item<<" enableaddr "<<pVal<<" enableval "<<val;
     }
 }
 void CEnableMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
 {
-    qDebug()<<"addr "<<pVal<<" value "<<valNew<<" value "<<*pVal;
+    //qDebug()<<"addr "<<pVal<<" value "<<valNew<<" value "<<*pVal;
     //auto itOut = valUiMap.find(pVal);
     //if (itOut != valUiMap.end()){
     //    auto itWid = itOut->second.begin();
@@ -200,7 +200,7 @@ void CVisibleMngr::registerVisibleUi(CKeyDnComboBox* pCmb, uint16_t* pVal, list<
 }
 void CVisibleMngr::slot_valueChanged(uint16_t* pVal, uint32_t valNew)
 {
-    qDebug()<<"addr "<<pVal<<" value "<<valNew<<" value "<<*pVal;
+    //qDebug()<<"addr "<<pVal<<" value "<<valNew<<" value "<<*pVal;
     auto itOut = valUiMap.find(pVal);
     if (itOut != valUiMap.end()){
         for (auto itPair = itOut->second.begin(); itPair != itOut->second.end(); itPair++){

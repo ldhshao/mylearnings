@@ -38,7 +38,11 @@ static const QString DevTypeAnalogProtect;
 
 protected:
     static QString translateType(DevCfgItem* item, int iType);
-    static QString translateType2UiCfgType(DevCfgItem* item, int iType);
+#ifdef USE_JSON_SRC
+    static QString translateType2UiCfgType(bool bList, QJsonObject *obj, int iType);
+#else
+    static QString translateType2UiCfgType(bool bList, QJsonObject obj, int iType);
+#endif
     QString m_type;
     QString m_paName;
 };

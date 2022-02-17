@@ -160,7 +160,7 @@ void CBinder::BindEdit(CDevPointEdit *pEdit, uint16_t *pVal, uint32_t defaultVal
 {
     pEdit->setValuePtr(pVal);
     uint32_t devPoint = pEdit->getValue();
-    qDebug()<<"read addr "<<pVal<<" val "<<devPoint;
+    //qDebug()<<"read addr "<<pVal<<" val "<<devPoint;
     CDevPosMgr::instance()->setDevPoint(devPoint, pEdit->getPortType(), true);
 }
 /*

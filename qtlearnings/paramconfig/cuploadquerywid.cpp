@@ -148,7 +148,7 @@ void CUploadQueryWid::onResize(int width, int height)
         }
         i++;
     }
-    qDebug()<<__FUNCTION__<<" idx "<<i;
+    //qDebug()<<__FUNCTION__<<" idx "<<i;
 
     //layout copyright
     ui->label_copyright->move((width - ui->label_copyright->width())/2, height - 50);

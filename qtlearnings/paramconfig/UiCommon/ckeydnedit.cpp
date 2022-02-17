@@ -37,7 +37,7 @@ void CKeyDnEdit::focusOutEvent(QFocusEvent *ev)
 void CKeyDnEdit::keyPressEvent(QKeyEvent *ev)
 {
     // 未绑定数据直接返回按键事件
-    qDebug()<<"key press";
+    qDebug()<<"key press"<<ev->key();
     switch (ev->key()) {
         case Qt::Key_Down:
         case Qt::Key_Up:
@@ -163,7 +163,7 @@ void CKeyDnEdit::bindDataPtr(u_int16_t* pVal)
         if (nullptr != pBindU16Ptr){
             pBindU16Ptr->SetValPtr(pVal);
         }
-        qWarning()<<pVal<<*pVal;
+        //qWarning()<<pVal<<*pVal;
 
         setText(pBind->showSet());
     }

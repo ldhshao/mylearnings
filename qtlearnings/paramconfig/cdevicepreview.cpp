@@ -31,13 +31,13 @@ CDevicePreview::~CDevicePreview()
 
 void CDevicePreview::updateByDevice(GroupCfgItem* dev)
 {
-    qDebug()<<"preview "<<__FUNCTION__;
+    //qDebug()<<"preview "<<__FUNCTION__;
     if (nullptr != dev){
         ui->label_title->setText(dev->getNamePath(dev->titleDepth() - 1));
         ui->label_content1->setText(dev->previewInfo(0));
         ui->label_content2->setText(dev->previewInfo(1));
         devUiCfg = dev;
-        qDebug()<<"preview update";
+        //qDebug()<<"preview update";
         onResize(width(), height());
     }
 }
@@ -57,7 +57,7 @@ void CDevicePreview::showConfigPage(GroupCfgItem *dev)
         }
         page->resize(width(), height());
         page->move(mapToGlobal(QPoint(0, 0)));
-        qDebug()<<"width "<<width()<<" height "<<height()<<" pagepos "<<mapToGlobal(QPoint(0,0));
+        //qDebug()<<"width "<<width()<<" height "<<height()<<" pagepos "<<mapToGlobal(QPoint(0,0));
         page->showPage();
         pageCfg = page;
     }
@@ -72,17 +72,17 @@ void CDevicePreview::clearConfigPage()
 
 void CDevicePreview::keyReleaseEvent(QKeyEvent *event)
 {
-    qDebug()<<"preview "<<__FUNCTION__<<event->key();
+    //qDebug()<<"preview "<<__FUNCTION__<<event->key();
 }
 void CDevicePreview::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    qDebug()<<"preview "<<__FUNCTION__;
+    //qDebug()<<"preview "<<__FUNCTION__;
     showConfigPage(devUiCfg);
 }
 
 void CDevicePreview::slot_configFinished()
 {
-    qDebug()<<"preview "<<__FUNCTION__;
+    //qDebug()<<"preview "<<__FUNCTION__;
     updateByDevice(devUiCfg);
     pageCfg = nullptr;
 }

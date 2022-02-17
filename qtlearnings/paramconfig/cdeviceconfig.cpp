@@ -100,12 +100,11 @@ void CDeviceConfig::initMenu2(GroupCfgItem* grpItem)
         idx++;
     }
     menu2Cnt = idx;
-    qDebug()<<__FUNCTION__<<" idx "<<idx;
+    //qDebug()<<__FUNCTION__<<" idx "<<idx;
     for (; idx < cnt0; idx++) {
         menu2List[idx]->setVisible(false);
     }
 
-    qDebug()<<__FUNCTION__;
     menu2Mgr.selectButton(menu2List[0]);
 }
 
@@ -152,7 +151,7 @@ void CDeviceConfig::onResize(int width, int height)
         i++;
     }
     menuExit->move(m, t+i*span);
-    qDebug()<<__FUNCTION__<<" idx "<<i;
+    //qDebug()<<__FUNCTION__<<" idx "<<i;
 
     //layout menu3
     span = menuWidth + s;
@@ -163,7 +162,7 @@ void CDeviceConfig::onResize(int width, int height)
         (*it)->move(l + i*span, t);
         i++;
     }
-    qDebug()<<__FUNCTION__<<" idx "<<i;
+    //qDebug()<<__FUNCTION__<<" idx "<<i;
 
     //layout menu4
     t += menuHeight;
@@ -174,7 +173,7 @@ void CDeviceConfig::onResize(int width, int height)
         (*it)->move(l + i*span, t);
         i++;
     }
-    qDebug()<<__FUNCTION__<<" idx "<<i;
+    //qDebug()<<__FUNCTION__<<" idx "<<i;
 
     //layout preview area
     if (0 < i){
@@ -195,7 +194,7 @@ void CDeviceConfig::resizeEvent(QResizeEvent *event)
 
 void CDeviceConfig::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"deviceconfig "<<__FUNCTION__<<event->key();
+    //qDebug()<<"deviceconfig "<<__FUNCTION__<<event->key();
     bool bMenu4Show = (nullptr != menu4Mgr.currentButton());
     switch (event->key()) {
         case Qt::Key_Return:
@@ -214,9 +213,9 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Up:
             if (!bMenu4Show){//menu3 show
                 int idx = menu2Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
-                qDebug()<<"1 index "<<idx;
+                //qDebug()<<"1 index "<<idx;
                 idx = (idx - 1 + menu2Cnt + 1) % (menu2Cnt + 1);
-                qDebug()<<"2 index "<<idx;
+                //qDebug()<<"2 index "<<idx;
                 if (idx == menu2Cnt)
                     menu2Mgr.selectButton(menuExit);
                 else
@@ -232,9 +231,9 @@ void CDeviceConfig::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Down:
             if (!bMenu4Show){//menu3 show
                 int idx = menu2Mgr.currentButton()->property(PROPERTY_INDEX).toInt();
-                qDebug()<<"3 index "<<idx;
+                //qDebug()<<"3 index "<<idx;
                 idx = (idx + 1) % (menu2Cnt + 1);
-                qDebug()<<"4 index "<<idx;
+                //qDebug()<<"4 index "<<idx;
                 if (idx == menu2Cnt)
                     menu2Mgr.selectButton(menuExit);
                 else
@@ -313,7 +312,7 @@ bool CDeviceConfig::onExit()
             }else {
                 idx++;
             }
-            qDebug()<<name<<value<<dataCnt;
+            //qDebug()<<name<<value<<dataCnt;
         }
     }
     if (!itemList.empty()){
