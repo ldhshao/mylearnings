@@ -21,6 +21,12 @@ const QString DevCfgItem::DevTypeWorkVoithGroup = "workvoithgroup";
 const QString DevCfgItem::DevTypeWorkVoith = "workvoith";
 const QString DevCfgItem::DevTypeAnalogProtect = "analogprotect";
 
+const QString DevCfgItem::Dev2TypePrewarning = "prewarninggroup";//"预警"
+const QString DevCfgItem::Dev2TypeMotor = "motorgroup";//"电机"
+const QString DevCfgItem::Dev2TypeBrake = "brakegroup";//"制动闸"
+const QString DevCfgItem::Dev2TypeAutoTension = "autotensiongroup";//"张紧"
+const QString DevCfgItem::Dev2TypeSensor = "generalsensor";//"通用传感器"
+
 bool devCfgItemCompare (DevCfgItem* pItemLeft, DevCfgItem* pItemRight)
 {
     return (pItemLeft->getId()< pItemRight->getId());
@@ -190,14 +196,14 @@ QString DevCfgItem::translateType2UiCfgType(bool bList, QJsonObject obj, int iTy
                     sensorTypes<<"rollervibrationsensor";
                     sensorTypes<<"personapproachsensor";
                     return sensorTypes[sensorType - 15];
-                //}else if (30 <= sensorType && sensorType <=34){
-                //    QStringList sensorTypes;
-                //    sensorTypes<<"";
-                //    sensorTypes<<"";
-                //    sensorTypes<<"";
-                //    sensorTypes<<"";
-                //    sensorTypes<<"";
-                //    return sensorTypes[sensorType - 30];
+                }else if (30 <= sensorType && sensorType <=34){
+                    QStringList sensorTypes;
+                    sensorTypes<<"currentanalogmotorsensor";
+                    sensorTypes<<"currentswitchmotorsensor";
+                    sensorTypes<<"bearingtempermotorsensor";
+                    sensorTypes<<"windingtempermotorsensor";
+                    sensorTypes<<"vibrationmotorsensor";
+                    return sensorTypes[sensorType - 30];
                 }
             }
         }

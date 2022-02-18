@@ -39,5 +39,14 @@ static void setJsonObjectIntVal(QJsonObject* obj, const QString& key, int val){
 #endif
     }
 }
+static void setJsonObjectStrVal(QJsonObject* obj, const QString& key, const QString& val){
+    if (nullptr != obj && !key.isEmpty()){
+#ifdef USE_JSON_SRC
+        obj->add(key, val);
+#else
+        obj->insert(key, val);
+#endif
+    }
+}
 
 #endif

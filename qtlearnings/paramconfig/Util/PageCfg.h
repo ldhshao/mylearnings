@@ -12,7 +12,7 @@ class GroupCfgItem : public UiCfgItem
 public:
     HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
     GroupCfgItem() :m_titleDepth(1),m_cols(1),m_ctlWidth(100),m_ctlHeight(40),m_colMode(true),m_ctlUnitSize(10){
-        m_type = UiCfgItem::strTypeGroup;
+        m_type = UiCfgItem::strTypeGroup; m_devLevel = 0;
     }
     virtual ~GroupCfgItem();
 
@@ -57,14 +57,16 @@ public:
     //load/save json file
     bool readJsonFile(QString strFile);
     bool saveJsonFile(QString strFile);
-    virtual bool loadFromJsonObject(QJsonObject* obj);
-    virtual bool saveToJsonObject(QJsonObject* obj);
+    virtual bool loadFromJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
+    virtual bool saveToJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
+    void         setDeviceLevel(uint8_t lvl) { m_devLevel = lvl; }
 protected:
     void deleteAll();
     list<UiCfgItem*> m_children;
     list<UiCfgItem*>::iterator m_it;
     uint8_t          m_titleDepth;
     uint8_t          m_cols;
+    uint8_t          m_devLevel;//default 0; 1: device 2
     int              m_ctlWidth;
     int              m_ctlHeight;
     bool             m_colMode;

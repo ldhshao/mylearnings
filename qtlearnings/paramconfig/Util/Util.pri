@@ -3,6 +3,7 @@ DEPENDPATH += $$PWD
 
 UTIL = Util
 HEADERS +=\
+          $$PWD/datacfgitem.h \
           $$PWD/jsk_json.h \
           $$PWD/json.h \
           $$UTIL/DynamicLib.h \
@@ -13,6 +14,7 @@ HEADERS +=\
           $$UTIL/devcfg.h
 
 SOURCES +=\
+          $$PWD/datacfgitem.cpp \
           $$PWD/jsk_json.cpp \
           $$UTIL/DynamicLib.cpp \
           $$UTIL/ItemBase.cpp \

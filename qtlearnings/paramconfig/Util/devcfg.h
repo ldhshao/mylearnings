@@ -36,6 +36,12 @@ static const QString DevTypeWorkVoithGroup;
 static const QString DevTypeWorkVoith;
 static const QString DevTypeAnalogProtect;
 
+static const QString Dev2TypePrewarning;
+static const QString Dev2TypeMotor;
+static const QString Dev2TypeBrake;
+static const QString Dev2TypeAutoTension;
+static const QString Dev2TypeSensor;
+
 protected:
     static QString translateType(DevCfgItem* item, int iType);
 #ifdef USE_JSON_SRC

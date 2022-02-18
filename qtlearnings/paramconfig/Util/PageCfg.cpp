@@ -581,7 +581,7 @@ bool GroupCfgItem::readJsonFile(QString strFile)
     QJsonObject root;
     if (!root.fromString(file.readAll()))
         return false;
-    loadFromJsonObject(root.children()[0]);
+    loadFromJsonObject(root.children()[0], root.children()[0]);
 #else
     QJsonParseError parseError;
     QJsonDocument doc=QJsonDocument::fromJson(file.readAll(),&parseError);
@@ -590,7 +590,7 @@ bool GroupCfgItem::readJsonFile(QString strFile)
         return false;
     }
     QJsonObject obj=doc.object().begin()->toObject();
-    loadFromJsonObject(&obj);
+    loadFromJsonObject(&obj, &obj);
 #endif
 
     qDebug()<<"load successfully 1";
@@ -598,21 +598,28 @@ bool GroupCfgItem::readJsonFile(QString strFile)
 
     return true;
 }
-bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj)
+bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj, QJsonObject* root)
 {
 #ifdef USE_JSON_SRC
     for(auto it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
             QString childName = (*it)->paramName();
-            if (!childName.isEmpty() && obj->exists(childName)){
-                QJsonObject *childObj = obj->get(childName);
-                (*it)->loadFromJsonObject(childObj);
+            if (!childName.isEmpty()){
+                if (1 == grp->m_devLevel){
+                    if (root->exists(childName)){
+                        QJsonObject *childObj = root->get(childName);
+                        (*it)->loadFromJsonObject(childObj, root);
+                    }
+                }else if (obj->exists(childName)){
+                    QJsonObject *childObj = obj->get(childName);
+                    (*it)->loadFromJsonObject(childObj, root);
+                }
             }else {
-                (*it)->loadFromJsonObject(obj);
+                (*it)->loadFromJsonObject(obj, root);
             }
         }else{
-            (*it)->loadFromJsonObject(obj);
+            (*it)->loadFromJsonObject(obj, root);
         }
     }
 #else
@@ -620,14 +627,21 @@ bool GroupCfgItem::loadFromJsonObject(QJsonObject *obj)
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
             QString childName = (*it)->paramName();
-            if (!childName.isEmpty() && obj->contains(childName)){
-                QJsonObject childObj = obj->value(childName).toObject();
-                (*it)->loadFromJsonObject(&childObj);
+            if (!childName.isEmpty()){
+                if (1 == grp->m_devLevel){
+                    if (root->contains(childName)){
+                        QJsonObject childObj = root->value(childName).toObject();
+                        (*it)->loadFromJsonObject(&childObj, root);
+                    }
+                }else if (obj->contains(childName)){
+                    QJsonObject childObj = obj->value(childName).toObject();
+                    (*it)->loadFromJsonObject(&childObj, root);
+                }
             }else {
                 (*it)->loadFromJsonObject(obj);
             }
         }else{
-            (*it)->loadFromJsonObject(obj);
+            (*it)->loadFromJsonObject(obj, root);
         }
     }
 #endif
@@ -644,11 +658,11 @@ bool GroupCfgItem::saveJsonFile(QString strFile)
     QJsonObject root;
 #ifdef USE_JSON_SRC
     QJsonObject* obj = root.addObject(m_paName);
-    saveToJsonObject(obj);
+    saveToJsonObject(obj, obj);
     file.write(root.toString().toUtf8());
 #else
     QJsonObject obj;
-    saveToJsonObject(&obj);
+    saveToJsonObject(&obj, &obj);
     root.insert(m_paName, obj);
     QJsonDocument doc(root);
     file.write(doc.toJson());
@@ -658,31 +672,41 @@ bool GroupCfgItem::saveJsonFile(QString strFile)
 
     return true;
 }
-bool GroupCfgItem::saveToJsonObject(QJsonObject *obj)
+bool GroupCfgItem::saveToJsonObject(QJsonObject *obj, QJsonObject* root)
 {
+    setJsonObjectStrVal(obj, "name", getFullName());
     for(auto it = m_children.begin(); it != m_children.end(); it++){
         GroupCfgItem* grp = dynamic_cast<GroupCfgItem*>(*it);
         if (nullptr != grp){
 #ifdef USE_JSON_SRC
             QString childName = (*it)->paramName();
             if (!childName.isEmpty()){
-                QJsonObject *childObj = obj->addObject(childName);
-                (*it)->saveToJsonObject(childObj);
+                QJsonObject *childObj = nullptr;
+                if (1 == grp->m_devLevel){
+                    childObj = root->addObject(childName);
+                }else {
+                    childObj = obj->addObject(childName);
+                }
+                (*it)->saveToJsonObject(childObj, root);
             }else {
-                (*it)->saveToJsonObject(obj);
+                (*it)->saveToJsonObject(obj, root);
             }
 #else
             QJsonObject childObj;
             QString childName = (*it)->paramName();
             if (!childName.isEmpty()){
-                (*it)->saveToJsonObject(&childObj);
-                obj->insert(childName, childObj);
+                (*it)->saveToJsonObject(&childObj, root);
+                if (1 == grp->m_devLevel){
+                    root->insert(childName, childObj);
+                }else {
+                    obj->insert(childName, childObj);
+                }
             }else {
-                (*it)->saveToJsonObject(obj);
+                (*it)->saveToJsonObject(obj, root);
             }
 #endif
         }else{
-            (*it)->saveToJsonObject(obj);
+            (*it)->saveToJsonObject(obj, root);
         }
     }
     return true;

@@ -37,6 +37,11 @@
 #define DEVNAME_ELECTRIC        "电气系统"
 #define UITEMPLATE_COMM        "comm"
 #define DEVNAME_COMM           "通讯"
+#define DEVNAME_PREWARN           "预警"
+#define DEVNAME_AUTOTENSION       "自动张紧"
+#define DEVNAME_BRAKE             "制动闸"
+#define DEVNAME_ASENSOR            "模拟量传感器"
+#define DEVNAME_DSENSOR            "开关量传感器"
 #define PARNAME_DEVICE1        "HDevice1"
 #define MENU1_STYLE         "QPushButton {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}"
 #define MENU1_CMB_STYLE     "QComboBox {font-size:32px; font:bold;color:rgba(255,255,255,100%);background-color:rgba(80,80,100,100%);}\
@@ -262,9 +267,17 @@ void MainWindow::initPage()
             }
             grp->setName("基本信息");
             uiList->addChild(grp);
+            GroupCfgList *preWarningList = new GroupCfgList();
+            GroupCfgList *autoTensionList = new GroupCfgList();
+            GroupCfgList *brakingList = new GroupCfgList();
+            GroupCfgList *analogSensorList = new GroupCfgList();
+            GroupCfgList *switchSensorList = new GroupCfgList();
+            GroupCfgList *motorSensorList = new GroupCfgList();
+            GroupCfgList *motorGrp = nullptr;
             DevCfgItem* pSubItem = pList->getHead();//2level
             while(nullptr != pSubItem){
-                pGroup = cfgTemplate.findGroupByName(pSubItem->getType());
+                QString dev2Type = pSubItem->getType();
+                pGroup = cfgTemplate.findGroupByName(dev2Type);
                 if (nullptr != pGroup){
                     grp = dynamic_cast<GroupCfgItem*>(pGroup->createMyself());
                 }else {
@@ -274,11 +287,83 @@ void MainWindow::initPage()
                 if (nullptr != grp){
                     grp->setName(pSubItem->getName());
                     grp->setParamName(pSubItem->paramName());
-                    uiList->addChild(grp);
+                    if (DevCfgItem::Dev2TypePrewarning == dev2Type){
+                        preWarningList->addChild(grp);
+                    }else if (DevCfgItem::Dev2TypeAutoTension == dev2Type){
+                        autoTensionList->addChild(grp);
+                    }else if (DevCfgItem::Dev2TypeBrake == dev2Type){
+                        brakingList->addChild(grp);
+                    }else if (DevCfgItem::Dev2TypeSensor == dev2Type){
+                        switchSensorList->addChild(grp);
+                    }else if (0 < dev2Type.indexOf("motorsensor")){
+                        grp->setDeviceLevel(1);
+                        motorSensorList->addChild(grp);
+                    }else if (0 < dev2Type.indexOf("sensor")){
+                        analogSensorList->addChild(grp);
+                    }else{
+                        uiList->addChild(grp);
+                    }
+
+                    if (DevCfgItem::Dev2TypeMotor == dev2Type)
+                        motorGrp = dynamic_cast<GroupCfgList*>(grp);
                 }
 
                 pSubItem = pList->getNext();
             }
+            if (0 < preWarningList->getChildrenCount()){
+                preWarningList->setName(DEVNAME_PREWARN);
+                uiList->addChild(preWarningList);
+            }else{
+                delete preWarningList;
+            }
+            if (0 < autoTensionList->getChildrenCount()){
+                autoTensionList->setName(DEVNAME_AUTOTENSION);
+                uiList->addChild(autoTensionList);
+            }else{
+                delete autoTensionList;
+            }
+            if (0 < brakingList->getChildrenCount()){
+                brakingList->setName(DEVNAME_BRAKE);
+                uiList->addChild(brakingList);
+            }else{
+                delete brakingList;
+            }
+            if (0 < switchSensorList ->getChildrenCount()){
+                switchSensorList ->setName(DEVNAME_DSENSOR);
+                uiList->addChild(switchSensorList );
+            }else{
+                delete switchSensorList;
+            }
+            if (0 < analogSensorList ->getChildrenCount()){
+                analogSensorList ->setName(DEVNAME_ASENSOR);
+                uiList->addChild(analogSensorList );
+            }else{
+                delete analogSensorList;
+            }
+            if (0 < motorSensorList->getChildrenCount()){
+                //put motor sensor under motor
+                if (nullptr != motorGrp){
+                    int motorIdx = 0;
+                    UiCfgItem* motorCfg = motorGrp->getHead();
+                    while (nullptr != motorCfg){
+                        GroupCfgList* pMotor = dynamic_cast<GroupCfgList*>(motorCfg);
+                        if (nullptr != pMotor){
+                            UiCfgItem* pSensorItem = motorSensorList->getHead();
+                            while(nullptr != pSensorItem){
+                                QString strName("motor");
+                                strName.append(QString::number(motorIdx));
+                                if (-1 < pSensorItem->paramName().indexOf(strName))
+                                    pMotor->addChild(pSensorItem);
+                                pSensorItem = motorSensorList->getNext();
+                            }
+                            motorIdx++;
+                        }
+                        motorCfg = motorGrp->getNext();
+                    }
+                }
+                motorSensorList->clear();
+            }
+            delete motorSensorList;
         }
         devUiCfgList.addChild(uiList);
         pItem = devCfg.getNext();

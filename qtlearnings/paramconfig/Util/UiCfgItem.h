@@ -74,8 +74,8 @@ public:
 
     QString paramName() { return m_paName; }
     void setParamName(QString strPaName) { m_paName = strPaName; }
-    virtual bool loadFromJsonObject(QJsonObject* obj);
-    virtual bool saveToJsonObject(QJsonObject* obj);
+    virtual bool loadFromJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
+    virtual bool saveToJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
 
     int getPortType();
 protected:
@@ -136,8 +136,8 @@ public:
     uint16_t setCount() { return m_setCnt; }
     void addItem(UiCfgItem* item);
 
-    virtual bool loadFromJsonObject(QJsonObject* obj);
-    virtual bool saveToJsonObject(QJsonObject* obj);
+    virtual bool loadFromJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
+    virtual bool saveToJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
 protected:
     uint16_t m_setSize;
     uint16_t m_setCnt;
@@ -207,8 +207,8 @@ public:
 
     uint16_t setSize() { return m_setSize; }
 
-    virtual bool loadFromJsonObject(QJsonObject* obj);
-    virtual bool saveToJsonObject(QJsonObject* obj);
+    virtual bool loadFromJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
+    virtual bool saveToJsonObject(QJsonObject* obj, QJsonObject* root=nullptr);
 protected:
     uint16_t m_setSize;
 };

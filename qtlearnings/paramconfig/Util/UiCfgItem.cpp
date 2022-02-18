@@ -469,7 +469,7 @@ bool UiCfgItem::isDataOK()
     return true;
 }
 
-bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
+bool UiCfgItem::loadFromJsonObject(QJsonObject *obj, QJsonObject* root)
 {
     uint16_t* pAddr = paramAddress();
     if (!m_paName.isEmpty() && nullptr != pAddr){
@@ -502,7 +502,7 @@ bool UiCfgItem::loadFromJsonObject(QJsonObject *obj)
     }
     return false;
 }
-bool UiCfgItem::saveToJsonObject(QJsonObject *obj)
+bool UiCfgItem::saveToJsonObject(QJsonObject *obj, QJsonObject* root)
 {
     uint16_t* pAddr = paramAddress();
     if (!m_paName.isEmpty() && 0 < m_datacnt && nullptr != pAddr){
@@ -838,7 +838,7 @@ void SetIndexCfgItem::findPortInfoByPortType(int line, int portType, list<pair<u
     }
 }
 
-bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
+bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj, QJsonObject* root)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
@@ -922,7 +922,7 @@ bool SetIndexCfgItem::loadFromJsonObject(QJsonObject *obj)
     }
     return true;
 }
-bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj)
+bool SetIndexCfgItem::saveToJsonObject(QJsonObject *obj, QJsonObject* root)
 {
     uint16_t* pBaseAddr = paramAddress();
     for (int s = 0; s < m_setCnt; s++){
@@ -1319,7 +1319,7 @@ QString EditSetCfgItem::getDataValue(uint16_t *pVal, int *dataCnt)
     }
     return val;
 }
-bool EditSetCfgItem::loadFromJsonObject(QJsonObject *obj)
+bool EditSetCfgItem::loadFromJsonObject(QJsonObject *obj, QJsonObject* root)
 {
     uint16_t *pBaseAddr = paramAddress();
     if (!m_paName.isEmpty() && nullptr != pBaseAddr){
@@ -1332,7 +1332,7 @@ bool EditSetCfgItem::loadFromJsonObject(QJsonObject *obj)
     }
     return true;
 }
-bool EditSetCfgItem::saveToJsonObject(QJsonObject *obj)
+bool EditSetCfgItem::saveToJsonObject(QJsonObject *obj, QJsonObject* root)
 {
     uint16_t *pBaseAddr = paramAddress();
     CKeyDnSetEdit * pEdit = dynamic_cast<CKeyDnSetEdit*>(m_pWidget);

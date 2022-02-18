@@ -502,7 +502,7 @@
             <ComboboxCfgItem id="1" name="设备使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             </ComboboxCfgItem>
         </GroupCfgItem>
-        <GroupCfgList id= "2" name="电机1" enablesource="10/1:0" paname="HoutputModul_0">
+        <GroupCfgList id= "2" name="电机1" enablesource="1/1:1" paname="HoutputModul_0">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -573,10 +573,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -598,7 +596,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -621,7 +619,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -644,7 +676,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -667,7 +699,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -690,7 +722,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -713,7 +745,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -736,7 +768,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -760,7 +792,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id= "3" name="电机2" enablesource="10/1:0" paname="HoutputModul_1">
+        <GroupCfgList id= "3" name="电机2" enablesource="1/1:1" paname="HoutputModul_1">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -831,10 +863,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -856,7 +886,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -879,7 +909,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -902,7 +966,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -925,7 +989,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -948,7 +1012,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -971,7 +1035,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -994,7 +1058,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1018,7 +1082,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id= "4" name="电机3" enablesource="10/1:0" paname="HoutputModul_2">
+        <GroupCfgList id= "4" name="电机3" enablesource="1/1:1" paname="HoutputModul_2">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -1089,10 +1153,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -1114,7 +1176,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1137,7 +1199,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1160,7 +1256,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1183,7 +1279,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1206,7 +1302,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1229,7 +1325,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1252,7 +1348,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1276,7 +1372,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id= "5" name="电机4" enablesource="10/1:0" paname="HoutputModul_3">
+        <GroupCfgList id= "5" name="电机4" enablesource="1/1:1" paname="HoutputModul_3">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -1347,10 +1443,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -1372,7 +1466,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1395,7 +1489,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1418,7 +1546,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1441,7 +1569,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1464,7 +1592,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1487,7 +1615,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1510,7 +1638,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1534,7 +1662,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id= "6" name="电机5" enablesource="10/1:0" paname="HoutputModul_4">
+        <GroupCfgList id= "6" name="电机5" enablesource="1/1:1" paname="HoutputModul_4">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -1605,10 +1733,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -1630,7 +1756,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1653,7 +1779,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1676,7 +1836,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1699,7 +1859,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1722,7 +1882,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1745,7 +1905,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1768,7 +1928,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1792,7 +1952,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id="7" name="电机6" enablesource="10/1:0" paname="HoutputModul_5">
+        <GroupCfgList id= "7" name="电机6" enablesource="1/1:1" paname="HoutputModul_5">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -1863,10 +2023,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -1888,7 +2046,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1911,7 +2069,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1934,7 +2126,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -1957,7 +2149,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -1980,7 +2172,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2003,7 +2195,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2026,7 +2218,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2050,7 +2242,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id="8" name="电机7" enablesource="10/1:0" paname="HoutputModul_6">
+        <GroupCfgList id= "8" name="电机7" enablesource="1/1:1" paname="HoutputModul_6">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -2121,10 +2313,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -2146,7 +2336,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2169,7 +2359,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2192,7 +2416,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2215,7 +2439,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2238,7 +2462,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2261,7 +2485,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2284,7 +2508,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2308,7 +2532,7 @@
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
         </GroupCfgList>
-        <GroupCfgList id="9" name="电机8" enablesource="10/1:0" paname="HoutputModul_7">
+        <GroupCfgList id= "9" name="电机8" enablesource="1/1:1" paname="HoutputModul_7">
             <GroupCfgItem id="1" name="电机控制输出" controlwidth="100" controlheight="28" columnmode="1" unitsize="10" titledepth="2" paname="HoutputPointParthOutMotor">
         		<UiCfgItem id="2" name="输出点" type="devpointedit"  enablesource="1:0" defaultvalue="0" datacnt="2" paname="slave;lowSlave;prot">
         		</UiCfgItem>
@@ -2379,10 +2603,8 @@
         	    <UiCfgItemFloat id="7" name="输入点反馈等待时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="0" paname="feedbackTime">
         	    </UiCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="6" name="电流" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            <GroupCfgItem id="6" name="电流_模拟" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
-            	</ComboboxCfgItem>
-            	<ComboboxCfgItem id="11" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
             	</ComboboxCfgItem>
@@ -2404,7 +2626,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2427,7 +2649,41 @@
         	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="7" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
+            <GroupCfgItem id="7" name="电流_开关" controlwidth="100" controlheight="28" columnmode="1" unitsize="12" titledepth="2" paname="HSensor_0">
+            	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="2" name="动作保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorActionType">
+            	</ComboboxCfgItem>
+            	<ComboboxCfgItem id="3" name="故障保护类型" params="0:报警;1:报警正常停车;2:报警紧急停车;3:无" defaultvalue="2" enablesource="1:1" paname="sensorErrorType">
+            	</ComboboxCfgItem>
+        		<UiCfgItemFloat id="9" name="高停车值" type="editbox"  range="(0-200)" precision="1" unit="%"  defaultvalue="120" enablesource="1:1" visiblesource="11:1" paname="stopValueMax">
+        		</UiCfgItemFloat>
+        		<UiCfgItemFloat id="12" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
+        		</UiCfgItemFloat>
+        		<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
+        		</ComboboxCfgItem>
+        		<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="15" name="关联报警输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="16" name="关联报警输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_2">
+        		</UiCfgItem>
+        		<UiCfgItem id="17" name="关联保护输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_0">
+        		</UiCfgItem>
+        		<UiCfgItem id="18" name="关联保护输出台号2" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_1">
+        		</UiCfgItem>
+        		<UiCfgItem id="19" name="关联保护输出台号3" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="protectPoutnumber_2">
+        		</UiCfgItem>
+        		<SetIndexCfgItem id="22" name="传感器输入" type="setindexeditbox" range="(1-8)" defaultvalue="1" setsize="8" setcount="8" previewconfig="传感器输入/号" datanameconfig="传感器输入/号" enablesource="1:1" paname="HinputPointPart">
+        		</SetIndexCfgItem>
+        		<SetItemCfgItem id="14" name="输入点" type="devpointedit" defaultvalue="0" itemdatacnt="2" datacnt="0" setindexsource="22" paname="slave;lowSlave;prot">
+        		</SetItemCfgItem>
+        	    <SetItemCfgItemFloat id="20" name="输入点恢复正常去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="normalTime">
+        	    </SetItemCfgItemFloat>
+        	    <SetItemCfgItemFloat id="21" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
+        	    </SetItemCfgItemFloat>
+            </GroupCfgItem>
+            <GroupCfgItem id="8" name="轴承温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_1">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2450,7 +2706,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2473,7 +2729,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="8" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
+            <GroupCfgItem id="9" name="绕组温度" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_2">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2496,7 +2752,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -2519,7 +2775,7 @@
         	    <SetItemCfgItemFloat id="20" name="输入点故障去抖时间" type="editbox"  range="(0-6000)" precision="0.1" unit="s"  defaultvalue="10" datacnt="0" setindexsource="22" paname="errorTime">
         	    </SetItemCfgItemFloat>
             </GroupCfgItem>
-            <GroupCfgItem id="9" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
+            <GroupCfgItem id="10" name="振动" controlwidth="100" controlheight="28" columnmode="1" unitsize="11" titledepth="2" paname="HSensor_3">
             	<ComboboxCfgItem id="1" name="传感器使能" params="1:使能;0:不使能" defaultvalue="0" paname="enable">
             	</ComboboxCfgItem>
             	<ComboboxCfgItem id="10" name="传感器类型" params="1:模拟量;0:开关量" defaultvalue="0" enablesource="1:1" paname="type">
@@ -2542,7 +2798,7 @@
         		</UiCfgItemFloat>
         		<UiCfgItemFloat id="10" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="1" unit="%"  defaultvalue="0" enablesource="1:1" paname="delaytime">
         		</UiCfgItemFloat>
-        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        		<ComboboxCfgItem id="11" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         		</ComboboxCfgItem>
         		<UiCfgItem id="12" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" enablesource="1:1" paname="alarmPoutnumber_0">
         		</UiCfgItem>
@@ -3255,7 +3511,7 @@
         	</UiCfgItemFloat>
         	<UiCfgItemFloat id="12" name="低报警值" type="editbox"  range="" precision="1" unit=""  defaultvalue="0" enablesource="1:1" paname="errorValueMin">
         	</UiCfgItemFloat>
-        	<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        	<ComboboxCfgItem id="13" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         	</ComboboxCfgItem>
         	<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" paname="alarmPoutnumber_0">
         	</UiCfgItem>
@@ -3371,7 +3627,7 @@
         	</UiCfgItemFloat>
         	<UiCfgItemFloat id="13" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="0.1" unit="秒"  defaultvalue="1000" enablesource="1:1" paname="delaytime">
         	</UiCfgItemFloat>
-        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         	</ComboboxCfgItem>
         	<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" paname="alarmPoutnumber_0">
         	</UiCfgItem>
@@ -3501,7 +3757,7 @@
         	</UiCfgItemFloat>
         	<UiCfgItemFloat id="13" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="0.1" unit="秒"  defaultvalue="1000" enablesource="1:1" paname="delaytime">
         	</UiCfgItemFloat>
-        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         	</ComboboxCfgItem>
         	<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" paname="alarmPoutnumber_0">
         	</UiCfgItem>
@@ -3547,7 +3803,7 @@
         	</UiCfgItemFloat>
         	<UiCfgItemFloat id="13" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="0.1" unit="秒"  defaultvalue="1000" enablesource="1:1" paname="delaytime">
         	</UiCfgItemFloat>
-        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         	</ComboboxCfgItem>
         	<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" paname="alarmPoutnumber_0">
         	</UiCfgItem>
@@ -3593,7 +3849,7 @@
         	</UiCfgItemFloat>
         	<UiCfgItemFloat id="13" name="启车后检测延时时间" type="editbox"  range="(0-12000)" precision="0.1" unit="秒"  defaultvalue="1000" enablesource="1:1" paname="delaytime">
         	</UiCfgItemFloat>
-        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="0" enablesource="1:1" paname="alarmCount">
+        	<ComboboxCfgItem id="14" name="传感器保护语音次数" params="0:无限播放;1:播放1次;2:播放2次;3:播放3次;4:播放4次;5:播放5次;6:播放6次;7:播放7次;8:播放8次;9:播放9次;10:播放10次"  defaultvalue="1" enablesource="1:1" paname="alarmCount">
         	</ComboboxCfgItem>
         	<UiCfgItem id="14" name="关联报警输出台号1" type="editbox"  range="(0-3)" defaultvalue="0" paname="alarmPoutnumber_0">
         	</UiCfgItem>
