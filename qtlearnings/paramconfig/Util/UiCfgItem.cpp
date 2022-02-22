@@ -16,6 +16,7 @@
 #include "../cdevposmgr.h"
 #include "Util/PageCfg.h"
 //#include <QJsonValue>
+#include <QApplication>
 #include <QStringList>
 #include <math.h>
 using namespace std;
@@ -34,13 +35,17 @@ QString UiCfgItem::strTypePage     = "page";
 int getQstringShowLen(const QString& str)
 {
     int len = 0;
+    float fLen = 0.0;
     for (QString::const_iterator it = str.begin(); it != str.end(); it++){
-        if (('0' <= *it && '9' >= *it) || ('a' <= *it && 'z' >= *it) || ('A' <= *it && 'Z' >= *it)
-                || ':' == *it || '.' == *it)
-            len++;
+        if (('0' <= *it && '9' >= *it) || ('a' <= *it && 'z' >= *it) || ('A' <= *it && 'Z' >= *it))
+            fLen += 2;
+        else if (':' == *it || '.' == *it || ' ' == *it)
+            fLen += 1;
         else
-            len += 2;
+            fLen += 3.55;
     }
+
+    len = fLen + 0.5;
 
     return len;
 }
@@ -174,6 +179,12 @@ void UiCfgItem::create(QWidget* parent)
             }
         }
         //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
+        QFont font = QApplication::font();
+        font.setPointSize(14);
+        //font.setWeight(QFont::Light);
+        if (nullptr != m_pWidget) m_pWidget->setFont(font);
+        if (nullptr != m_pWidName) m_pWidName->setFont(font);
+        if (nullptr != m_pWidDes) m_pWidDes->setFont(font);
     }
 }
 bool UiCfgItem::initData(int idx, bool useDef)
@@ -199,6 +210,7 @@ bool UiCfgItem::initUi(unsigned short* pStAddr, int w, int h)
     }
     if (nullptr != m_pWidName){
         int width = QFontMetrics(m_pWidName->font()).width(m_name);
+        //qDebug()<<"UiCfgItem::initUi"<<m_pWidName->font().family()<<m_pWidName->font().pointSize();
         m_pWidName->resize(width, h);
         m_pWidName->show();
     }
@@ -367,7 +379,7 @@ QString UiCfgItem::previewInfoEx(int nameLenMax)
 {
     if (0 < datacount()){
         QString strInfo(m_name + ":");
-        int tlen = 8;
+        int tlen = 16;
         int len = getQstringShowLen(strInfo);
         if (len < nameLenMax)
             strInfo.append(QString((nameLenMax - len + tlen - 1)/tlen, QChar('\t')));
@@ -601,6 +613,12 @@ void UiCfgItemFloat::create(QWidget* parent)
         m_pWidDes = pBoxDes;
 
         //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
+        QFont font = QApplication::font();
+        font.setPointSize(14);
+        //font.setWeight(QFont::Light);
+        if (nullptr != m_pWidget) m_pWidget->setFont(font);
+        if (nullptr != m_pWidName) m_pWidName->setFont(font);
+        if (nullptr != m_pWidDes) m_pWidDes->setFont(font);
     }
 }
 QString UiCfgItemFloat::strDataValue(uint16_t *pAddr)
@@ -725,9 +743,9 @@ QString SetIndexCfgItem::previewInfo()
 #endif
     if (0 < datacount() && 2 == pvCfgList.count()){
         uint16_t* param = paramAddress();
-        int tlen = 8, tCntMin = 2;;
+        int tlen = 16, tCntMin = 2;;
         vector<int> tCntList;
-        QString strTemp = QString::number(m_setCnt)+ pvCfgList[1];
+        QString strTemp = QString::number(m_setCnt)+ pvCfgList[1] + ": ";
         int iTemp = getQstringShowLen(strTemp);
         iTemp = (iTemp + tlen - 1) / tlen;
         strInfo.append(QString(iTemp, '\t'));
@@ -735,6 +753,19 @@ QString SetIndexCfgItem::previewInfo()
         for (auto it = m_itemList.begin(); it != m_itemList.end(); it++){
             strTemp = (*it)->getName();
             int tCnt = getQstringShowLen(strTemp);
+            //deal value range
+            if ((*it)->isType(UiCfgItem::strTypeDevPointEdit)){
+                tCnt = getQstringShowLen("CS5_BS.100.12");
+            }else if((*it)->isType(UiCfgItem::strTypeCombobox)){
+                ComboboxSetItemCfgItem* pCmbCfgItem = dynamic_cast<ComboboxSetItemCfgItem*>(*it);
+                QStringList params = pCmbCfgItem->params();
+                for (int i = 0; i < params.count(); i++){
+                    int len = getQstringShowLen(params[i]);
+                    if (len > tCnt) tCnt = len;
+                }
+            }else {
+                tCnt = getQstringShowLen("50000");
+            }
             if (0 == (tCnt % tlen)) tCnt = tCnt / tlen + 1;
             else tCnt = (tCnt + tlen - 1) / tlen;
             if (tCnt < tCntMin) tCnt = tCntMin;
@@ -744,18 +775,21 @@ QString SetIndexCfgItem::previewInfo()
         }
         strInfo.append("\n");
         for (int s = 0; s < m_setCnt; s++){
+            QString strHead, strItemInfo;
             strTemp = QString::number(s+1) + pvCfgList[1] + ": ";
-            strInfo.append(strTemp);
-            strInfo.append(QString(tCntList[0] - getQstringShowLen(strTemp)/tlen, '\t'));
+            strHead.append(strTemp);
+            strHead.append(QString(tCntList[0] - getQstringShowLen(strTemp)/tlen, '\t'));
             int i = 1;
             for (auto it = m_itemList.begin(); it != m_itemList.end(); it++, i++){
                 uint16_t* pAddr = param + s * m_setSize + (*it)->dataidx();
                 strTemp = (*it)->strDataValue(pAddr);
-                strInfo.append(strTemp);
-                strInfo.append(QString(tCntList[i] - getQstringShowLen(strTemp)/tlen, '\t'));
+                if (strTemp.isEmpty()) break;
+                strItemInfo.append(strTemp);
+                strItemInfo.append(QString(tCntList[i] - getQstringShowLen(strTemp)/tlen, '\t'));
                 //qDebug()<<getQstringShowLen(strTemp)<<tCntList[i] - getQstringShowLen(strTemp)/tlen;
             }
-            strInfo.append("\n");
+            if (strItemInfo.isEmpty()) break;
+            strInfo.append(strHead + strItemInfo + "\n");
         }
     }
 
@@ -1091,6 +1125,12 @@ void ComboboxSetCfgItem::create(QWidget* parent)
             m_pWidDes = pBoxDes;
         }
         //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName<<" parent "<<parent;
+        QFont font = QApplication::font();
+        font.setPointSize(14);
+        //font.setWeight(QFont::Light);
+        if (nullptr != m_pWidget) m_pWidget->setFont(font);
+        if (nullptr != m_pWidName) m_pWidName->setFont(font);
+        if (nullptr != m_pWidDes) m_pWidDes->setFont(font);
     }
 }
 bool ComboboxSetCfgItem::initUi(unsigned short *pStAddr, int w, int h)
@@ -1288,7 +1328,7 @@ QString EditSetCfgItem::previewInfoEx(int nameLenMax)
         }
     }
     if (strValue.isEmpty()){
-        int tlen = 8;
+        int tlen = 16;
         strInfo = m_name + ":";
         int len = getQstringShowLen(strInfo);
         if (len < nameLenMax)
@@ -1594,6 +1634,12 @@ void SetItemCfgItemFloat::create(QWidget* parent)
         m_pWidDes = pBoxDes;
 
         //qDebug()<<m_name<<" wid "<<m_pWidget<<" des "<<m_pWidDes<<" name "<<m_pWidName;
+        QFont font = QApplication::font();
+        font.setPointSize(14);
+        //font.setWeight(QFont::Light);
+        if (nullptr != m_pWidget) m_pWidget->setFont(font);
+        if (nullptr != m_pWidName) m_pWidName->setFont(font);
+        if (nullptr != m_pWidDes) m_pWidDes->setFont(font);
     }
 }
 QString SetItemCfgItemFloat::strDataValue(uint16_t *pAddr)

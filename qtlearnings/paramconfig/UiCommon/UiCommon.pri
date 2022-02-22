@@ -7,6 +7,7 @@ HEADERS +=\
           $$PWD/ckeydateedit.h \
           $$PWD/ckeylabel.h \
           $$PWD/ckeytablewidget.h \
+          $$PWD/cmymessagebox.h \
           $$UICOMMON/cwidgetbutton.h \
           $$UICOMMON/uipage.h        \
           $$UICOMMON/qkeytools_global.h \
@@ -24,6 +25,7 @@ SOURCES +=\
           $$PWD/ckeydateedit.cpp \
           $$PWD/ckeylabel.cpp \
           $$PWD/ckeytablewidget.cpp \
+          $$PWD/cmymessagebox.cpp \
           $$UICOMMON/cwidgetbutton.cpp \
           $$UICOMMON/uipage.cpp        \
           $$UICOMMON/qkeytools.cpp     \

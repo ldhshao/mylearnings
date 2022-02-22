@@ -11,7 +11,7 @@
 
 #define WIDGET_STYLE     "background-color:rgba(80,80,100,100%);"
 #define TITLE_STYLE      "font-size:20px;color:rgba(255,255,255,100%);"
-#define CONTENT_STYLE    "color:rgba(255,255,255,100%);"
+#define CONTENT_STYLE    "font-size:14px;color:rgba(255,255,255,100%);"
 
 CDevicePreview::CDevicePreview(QWidget *parent) :
     QWidget(parent),

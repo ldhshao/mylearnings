@@ -21,7 +21,7 @@ public:
     void setTitleHeight(int h) { titleHeight = h; }
     void setInitWidthHeight(int w, int h) { initWidth = w; initHeight = h; }
     void fillColList(int col, QWidget* w);
-    void initTabOrder();
+    void initPage();
     void updateUi();
     void showPage();
 
@@ -43,6 +43,7 @@ private:
     void showTipInfo(QPoint pt, const QString& strTip);
     bool checkRequiredData();
     QLabel            *title;
+    QLabel            *bkLbl;
     list<QWidget*>::iterator m_it;
     list<QWidget*>     colList[UIPAGE_COL_NUM];
     list<uint16_t*>    mparamAddrList;//modified params address list

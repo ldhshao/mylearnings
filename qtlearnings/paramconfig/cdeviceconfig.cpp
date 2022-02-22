@@ -12,6 +12,7 @@
 #define WIDGET_BKCOLOR        "border-image: url(:/images/mainback.png);"
 #define TITLE_STYLE         "font-size:28px;color:rgba(255,255,255,100%);"
 #define COPYRIGHT_STYLE     "color:rgba(255,255,255,100%);"
+#define MENU_STYLE          "font-size:18px;color:rgba(255,255,255,100%);"
 #define PROPERTY_DEVICE "device"
 #define PROPERTY_INDEX "index"
 CDeviceConfig::CDeviceConfig(QWidget *parent) :
@@ -29,9 +30,10 @@ CDeviceConfig::CDeviceConfig(QWidget *parent) :
     menu2Cnt = 0;
     menu3Cnt = 0;
     menu4Cnt = 0;
-    menuWidth = 100;
+    menuWidth = 120;
     menuHeight = 40;
     menuExit = new CKeyStateButton(this);
+    menuExit->addStyleSheet(MENU_STYLE);
     menuExit->setText("返回");
     menuExit->resize(menuWidth, menuHeight);
     menuExit->setProperty(PROPERTY_INDEX, -1);
@@ -52,15 +54,12 @@ CDeviceConfig::~CDeviceConfig()
     delete bkLbl;
 }
 
-void CDeviceConfig::updateUi(QString devName, PageCfgList* uiCfg)
+void CDeviceConfig::updateUi(GroupCfgItem* devUiCfg)
 {
-    ui->label_title->setText(devName + "参数配置");
-    if (nullptr != uiCfg){
-        GroupCfgItem* grpItem = uiCfg->findGroupByName(devName);
-        if (nullptr != grpItem){
-            deviceUiCfg = grpItem;
-            initMenu2(grpItem);
-        }
+    if (nullptr != devUiCfg){
+        ui->label_title->setText(devUiCfg->getName() + "参数配置");
+        deviceUiCfg = devUiCfg;
+        initMenu2(devUiCfg);
     }
 }
 
@@ -81,6 +80,7 @@ void CDeviceConfig::initMenu2(GroupCfgItem* grpItem)
     if (cnt0 < cnt1){
         for (int i=0; i < cnt1-cnt0; i++) {
             CStateButton* pBtn = new CKeyStateButton(this);
+            pBtn->addStyleSheet(MENU_STYLE);
             pBtn->setProperty(PROPERTY_INDEX, cnt0+i);
             pBtn->resize(menuWidth, menuHeight);
             menu2Mgr.registerButton(pBtn);
@@ -129,8 +129,8 @@ void CDeviceConfig::showPreview(CStateButton* menu)
 
 void CDeviceConfig::onResize(int width, int height)
 {
-    int l = 120, t = 100, m = 4, s = 10;
-    int i = 0;
+    int t = 60, m = 4, s = 4;
+    int l = m + menuWidth + m, i = 0;
 
     //layout background
     bkLbl->resize(width, height);
@@ -166,17 +166,17 @@ void CDeviceConfig::onResize(int width, int height)
 
     //layout menu4
     t += menuHeight;
-    i = 0;
+    int menu4Left = l;
     for (auto it = menu4List.begin(); it != menu4List.end(); it++) {
         if (!(*it)->isVisible())
             break;
-        (*it)->move(l + i*span, t);
-        i++;
+        (*it)->move(menu4Left, t);
+        menu4Left += ((*it)->width() + s);
     }
     //qDebug()<<__FUNCTION__<<" idx "<<i;
 
     //layout preview area
-    if (0 < i){
+    if (l < menu4Left){
         t += menuHeight;//
     }
     preview->resize(width - l, height -50 - t);
@@ -185,6 +185,9 @@ void CDeviceConfig::onResize(int width, int height)
     //layout copyright
     ui->label_copyright->move((width - ui->label_copyright->width())/2, height - 50);
     update(0, 0, width, height);
+
+    //dump font
+    qDebug()<<menu3List[0]->font().family();
 }
 void CDeviceConfig::resizeEvent(QResizeEvent *event)
 {
@@ -342,6 +345,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
         if (cnt0 < cnt1){
             for (int i=0; i < cnt1-cnt0; i++) {
                 CStateButton* pBtn = new CKeyStateButton(this);
+                pBtn->addStyleSheet(MENU_STYLE);
                 pBtn->setProperty(PROPERTY_INDEX, cnt0+i);
                 pBtn->resize(menuWidth, menuHeight);
                 pBtn->installEventFilter(this);
@@ -363,6 +367,7 @@ void CDeviceConfig::slot_menu2_clicked(CStateButton* pBtn)
     }else {
         if (0 == cnt0){
             CStateButton* pBtn = new CKeyStateButton(this);
+            pBtn->addStyleSheet(MENU_STYLE);
             pBtn->setProperty(PROPERTY_INDEX, 0);
             pBtn->resize(menuWidth, menuHeight);
             pBtn->installEventFilter(this);
@@ -399,6 +404,7 @@ void CDeviceConfig::slot_menu3_clicked(CStateButton* pBtn)
         if (cnt0 < cnt1){
             for (int i=0; i < cnt1-cnt0; i++) {
                 CStateButton* pBtn = new CKeyStateButton(this);
+                pBtn->addStyleSheet(MENU_STYLE);
                 pBtn->setProperty(PROPERTY_INDEX, cnt0+i);
                 pBtn->resize(menuWidth, menuHeight);
                 menu4Mgr.registerButton(pBtn);
@@ -408,11 +414,14 @@ void CDeviceConfig::slot_menu3_clicked(CStateButton* pBtn)
         int idx = 0;
         UiCfgItem* pItem = list->getHead();
         while(nullptr != pItem){
+            CStateButton* pBtn = menu4List[idx];
             QVariant var;
             var.setValue<void*>(pItem);
-            menu4List[idx]->setProperty(PROPERTY_DEVICE, var);
-            menu4List[idx]->setText(pItem->getName());
-            menu4List[idx]->setVisible(true);
+            pBtn->setProperty(PROPERTY_DEVICE, var);
+            int tWidth = QFontMetrics(pBtn->font()).width(pItem->getName()) + 6;
+            if (tWidth > pBtn->width()) pBtn->resize(tWidth, pBtn->height());
+            pBtn->setText(pItem->getName());
+            pBtn->setVisible(true);
             pItem = list->getNext();
             idx++;
         }
@@ -422,6 +431,7 @@ void CDeviceConfig::slot_menu3_clicked(CStateButton* pBtn)
             menu4List[idx]->setVisible(false);
         }
         menu4Mgr.selectButton(menu4List[0]);
+        showPreview(menu4List[0]);
 
         onResize(width(), height());
     }else {

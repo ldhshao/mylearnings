@@ -236,7 +236,7 @@ void GroupCfgItem::create(QWidget *parent)
     for (; it != m_children.end(); it++){
         (*it)->create(m_pWidget);
     }
-    page->initTabOrder();
+    //page->initPage();
 }
 
 //version 003
@@ -260,7 +260,7 @@ bool GroupCfgItem::initUi(unsigned short* pStAddr, int w, int h)
     int iSpanDes = 2;
     int iSpanItem = 10;
     int iSpanMargin = 4;
-    int iTitleHeight = 80;
+    int iTitleHeight = 60;
     //find cols and rows
     //count max width and max height
     struct SRowItemInfo{
@@ -542,10 +542,10 @@ QString GroupCfgItem::previewInfo()
 QString GroupCfgItem::previewInfo(int col)
 {
     QString strInfo;
-    int i = 0, max = 0, tlen = 8;
+    int i = 0, max = 0, tlen = 16;
     for (list<UiCfgItem*>::iterator it = m_children.begin(); it !=m_children.end(); it++, i++){
         int len = getQstringShowLen((*it)->getName())+1;
-        qWarning()<<i<<len;
+        //qDebug()<<i<<len;
         if ((i / m_ctlUnitSize) == col && max < len)
             max = len;
     }

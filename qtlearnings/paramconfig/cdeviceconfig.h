@@ -22,7 +22,7 @@ class CDeviceConfig : public QMainWindow
 public:
     explicit CDeviceConfig(QWidget *parent = nullptr);
     ~CDeviceConfig();
-    void updateUi(QString devName, PageCfgList* uiCfg);
+    void updateUi(GroupCfgItem* devUiCfg);
     void showUi(int reason);
     CDevicePreview* getPreview() {	return preview; }
     void setParamAddr(uint16_t* srvAddr, uint16_t* lclAddr) { paramSrvAddr = srvAddr; paramLclAddr = lclAddr; }
@@ -58,6 +58,7 @@ private:
     CDevicePreview     *preview;
     QLabel             *bkLbl;
     int                 menuWidth;
+    int                 menu4Width;
     int                 menuHeight;
     uint16_t           *paramSrvAddr;
     uint16_t           *paramLclAddr;

@@ -72,11 +72,17 @@
 #define get_row_from_index(index) ((index)>>16)
 #define get_col_from_index(index) ((index)&0xFFFF)
 
+time_t tBegin, tEnd;
+#define print_time_interval(b,msg) {\
+    time(&tEnd);\
+    qDebug()<<(msg)<<tEnd-(b);\
+    }
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), devUiCfgList(0)
 {
+    time(&tBegin);
     initTitle();
     setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
@@ -98,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(emitTimer, SIGNAL(timeout()), this, SLOT(slot_emitTimer()));
 
     initWorkDir();
+    print_time_interval(tBegin, "time 1");
     initMenu();
     //QkeyTools::getInstance();
     CDevPosMgr::instance()->initDevPosMgr(&devUiCfgList);
@@ -163,6 +170,7 @@ void MainWindow::initTitle()
 }
 void MainWindow::initMenu()
 {
+    time(&tBegin);
     qDebug()<<workDir;
     QString strDevCfg = workDir + "/" + SYSTEM_CFG_FILEPATH;
     bool loaded = devCfg.readDevCfgFile(strDevCfg);
@@ -227,11 +235,13 @@ void MainWindow::initMenu()
         devList.push_back(pBtn);
     }
 
+    print_time_interval(tBegin, "time initmenu");
     initPage();
 }
 
 void MainWindow::initPage()
 {
+    time(&tBegin);
     GroupCfgList cfgTemplate;
     QString strTemplate = workDir + "/" + UITEMP_CFG_FILEPATH;
     bool loaded = cfgTemplate.readXmlFile(strTemplate);
@@ -378,24 +388,30 @@ void MainWindow::initPage()
     QCoreApplication::instance()->setProperty(PROPERTY_DEVICE, varDevice);//set global device
     devUiCfgList.setParamTbl(paramLocalAddr);
     devUiCfgList.initData(0, true);//
+    print_time_interval(tBegin, "time initData");
+    time(&tBegin);
     //check data count
     loaded = loadParam();
-
-    qWarning()<<"param address "<<paramLocalAddr<<" param count "<<paramCount;
+    //qDebug()<<"param address "<<paramLocalAddr<<" param count "<<paramCount;
     memcpy(paramServerAddr, paramLocalAddr, paramCount*sizeof(uint16_t));
-    devUiCfgList.createAllPage(pageList);
-
-    connectPages();
     deviceUi->setParamAddr(paramServerAddr, paramLocalAddr);
+    print_time_interval(tBegin, "time loadparam");
+
 }
 
-void MainWindow::connectPages()
+void MainWindow::initDeviceUiCfg(GroupCfgItem* devItem)
 {
-    for (auto it = pageList.begin(); it !=pageList.end(); it++) {
-        QObject::connect(*it, SIGNAL(sig_configFinished()), deviceUi->getPreview(), SLOT(slot_configFinished()));
-        QObject::connect(*it, SIGNAL(sig_modifiedParamAddrList(list<uint16_t*> *)), this, SLOT(slot_modifiedParamAddrList(list<uint16_t*> *)));
-        QObject::connect(*it, SIGNAL(sig_rollBack_paramAddrList(list<uint16_t*> *)), this, SLOT(slot_rollBack_paramAddrList(list<uint16_t*> *)));
-        //qDebug()<<"bind uipage "<<*it;
+    if (!devItem->isInited()){
+        list<UiPage*> pgList;
+        devItem->create(nullptr);
+        devItem->initUi(paramLocalAddr);
+        devItem->createPage(pgList);
+        for (auto it = pgList.begin(); it !=pgList.end(); it++) {
+            QObject::connect(*it, SIGNAL(sig_configFinished()), deviceUi->getPreview(), SLOT(slot_configFinished()));
+            QObject::connect(*it, SIGNAL(sig_rollBack_paramAddrList(list<uint16_t*> *)), this, SLOT(slot_rollBack_paramAddrList(list<uint16_t*> *)));
+        }
+
+        devItem->setInited(true);
     }
 }
 
@@ -406,12 +422,6 @@ void MainWindow::deleteAll()
     }
 
     delete deviceUi;
-    //delete pages
-    //list<UiPage*>::iterator itPage = pageList.begin();
-    //for (; itPage != pageList.end(); itPage++) {
-    //    delete (*it);
-    //}
-    //pageList.clear();
 }
 
 bool MainWindow::saveParam()
@@ -532,8 +542,9 @@ void MainWindow::onResize(int width, int height)
     verLbl->resize(tWidth, tHeight);
     titleLbl->move((width - titleLbl->width())/2,20);
     verLbl->move(verl, 30);
-    timeLbl->resize(200, 30);
-    timeLbl->move(width - 450, 30);
+    tWidth = QFontMetrics(timeLbl->font()).width("2022-02-21 11:40:00");
+    timeLbl->resize(tWidth, QFontMetrics(timeLbl->font()).height());
+    timeLbl->move(width - 480, 30);
     ui->label_copyright->move((width - w1)/2, t1);
 
     //layout device
@@ -678,8 +689,10 @@ bool MainWindow::eventFilter(QObject * watched, QEvent * event)
 }
 void MainWindow::slot_systemClicked(QWidget* w)
 {
-        deviceUi->updateUi(devUiCfgList.getHead()->getName(), &devUiCfgList);
-        deviceUi->showUi(1);
+    GroupCfgItem* devItem = devUiCfgList.findGroupByName(DEVNAME_ELECTRIC);
+    initDeviceUiCfg(devItem);
+    deviceUi->updateUi(devItem);
+    deviceUi->showUi(1);
 }
 void MainWindow::slot_deviceClicked(QWidget* w)
 {
@@ -687,8 +700,10 @@ void MainWindow::slot_deviceClicked(QWidget* w)
     if (var.isValid()){
         DevCfgList* list = static_cast<DevCfgList*>(var.value<void*>());
         //qDebug()<<" device "<<list;
+        GroupCfgItem* devItem = devUiCfgList.findGroupByName(list->getName());
+        initDeviceUiCfg(devItem);
 
-        deviceUi->updateUi(list->getName(), &devUiCfgList);
+        deviceUi->updateUi(devItem);
         deviceUi->showUi(1);
     }
 }
@@ -734,7 +749,9 @@ void MainWindow::slot_bakeupRestoreClicked(QWidget* w)
 }
 void MainWindow::slot_commClicked(QWidget* w)
 {
-    deviceUi->updateUi(DEVNAME_COMM, &devUiCfgList);
+    GroupCfgItem* devItem = devUiCfgList.findGroupByName(DEVNAME_COMM);
+    initDeviceUiCfg(devItem);
+    deviceUi->updateUi(devItem);
     deviceUi->showUi(1);
 }
 
@@ -757,15 +774,6 @@ void MainWindow::slot_helpClicked(QWidget* w)
     }
 }
 
-void MainWindow::slot_modifiedParamAddrList(list<uint16_t*> *pMparamAddrList)
-{
-    //qDebug()<<__FUNCTION__<<*pMparamAddrList;
-    for (auto it = pMparamAddrList->begin(); it != pMparamAddrList->end(); it++) {
-        uint32_t idx = (*it) - paramLocalAddr;
-        addModifiedParamIndex(idx);
-    }
-}
-
 void MainWindow::slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList)
 {
     //qDebug()<<__FUNCTION__<<*pMparamAddrList;
@@ -783,140 +791,6 @@ void MainWindow::slot_rollBack_paramAddrList(list<uint16_t*> *pMparamAddrList)
         }
         //qDebug()<<"modified "<<*(*it)<<" old "<<*(paramServerAddr+idx);
     }
-}
-
-void MainWindow::addModifiedParamIndex(uint32_t idx)
-{
-    auto it = mparamIdxList.begin();
-    for (; it != mparamIdxList.end(); it++) {
-        if (*it == idx)
-            break;
-    }
-
-    if (it == mparamIdxList.end())
-        mparamIdxList.push_back(idx);
-}
-
-void MainWindow::on_pushButton_load_clicked()
-{
-    //qDebug()<<__FUNCTION__;
-    //获取应用程序的路径
-    QString dlgTitle="选择一个文件"; //对话框标题
-    QString filter="数据文件(*.dat);;所有文件(*.*)"; //文件过滤器
-    QString fileName=QFileDialog::getOpenFileName(this,dlgTitle,workDir,filter);
-    if (!fileName.isEmpty()){
-        //qDebug()<<fileName;
-        ifstream inFile;
-        int count = 0;
-        inFile.open(fileName.toStdString(), ios_base::in | ios_base::binary);
-        inFile.seekg(0, inFile.end);
-        int len = inFile.tellg();
-        char * buf = new char [len];
-        if (0 != len%6) qDebug()<<"error: wrond modified param data with len "<<len;
-
-        mparamIdxList.clear();
-        inFile.seekg(0, inFile.beg);
-        inFile.read (buf,len);
-        for (int i = 0; i < len; i+= 6) {
-            uint32_t *pIdx = static_cast<uint32_t*>((void*)(buf+i));
-            uint16_t *pVal = static_cast<uint16_t*>((void*)(buf+i+4));
-            qDebug()<<*pIdx<<*pVal;
-            *(paramLocalAddr + *pIdx) = *pVal;
-            mparamIdxList.push_back(*pIdx);
-        }
-
-        inFile.close();
-        delete [] buf;
-        //all page update
-        //以下语句在加载变更表后会引起关闭异常，原因待确定 2021.12.15
-        for(auto it = pageList.begin(); it != pageList.end(); it++){
-            (*it)->updateUi();
-        }
-    }
-}
-
-void MainWindow::on_pushButton_send_clicked()
-{
-    qDebug()<<__FUNCTION__;
-
-}
-
-void MainWindow::on_pushButton_preview_clicked()
-{
-    qDebug()<<__FUNCTION__;
-    //if (mparamIdxList.empty()){
-    //    QMessageBox msgBox(QMessageBox::Information, "通知", QString("参数未修改:"));
-    //    msgBox.addButton("确定", QMessageBox::AcceptRole);
-    //    msgBox.exec();
-    //    return ;
-    //}
-
-    list<UiCfgItem*> itemList;
-    for (auto it = mparamIdxList.begin(); it != mparamIdxList.end(); it++) {
-        UiCfgItem* item = devUiCfgList.findItemByDataIdx(*it);
-        if (nullptr != item)
-            itemList.push_back(item);
-    }
-
-    //qDebug()<<itemList;
-    //CModParamPreview dlg(&itemList);
-    //if (QDialog::Accepted == dlg.exec()){
-    //    qDebug()<<mparamIdxList;
-    //    mparamIdxList.clear();
-    //    for (auto it = itemList.begin(); it != itemList.end(); it++) {
-    //        uint32_t idx = static_cast<uint32_t>((*it)->dataidx() + (*it)->parent()->dataidx());
-    //        int cnt = (*it)->datacount();
-    //        while(cnt-- > 0)
-    //            mparamIdxList.push_back(idx++);
-    //    }
-
-    //    qDebug()<<mparamIdxList;
-    //}
-}
-
-void MainWindow::on_pushButton_save_clicked()
-{
-    qDebug()<<__FUNCTION__;
-    //save params modified
-    if (!mparamIdxList.empty()){
-        ofstream outFile;
-        QString strParam = workDir + "/";
-        time_t rawtime;
-        struct tm * timeinfo;
-        char strTemp[100] = {0};
-        //qDebug()<<mparamIdxList;
-
-        time (&rawtime);
-        timeinfo = localtime (&rawtime);
-        sprintf(strTemp, "%d%02d%02d%02d%02d%02dmodified.dat",
-                 timeinfo->tm_year+1900, timeinfo->tm_mon+1, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
-        strParam.append(strTemp);
-        outFile.open(strParam.toStdString(), ios_base::out|ios_base::binary);
-        char *buf = new char[6*mparamIdxList.size()];
-        int i = 0;
-        for(auto it = mparamIdxList.begin(); it != mparamIdxList.end(); it++){
-            uint32_t* pIdx = static_cast<uint32_t*>((void*)(buf+i));
-            uint16_t* pVal = static_cast<uint16_t*>((void*)(buf + i+4));
-            *pIdx = *it;
-            *pVal = *(paramLocalAddr + *it);
-            i += 6;
-        }
-        outFile.write(buf, i);
-        outFile.close();
-        qDebug()<<buf<<" len "<<i;
-        //notify to user file path
-        QMessageBox msgBox(QMessageBox::Information, "通知", QString("文件已保存到:").append(strParam));
-        msgBox.addButton("确定", QMessageBox::AcceptRole);
-        msgBox.exec();
-    }
-}
-
-void MainWindow::on_pushButton_queryrecord_clicked()
-{
-    qDebug()<<__FUNCTION__;
-    CModParamQuery dlg;
-    //Dialog dlg;
-    //dlg.exec();
 }
 
 void MainWindow::slot_emitTimer()

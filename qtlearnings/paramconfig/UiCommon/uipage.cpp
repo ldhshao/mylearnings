@@ -11,17 +11,39 @@
 #include <QToolTip>
 #include <QDebug>
 
+#define TITLE_STYLE      "font-size:20px;color:rgba(255,255,255,100%);"
+#define LABEL_STYLE      "color:rgba(255,255,255,100%);"
+#define EDIT_STYLE       "color:rgba(38,38,38,100%);"
+//#define WIDGET_STYLE     "background-color:rgba(0,151,255,100%);"
+#define WIDGET_STYLE     "background-color:rgba(80,80,100,100%);"
+
+void addWidgetStyleSheet(QWidget* w, const QString& strStyle)
+{
+    QStringList oldList = w->styleSheet().split(';');
+    QString dstStyle;
+    for (int i = 0; i < oldList.count(); i++) {
+        QStringList keyVal = oldList[i].split(':');
+        if (2 == keyVal.count() && -1 == strStyle.indexOf(keyVal[0])){
+            dstStyle.append(oldList[i] + ";");
+        }
+    }
+    dstStyle.append(strStyle);
+    w->setStyleSheet(dstStyle);
+    qDebug()<<dstStyle<<strStyle;
+}
+
 UiPage::UiPage(QWidget *parent) :
     QWidget(parent)
 {
-    titleHeight = 80;
+    titleHeight = 50;
     initWidth = 200;
     initHeight = 200;
     init = false;
     setWindowFlags(/*Qt::Tool | Qt::WindowStaysOnTopHint |*/ Qt::FramelessWindowHint);
+    bkLbl = new QLabel(this);
+    bkLbl->setStyleSheet(WIDGET_STYLE);
     title = new QLabel(this);
     title->setAlignment(Qt::AlignCenter);
-    title->move(0, 0);
 }
 
 UiPage::~UiPage()
@@ -59,8 +81,20 @@ void UiPage::updateUi()
     }
 }
 
-void UiPage::initTabOrder()
+void UiPage::initPage()
 {
+    addWidgetStyleSheet(title, TITLE_STYLE);
+    for(int i = 0; i < UIPAGE_COL_NUM; i++){
+        for(auto itRow = colList[i].begin(); itRow != colList[i].end(); itRow++){
+            QLabel* pLbl = dynamic_cast<QLabel*>(*itRow);
+            if (nullptr != pLbl)
+                addWidgetStyleSheet(pLbl, LABEL_STYLE);
+            else
+                addWidgetStyleSheet(*itRow, EDIT_STYLE);
+            //qDebug()<<"UiPage::initPage"<<(*itRow)->font().family()<<(*itRow)->font().pointSize()<<(*itRow)->font().weight();
+        }
+    }
+
     QWidget *wid = nullptr;
     for(int i = 0; i < UIPAGE_COL_NUM; i++){
         auto itRow = colList[i].begin();
@@ -179,6 +213,11 @@ void UiPage::resizeEvent(QResizeEvent *event)
 {
     if (init) return ;
 
+    bkLbl->resize(event->size().width(), event->size().height());
+    bkLbl->move(0, 0);
+
+    initPage();
+
     QSize s0 = event->oldSize();
     QSize s1 = event->size();
     //qDebug()<<__FUNCTION__<<this<<" old "<<s0<<" new "<<s1;
@@ -191,6 +230,7 @@ void UiPage::resizeEvent(QResizeEvent *event)
     }
     int deltX = (s1.width() - initWidth)/(cols+1);
     title->resize(s1.width(), titleHeight);
+    title->move(0, 0);
     if (s0.width() > 0){
         deltX = (s1.width() - s0.width())/(cols+1);
     }

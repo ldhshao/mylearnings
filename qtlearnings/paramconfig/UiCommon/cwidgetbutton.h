@@ -20,6 +20,7 @@ public:
     };
 
     virtual void setButtonState(BUTTON_STATE state);
+    void addStyleSheet(const QString& strStyle);
 
 signals:
     void sig_button_clicked(CStateButton* pBtn);

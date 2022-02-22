@@ -29,6 +29,20 @@ void CStateButton::slot_clicked(bool)
     emit sig_button_clicked(this);
 }
 
+void CStateButton::addStyleSheet(const QString& strStyle)
+{
+    QStringList oldList = styleSheet().split(';');
+    QString dstStyle;
+    for (int i = 0; i < oldList.count(); i++) {
+        QStringList keyVal = oldList[i].split(':');
+        if (2 == keyVal.count() && -1 == strStyle.indexOf(keyVal[0])){
+            dstStyle.append(oldList[i] + ";");
+        }
+    }
+    dstStyle.append(strStyle);
+    setStyleSheet(dstStyle);
+}
+
 QString CStateButton::removeStyle(const QString& strStyle, QString strAttr)
 {
     QStringList dstList;

@@ -12,7 +12,7 @@ class GroupCfgItem : public UiCfgItem
 public:
     HNDZ_DECLARE_DYNCREATE(GroupCfgItem)
     GroupCfgItem() :m_titleDepth(1),m_cols(1),m_ctlWidth(100),m_ctlHeight(40),m_colMode(true),m_ctlUnitSize(10){
-        m_type = UiCfgItem::strTypeGroup; m_devLevel = 0;
+        m_type = UiCfgItem::strTypeGroup; m_devLevel = 0; m_inited = false;
     }
     virtual ~GroupCfgItem();
 
@@ -23,6 +23,8 @@ public:
     void     addChild(UiCfgItem* item) { item->setParent(this); m_children.push_back(item); }
     void     clear()             { m_children.clear(); }
     uint8_t  titleDepth()        { return m_titleDepth; }
+    bool     isInited()          { return m_inited; }
+    void     setInited(bool init){ m_inited = init; }
 
     virtual bool initFromDomElement(QDomElement element);
     virtual bool initChildrenFromDomElement(QDomNodeList list);
@@ -70,6 +72,7 @@ protected:
     int              m_ctlWidth;
     int              m_ctlHeight;
     bool             m_colMode;
+    bool             m_inited;
     int              m_ctlUnitSize;
 };
 
